@@ -1,0 +1,7 @@
+node_modules
+/dist/
+
+
+# Chat
+answer.jsonl
+me.md
