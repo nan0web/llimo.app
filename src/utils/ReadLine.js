@@ -20,12 +20,12 @@ function parseStopKeys(stopKeys = []) {
 
 /**
  * @typedef {Object} InteractiveReadLineOptions
- * @property {string}   [stopWord=""]       – line that ends the input
- * @property {string[]|string} [stopKeys=[]] – which key‑combos finish the input
- * @property {string}   [question=""]      – optional prompt printed before reading
- * @property {boolean}  [help=false]       – print the “type # or Ctrl‑Enter” help text
- * @property {NodeJS.ReadableStream} [input]   – defaults to process.stdin
- * @property {NodeJS.WritableStream} [output]  – defaults to process.stdout
+ * @property {string}   [stopWord=""]         line that ends the input
+ * @property {string[]|string} [stopKeys=[]]  which key‑combos finish the input
+ * @property {string}   [question=""]         optional prompt printed before reading
+ * @property {boolean}  [help=false]          print the “type # or Ctrl‑Enter” help text
+ * @property {NodeJS.ReadableStream} [input]  defaults to process.stdin
+ * @property {NodeJS.WritableStream} [output] defaults to process.stdout
  */
 
 /**
@@ -37,7 +37,7 @@ function parseStopKeys(stopKeys = []) {
  */
 export default class ReadLine {
 	/**
-	 * @param {Object} [options] – you can override the default stdin/stdout here.
+	 * @param {Object} [options] you can override the default stdin/stdout here.
 	 */
 	constructor(options = {}) {
 		const {

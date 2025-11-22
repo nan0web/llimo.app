@@ -1,12 +1,6 @@
 import FileProtocol, { FileEntry, FileError } from "../FileProtocol.js"
 
-/**
- * @typedef {Object} ParsedFile
- * @property {FileEntry[]} correct
- * @property {FileError[]} failed
- * @property {boolean} isValid
- * @property {string | null} validate - Validate content with the list of provided files
- */
+/** @typedef {import("../FileProtocol.js").ParsedFile} ParsedFile */
 
 export default class MardownProtocol extends FileProtocol {
 	/**
@@ -18,7 +12,7 @@ export default class MardownProtocol extends FileProtocol {
 		const correct = []
 		/** @type {FileError[]} */
 		const failed = []
-		/** @type {FileEntry} */
+		/** @type {FileEntry | null} */
 		let current = null
 		/** @type {string | null} */
 		let innerType = null
@@ -74,19 +68,7 @@ export default class MardownProtocol extends FileProtocol {
 		if (current) {
 			correct.push(current)
 		}
-		const validateFile = correct.filter(file => "@validate" === file.filename)[0]
-		let isValid = false
-		if (validateFile) {
-			const requested = []
-			const files = correct.filter(file => "@validate" !== file.filename).map(
-				file => [file.label, file.filename]
-			)
-			validateFile.content.split("\n").map(s => {
-				if (!s.startsWith("- [") && !s.endsWith(")")) return ""
-				requested.push(s.slice(3, -1).split("]("))
-			}).filter(Boolean)
-			isValid = JSON.stringify(files) === JSON.stringify(requested)
-		}
-		return { correct, failed, isValid, validate: validateFile.content ?? null }
+		const { isValid, validate, files, requested } = FileProtocol.validate(correct)
+		return { correct, failed, isValid, validate, files, requested }
 	}
 }

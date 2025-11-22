@@ -5,6 +5,7 @@ import fs from 'node:fs/promises'
 import process from 'node:process'
 
 import Path from './Path.js'
+import { Stream } from 'node:stream'
 
 /**
  * @typedef {import('node:fs').Mode | import('node:fs').MakeDirectoryOptions | null} MkDirOptions

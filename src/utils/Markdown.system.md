@@ -1,7 +1,9 @@
 ---
-response.format: "markdown #### [<label>](<filename>)\n```<type>\n<content>\n```\n and more files, for tooling use filename with prefix @ - @bash; provide @validate file with the content of the list of provided files and commands: #### [2 file(s), 1 command(s)](@validate)\n```markdown\n- [](index.js)\n- [](package.json)\n- [Init git](@bash)"
+response.format: "markdown #### [<label>](<filename>)\n```<type>\n<content>\n```\n and more files, for tooling use filename with prefix @ - @bash; provide @validate file with the content of the list of provided files and commands: #### [X file(s), Y command(s)](@validate)\n```markdown\n- [](index.js)\n- [](package.json)\n- [Init git](@bash)"
 response.schema: "[{ label: string, filename: string,  }]"
 tools: bash
+validation.js: node:test describe > it, same file path with .test.js instead of .js
+validation.jsx: vitest describe > it, same file path with .test.jsx instead of .jsx
 ---
 ## System / user instruction
 
@@ -28,7 +30,7 @@ In every response provide file with list of provided, named "@validate" with typ
 as example:
 
 ---
-#### [2 files, 1 command](@validate)
+#### [2 file(s), 1 command(s)](@validate)
 ```markdown
 - [](system.md)
 - [Updated](play/main.js)

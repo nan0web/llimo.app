@@ -1,5 +1,7 @@
 import FileProtocol, { FileEntry, FileError } from "../FileProtocol.js"
 
+/** @typedef {import("../FileProtocol.js").ParsedFile} ParsedFile */
+
 /**
  * Helper that attempts to repair a malformed JSONL line.
  *
@@ -40,12 +42,12 @@ function safeParse(line) {
 export default class JSONL extends FileProtocol {
 	/**
 	 * @param {AsyncGenerator<string>} stream – an async iterator yielding one line per call.
-	 * @returns {Promise<{ correct: FileEntry[], failed: Error[] }>}
+	 * @returns {Promise<ParsedFile>}
 	 */
 	static async parseStream(stream) {
 		/** @type {FileEntry[]} */
 		const correct = []
-		/** @type {Error[]} */
+		/** @type {FileError[]} */
 		const failed = []
 		let i = 0
 		for await (const rawLine of stream) {
@@ -63,7 +65,7 @@ export default class JSONL extends FileProtocol {
 				let target = ""
 				const shift = 33
 				if (matches) {
-					const index = Math.max(0, parseInt(matches[1] - 1))
+					const index = Math.max(0, parseInt(matches[1]) - 1)
 					const start = index > shift ? index - shift : 0
 					const limit = index > shift ? shift : index + 1
 					console.log(index, start, limit)
@@ -74,16 +76,17 @@ export default class JSONL extends FileProtocol {
 					new FileError({
 						line: i,
 						content: rawLine,
-						error: [
+						error: new Error([
 							`Unable to parse JSON line #${i}:\n`,
 							`   ${line.slice(0, shift * 2)}${line.length > shift * 2 ? "…" : ""}\n`,
 							`   ${target}`,
 							`   ${err.message}\n\n`,
-						].join("\n")
+						].join("\n"))
 					})
 				)
 			}
 		}
-		return { correct, failed }
+		const { isValid, validate } = FileProtocol.validate(correct)
+		return { correct, failed, isValid, validate }
 	}
 }

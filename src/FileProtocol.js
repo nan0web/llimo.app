@@ -1,4 +1,23 @@
 import readline from "node:readline"
+import { Readable } from "node:stream"
+
+/**
+ * @typedef {Object} ParsedFile
+ * @property {FileEntry[]} [correct=[]]
+ * @property {FileError[]} [failed=[]]
+ * @property {boolean} [isValid=false]
+ * @property {FileEntry | null} [validate=null] Validate content with the list of provided files
+ * @property {Array<[string, string]>} [files=[]] Array of found files in LLiMo response in [label, filename] format
+ * @property {Array<[string, string]>} [requested=[]] Array of requested files in `@validate` file response from LLiMo in [label, filename] format
+ */
+
+/**
+ * @typedef {Object} ValidateResult
+ * @property {boolean} [isValid=false]
+ * @property {FileEntry | null} [validate=null]
+ * @property {Array<[string, string]>} [files=[]] Array of found files in LLiMo response in [label, filename] format
+ * @property {Array<[string, string]>} [requested=[]] Array of requested files in `@validate` file response from LLiMo in [label, filename] format
+ */
 
 export class FileEntry {
 	/** @type {string} */
@@ -11,7 +30,7 @@ export class FileEntry {
 	content = ""
 	/** @type {string} */
 	encoding = "utf-8"
-	/** @param {Partial<FileEntry>} */
+	/** @param {Partial<FileEntry>} [input={}] */
 	constructor(input = {}) {
 		const {
 			label = this.label,
@@ -35,11 +54,8 @@ export class FileError {
 	content = ""
 	/** @type {number} */
 	line = 0
-	/** @param {Partial<FileError> | string} input */
+	/** @param {Partial<FileError>} input */
 	constructor(input = {}) {
-		if ("string" === input) {
-			input = { content: input }
-		}
 		const {
 			error = this.error,
 			content = this.content,
@@ -52,6 +68,29 @@ export class FileError {
 }
 
 export default class FileProtocol {
+	/**
+	 * Validates the correct array of file entries with the `@validate` filename.
+	 * @param {FileEntry[]} correct
+	 * @returns {ValidateResult}
+	 */
+	static validate(correct = []) {
+		const validate = correct.filter(file => "@validate" === file.filename)[0]
+		let isValid = false
+		const requested = []
+		let files = []
+		if (validate) {
+			files = correct.filter(file => "@validate" !== file.filename).map(
+				file => [file.label, file.filename]
+			)
+			validate.content.split("\n").map(s => {
+				if (!s.startsWith("- [") && !s.endsWith(")")) return ""
+				requested.push(s.slice(3, -1).split("]("))
+			}).filter(Boolean)
+			isValid = JSON.stringify(files) === JSON.stringify(requested)
+		}
+		return { isValid, validate, files, requested }
+	}
+
 	static async parse(source) {
 		if ("string" === typeof source) {
 			const stream = readline.createInterface({
@@ -61,12 +100,13 @@ export default class FileProtocol {
 			return await this.parseStream(stream)
 		}
 	}
+
 	/**
 	 * @param {AsyncGenerator<string>} stream – an async iterator yielding one line per call.
-	 * @returns {Promise<{ correct: FileEntry[], failed: FileError[] }>}
+	 * @returns {Promise<ParsedFile>}
 	 */
 	static async parseStream(stream) {
 		for await (const line of stream) { }
-		return { correct: [], failed: [] }
+		return { correct: [], failed: [], isValid: false, validate: null }
 	}
 }

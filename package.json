@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"build": "tsc",
 		"test": "node --test --test-timeout=3333 'src/**/*.test.js'",
 		"prepare": "husky"
 	},
@@ -13,6 +14,7 @@
 	"license": "ISC",
 	"packageManager": "pnpm@10.11.0",
 	"devDependencies": {
-		"husky": "^9.1.7"
+		"husky": "^9.1.7",
+		"typescript": "^5.9.3"
 	}
 }

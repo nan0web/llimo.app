@@ -11,9 +11,11 @@
 import process from "node:process"
 import { Readable } from "node:stream"
 
-import { GREEN, RED, RESET, ITALIC } from "../src/utils/ANSI.js"
+import { GREEN, RED, RESET, ITALIC, YELLOW } from "../src/utils/ANSI.js"
 import { FileSystem, Path, ReadLine } from "../src/utils.js"
-import JSONL from "../src/utils/JSONL.js"
+import Markdown from "../src/utils/Markdown.js"
+import BashCommand from "../src/llm/commands/BashCommand.js"
+import ValidateCommand from "../src/llm/commands/ValidateCommand.js"
 
 /**
  * @typedef {Object} JSONResponse
@@ -36,6 +38,12 @@ function usage() {
 	console.info("    output-file - Path to the output file prints to stdout if not defined")
 	console.info("  ")
 }
+
+/** @type {Map<string, typeof import("../src/llm/commands/Command.js").default>} */
+const commands = new Map([
+	[ValidateCommand.name, ValidateCommand],
+	[BashCommand.name, BashCommand],
+])
 
 /**
  * Main entry point.
@@ -62,7 +70,7 @@ async function main(argv = process.argv.slice(2)) {
 	}
 
 	/**
-	 * 1️⃣ Detect and collect possible stdin data *before* interpreting argv.
+	 * Detect and collect possible stdin data *before* interpreting argv.
 	 *    - If stdin is not a TTY we try to read everything.
 	 *    - If any data is present, it represents the markdown source.
 	 */
@@ -73,7 +81,7 @@ async function main(argv = process.argv.slice(2)) {
 	}
 
 	/**
-	 * 2️⃣ Decide how to interpret argv based on whether we already have stdin data.
+	 * Decide how to interpret argv based on whether we already have stdin data.
 	 *    - When stdinData is non‑empty, argv[0] (if present) is treated as the
 	 *      *output* file path; the markdown source comes from stdinData.
 	 *    - When stdinData is empty, argv[0] is treated as the *input* markdown file.
@@ -116,31 +124,49 @@ async function main(argv = process.argv.slice(2)) {
 		return
 	}
 
-	const { correct, failed } = await JSONL.parseStream(mdStream)
+	const parsed = await Markdown.parseStream(mdStream)
+	const {
+		correct, failed, isValid, files, requested
+	} = parsed
 
 	const format = new Intl.NumberFormat("en-US").format
 
 	console.info(RESET)
 	console.info("Extracting files")
 
-	for (const line of correct) {
-		const { filename = "", content = "", encoding = "utf-8" } = line
+	for (const file of correct) {
+		const { filename = "", content = "", encoding = "utf-8" } = file
 		const text = String(content).replace(/\\n/g, "\n")
-		if (filename.startsWith(":")) {
+		if (filename.startsWith("@")) {
 			const command = filename.slice(1)
-			// @todo execute command if it is available
+			const Command = commands.get(command)
+			if (Command) {
+				const cmd = new Command({ cwd: process.cwd(), file, parsed })
+				for await (const str of cmd.run()) {
+					console.info(str)
+				}
+			} else {
+				console.error(` ${RED}! Unknown command: ${filename}${RESET}`)
+				console.error(' ! Available commands:')
+				Array.from(commands.entries()).forEach(([name, Command]) => {
+					console.error(` - ${name} - ${Command.help}`)
+				})
+			}
 		} else {
 			const absPath = path.resolve(baseDir, filename)
-			const dir = path.dirname(absPath)
-			await fs.mkdir(dir, { recursive: true })
-			await fs.writeFile(absPath, text, encoding)
+			await fs.save(absPath, text, encoding)
 			const size = Buffer.byteLength(text)
 			console.info(` ${GREEN}+${RESET} ${filename} (${ITALIC}${format(size)} bytes${RESET})`)
 		}
 	}
 
-	for (const err of failed) {
-		console.error(` ${RED}! Error: ${err.message}${RESET}`)
+	const empties = failed.filter(err => err.content.trim() === "").map(err => err.line)
+	if (empties.length) {
+		console.warn(` ${YELLOW}• Empty rows #${empties.join(", #")}`)
+	}
+	const others = failed.filter(err => err.content.trim() !== "")
+	for (const err of others) {
+		console.error(` ${RED}! Error: ${err.error}\n > ${err.line}. ${err.content}${RESET}`)
 	}
 }
 
