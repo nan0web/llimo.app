@@ -16,10 +16,22 @@ import { Stats } from 'node:fs'
  * File system operations wrapper to allow testing
  */
 export default class FileSystem {
+	/** @type {string} */
+	cwd
 	/** @type {Path} */
-	path
-	constructor() {
-		this.path = new Path()
+	#path
+	/**
+	 * @param {Partial<FileSystem>} [input={}]
+	 */
+	constructor(input = {}) {
+		const {
+			cwd = process.cwd(),
+		} = input
+		this.cwd = String(cwd)
+		this.#path = new Path({ cwd })
+	}
+	get path() {
+		return this.#path
 	}
 	/**
 	 * Check if file exists
@@ -98,8 +110,13 @@ export default class FileSystem {
 		}
 	}
 
+	async load(path, encoding) {
+		const abs = this.path.resolve(path)
+		return await this.readFile(abs, encoding)
+	}
+
 	async save(path, data, options) {
-		const abs = this.path.resolve(process.cwd(), path)
+		const abs = this.path.resolve(path)
 		const dir = this.path.dirname(abs)
 		await fs.mkdir(dir, { recursive: true, mode: options?.mode || 0o777 })
 		return await fs.writeFile(abs, data, options)

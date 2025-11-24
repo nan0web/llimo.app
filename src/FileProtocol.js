@@ -7,16 +7,16 @@ import { Readable } from "node:stream"
  * @property {FileError[]} [failed=[]] List of errors per line detected in the response
  * @property {boolean} [isValid=false] Validation flag that checked by LLiMo validate files compared to delivered files in the response
  * @property {FileEntry | null} [validate=null] Validate content with the list of provided files
- * @property {Array<[label: string, filename: string]>} [files=[]] Array of found files in LLiMo response in [label, filename] format
- * @property {Array<[label: string, filename: string]>} [requested=[]] Array of requested files in `@validate` file response from LLiMo in [label, filename] format
+ * @property {Map<string, string>} [files=new Map()] Map<filename, label> of found files in LLiMo response in [label, filename] format
+ * @property {Map<string, string>} [requested=new Map()] Map<filename, label> of requested files in `@validate` file response from LLiMo in [label, filename] format
  */
 
 /**
  * @typedef {Object} ValidateResult
  * @property {boolean} [isValid=false] Validation flag that checked by LLiMo validate files compared to delivered files in the response
  * @property {FileEntry | null} [validate=null] Validate file with the content of the listed files that LLiMo thinks must be delivered in the response
- * @property {Array<[label: string, filename: string]>} [files=[]] Array of found files in LLiMo response in [label, filename] format
- * @property {Array<[label: string, filename: string]>} [requested=[]] Array of requested files in `@validate` file response from LLiMo in [label, filename] format
+ * @property {Map<string, string>} [files=new Map()] Map<filename, label> of found files in LLiMo response in [label, filename] format
+ * @property {Map<string, string>} [requested=new Map()] Map<filename, label> of requested files in `@validate` file response from LLiMo in [label, filename] format
  */
 
 export class FileEntry {
@@ -80,15 +80,21 @@ export default class FileProtocol {
 		let files = []
 		if (validate) {
 			files = correct.filter(file => "@validate" !== file.filename).map(
-				file => [file.label, file.filename]
+				file => [file.filename, file.label]
 			)
 			validate.content.split("\n").map(s => {
 				if (!s.startsWith("- [") && !s.endsWith(")")) return ""
-				requested.push(s.slice(3, -1).split("]("))
+				const [label, name = ""] = s.slice(3, -1).split("](")
+				requested.push([name, label])
 			}).filter(Boolean)
-			isValid = JSON.stringify(files) === JSON.stringify(requested)
+			const a = files.map(([f]) => f).sort()
+			const b = requested.map(([f]) => f).sort()
+			/**
+			 * @description labels are not important for validation of files compare
+			 */
+			isValid = JSON.stringify(a) === JSON.stringify(b)
 		}
-		return { isValid, validate, files, requested }
+		return { isValid, validate, files: new Map(files), requested: new Map(requested) }
 	}
 
 	/**

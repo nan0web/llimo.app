@@ -42,7 +42,7 @@ async function main(argv = process.argv.slice(2)) {
 		Command => `### ${Command.name}\n${Command.help}\n\nExample:\n#### [](@${Command.name})\n${Command.example}`
 	).join("\n\n")
 
-	const output = template.replaceAll("${TOOLS_LIST}", list).replaceAll("${TOOLS_MD}", md)
+	const output = template.replaceAll("<!--TOOLS_LIST-->", list).replaceAll("<!--TOOLS_MD-->", md)
 	if (outputPath) {
 		const format = new Intl.NumberFormat("en-US").format
 		await fs.writeFile(outputPath, output)

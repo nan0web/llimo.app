@@ -101,19 +101,19 @@ describe("Markdown.parseStream", () => {
 		const content = await fs.readFile("src/utils/Markdown.test.inject.md", "utf-8")
 		const parsed = await Markdown.parse(content)
 		assert.equal(parsed.isValid, false)
-		assert.deepStrictEqual(parsed.requested, [
-			["llimo-pack.js", "bin/llimo-pack.js"],
-			["llimo-unpack.js", "bin/llimo-unpack.js"],
-			["llimo-chat.js", "bin/llimo-chat.js"],
-			["llimo-chat.test.js", "bin/llimo-chat.test.js"],
-			["argvHelper.js", "src/cli/argvHelper.js"],
-			["InjectFilesCommand.js", "src/llm/commands/InjectFilesCommand.js"],
-			["FileSystem.js", "src/utils/FileSystem.js"],
-		])
-		assert.deepStrictEqual(parsed.files, [
+		assert.deepStrictEqual(parsed.requested, new Map([
+			["bin/llimo-pack.js", "llimo-pack.js"],
+			["bin/llimo-unpack.js", "llimo-unpack.js"],
+			["bin/llimo-chat.js", "llimo-chat.js"],
+			["bin/llimo-chat.test.js", "llimo-chat.test.js"],
+			["src/cli/argvHelper.js", "argvHelper.js"],
+			["src/llm/commands/InjectFilesCommand.js", "InjectFilesCommand.js"],
+			["src/utils/FileSystem.js", "FileSystem.js"],
+		]))
+		assert.deepStrictEqual(parsed.files, new Map([
 			["src/utils/FileSystem.js", "src/utils/FileSystem.js"],
 			["src/llm/commands/InjectFilesCommand.js", "src/llm/commands/InjectFilesCommand.js"],
-		])
+		]))
 		for (const { filename, content } of parsed.correct) {
 			if (filename.startsWith("@")) continue
 			await fs.save(`dist/markdown-parse.test/${filename}`, content)

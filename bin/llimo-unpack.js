@@ -11,7 +11,7 @@
 import process from "node:process"
 import { Readable } from "node:stream"
 
-import { GREEN, RED, RESET, ITALIC, YELLOW } from "../src/utils/ANSI.js"
+import { GREEN, RED, RESET, ITALIC, YELLOW, BOLD } from "../src/utils/ANSI.js"
 import { FileSystem, Path, ReadLine } from "../src/utils.js"
 import Markdown from "../src/utils/Markdown.js"
 import commands from "../src/llm/commands/index.js"
@@ -49,6 +49,9 @@ async function main(argv = process.argv.slice(2)) {
 	let mdStream = null               // interface that yields markdown lines
 	let baseDir = process.cwd()       // directory used to resolve relative file paths
 	let stdinData = ''                // raw data read from stdin (if any)
+
+	const isDry = argv.includes("--dry")
+	argv = argv.filter(a => !a.startsWith("-"))
 
 	/**
 	 * Helper – determines whether a given argument is an existing file.
@@ -125,7 +128,7 @@ async function main(argv = process.argv.slice(2)) {
 	const format = new Intl.NumberFormat("en-US").format
 
 	console.info(RESET)
-	console.info("Extracting files")
+	console.info(`Extracting files ${isDry ? `${YELLOW}(dry mode, no real saving)` : ''}`)
 
 	for (const file of correct) {
 		const { filename = "", content = "", encoding = "utf-8" } = file
@@ -147,9 +150,17 @@ async function main(argv = process.argv.slice(2)) {
 			}
 		} else {
 			const absPath = path.resolve(baseDir, filename)
-			await fs.save(absPath, text, encoding)
+			if ("" === text.trim()) {
+				console.info(` ${YELLOW}- ${filename} - ${BOLD}empty content${RESET} - to remove file use command @rm`)
+				continue
+			}
+			if (!isDry) {
+				await fs.save(absPath, text, encoding)
+			}
 			const size = Buffer.byteLength(text)
-			console.info(` ${GREEN}+${RESET} ${filename} (${ITALIC}${format(size)} bytes${RESET})`)
+			const SAVE = `${GREEN}+`
+			const SKIP = `${YELLOW}•`
+			console.info(` ${isDry ? SKIP : SAVE}${RESET} ${filename} (${ITALIC}${format(size)} bytes${RESET})`)
 		}
 	}
 

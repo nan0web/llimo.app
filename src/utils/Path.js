@@ -1,9 +1,21 @@
+import process from 'node:process'
 import { dirname, extname, resolve, basename, relative } from 'node:path'
 
 /**
  * Path operations wrapper
  */
 export default class Path {
+	/** @type {string} */
+	cwd
+	/**
+	 * @param {Partial<Path>} [input={}]
+	 */
+	constructor(input = {}) {{
+		const {
+			cwd = process.cwd(),
+		} = input
+		this.cwd = String(cwd)
+	}}
 	/**
 	 * Get directory name
 	 * @param {string} path
@@ -28,7 +40,7 @@ export default class Path {
 	 * @returns {string}
 	 */
 	resolve(...paths) {
-		return resolve(...paths)
+		return resolve(this.cwd, ...paths)
 	}
 
 	/**
