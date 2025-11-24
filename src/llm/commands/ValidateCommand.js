@@ -32,11 +32,11 @@ export default class ValidateCommand extends Command {
 			file => file.filename.startsWith("@")
 		).map(file => file.filename)
 		const realLabel = { files: 0, commands: 0 }
-		const files = Array.from(this.parsed.files ?? []).map(([, file]) => {
+		const files = Array.from(this.parsed.files ?? []).map(([file]) => {
 			++realLabel[commands?.includes(file) ? "commands" : "files"]
 			return file
 		})
-		const requested = Array.from(this.parsed.requested ?? []).map(([, file]) => file)
+		const requested = Array.from(this.parsed.requested ?? []).map(([file]) => file)
 		if (JSON.stringify(realLabel) !== JSON.stringify(validateLabel)) {
 			yield ` ${RED}!${RESET} Unexpected response "${this.parsed.validate?.label}"`
 			yield `   but provided: ${realLabel.files} file(s), ${realLabel.commands} command(s)`
