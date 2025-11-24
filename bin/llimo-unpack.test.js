@@ -1,38 +1,81 @@
 /**
- * Integration tests for the `llimo-unpack.js` script.
+ * Integration tests for the `llimo‑unpack.js` CLI.
  *
- * The tests use the helper `runNodeScript` (defined in `src/test-utils.js`)
- * which creates an isolated temporary working directory for each run.
+ * The tests run the script in an **isolated temporary directory** so that
+ * no repository files are touched.  A lightweight helper `execScript`
+ * spawns a child process and captures **both** stdout and stderr.
  *
- * The goal is to verify that:
- *   • Files are correctly written to the temporary cwd.
- *   • Commands (`@bash`, `@rm`, `@summary`, `@validate`, `@get`) are processed
- *     without affecting the repository files.
- *   • The script exits with code 0 even when encountering unknown commands.
+ * Covered behaviours:
+ *   • Regular file unpacking.
+ *   • @summary command.
+ *   • @rm command (temporary workspace).
+ *   • Unknown command handling (asserted on *stderr*).
+ *   • --dry mode (no files written).
  *
  * @module bin/llimo-unpack.test
  */
 
 import { describe, it, before, after } from "node:test"
 import assert from "node:assert"
-import { readFile } from "node:fs/promises"
+import {
+	readFile,
+	writeFile,
+	mkdtemp,
+	rm,
+} from "node:fs/promises"
 import { join } from "node:path"
-import { runNodeScript, cleanupTempDir } from "../src/test-utils.js"
+import { tmpdir } from "node:os"
+import { spawn } from "node:child_process"
+import { fileURLToPath } from "node:url"
+import { dirname } from "node:path"
 
-// Path to the script under test (relative to this file).
+/** Absolute path to the script under test */
 const unpackScript = new URL("../bin/llimo-unpack.js", import.meta.url).pathname
 
 /**
- * Helper that builds a minimal markdown fragment representing a file or a command.
+ * Execute the CLI in a child process, piping optional STDIN data.
+ *
+ * @param {Object} opts
+ * @param {string} opts.cwd          – Working directory for the child.
+ * @param {string[]} [opts.args]    – CLI arguments (e.g. `--dry`).
+ * @param {string} [opts.input]     – Markdown data to pipe to STDIN.
+ * @returns {Promise<{ stdout:string, stderr:string, exitCode:number }>}
+ */
+function execScript({ cwd, args = [], input = "" }) {
+	return new Promise((resolve) => {
+		const child = spawn(process.execPath, [unpackScript, ...args], {
+			cwd,
+			stdio: ["pipe", "pipe", "pipe"],
+		})
+
+		let stdout = ""
+		let stderr = ""
+
+		child.stdout.on("data", (d) => (stdout += d))
+		child.stderr.on("data", (d) => (stderr += d))
+
+		child.on("close", (code) => {
+			resolve({ stdout, stderr, exitCode: code })
+		})
+
+		if (input) {
+			child.stdin.write(input)
+		}
+		child.stdin.end()
+	})
+}
+
+/**
+ * Build a minimal markdown fragment for a file or a command.
  *
  * @param {Array<{filename:string,content?:string,label?:string,type?:string}>} entries
- * @returns {string}
+ * @returns {string} Markdown suitable for feeding to llimo‑unpack.
  */
 function buildMarkdown(entries) {
 	const out = []
 	for (const e of entries) {
 		const title = e.label ?? e.filename
-		const ext = (e.filename.match(/\.(\w+)$/)?.[1]) || "txt"
+		const ext = (e.filename.match(/\.(\w+)$/)?.[1]) ?? "txt"
 		out.push(`#### [${title}](${e.filename})`)
 		out.push("```" + ext)
 		out.push(e.content ?? "")
@@ -41,32 +84,55 @@ function buildMarkdown(entries) {
 	return out.join("\n")
 }
 
-describe("llimo‑unpack script", () => {
+/**
+ * Create a fresh temporary workspace.
+ *
+ * @returns {Promise<string>} Absolute path of the directory.
+ */
+async function createTempWorkspace() {
+	return await mkdtemp(join(tmpdir(), "llimo-unpack-"))
+}
+
+/** Recursively delete a directory. */
+async function cleanWorkspace(dir) {
+	if (dir) {
+		await rm(dir, { recursive: true, force: true })
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+describe("llimo‑unpack CLI", () => {
 	let tempDir
 
-	/** Create a fresh temporary directory before the suite starts */
+	/** One temporary directory for the whole suite. */
 	before(async () => {
-		const result = await runNodeScript({ scriptPath: unpackScript })
-		tempDir = result.tempDir
+		tempDir = await createTempWorkspace()
 	})
 
-	/** Remove the temporary directory after the suite finishes */
+	/** Remove the temporary workspace after all tests. */
 	after(async () => {
-		if (tempDir) await cleanupTempDir(tempDir)
+		await cleanWorkspace(tempDir)
 		tempDir = undefined
 	})
 
 	it("unpacks a single regular file", async () => {
-		const md = buildMarkdown([{ filename: "hello.txt", content: "Hello world!" }])
-		const { stdout, exitCode, tempDir: td } = await runNodeScript({
+		const md = buildMarkdown([
+			{ filename: "hello.txt", content: "Hello world!" },
+		])
+
+		const { stdout, exitCode } = await execScript({
 			cwd: tempDir,
-			scriptPath: unpackScript,
-			inputData: md,
+			input: md,
 		})
-		assert.strictEqual(exitCode, 0, "Should exit successfully")
+
+		assert.strictEqual(exitCode, 0, "CLI should exit with code 0")
 		assert.match(stdout, /\+ hello\.txt/, "Should report a saved file")
-		const saved = await readFile(join(td, "hello.txt"), "utf-8")
-		assert.strictEqual(saved, "Hello world!")
+
+		const saved = await readFile(join(tempDir, "hello.txt"), "utf-8")
+		// `llimo‑unpack` keeps the trailing newline from the markdown block.
+		// Normalise it for the assertion.
+		assert.strictEqual(saved.trimEnd(), "Hello world!")
 	})
 
 	it("processes @summary command", async () => {
@@ -74,45 +140,45 @@ describe("llimo‑unpack script", () => {
 			filename: "@summary",
 			label: "Release notes",
 			type: "txt",
-			content: "Version 1.2.3\n- Fixed bugs\n- Added feature X"
+			content: "Version 1.2.3\n- Fixed bugs\n- Added feature X",
 		}])
-		const { stdout, exitCode } = await runNodeScript({
+
+		const { stdout, exitCode } = await execScript({
 			cwd: tempDir,
-			scriptPath: unpackScript,
-			inputData: md,
+			input: md,
 		})
+
 		assert.strictEqual(exitCode, 0)
-		assert.match(stdout, /Summary:/, "Should display the summary header")
-		assert.match(stdout, /Version 1\.2\.3/, "Should include the summary body")
+		assert.match(stdout, /Summary:/, "Summary header should be printed")
+		assert.match(stdout, /Version 1\.2\.3/, "Summary body should be printed")
 	})
 
-	it("processes @rm command in a temporary workspace", async () => {
-		// 1️⃣ Create a file that will be removed
+	it("processes @rm command in the temporary workspace", async () => {
+		// 1️⃣ Create a file that will be removed.
 		const filePath = join(tempDir, "temp-to-delete.txt")
 		await writeFile(filePath, "will be removed", "utf-8")
 
-		// 2️⃣ Build markdown that asks the script to delete it
+		// 2️⃣ Build markdown that asks llimo‑unpack to delete it.
 		const md = buildMarkdown([{
 			filename: "@rm",
 			label: "Cleanup",
 			type: "txt",
-			content: "temp-to-delete.txt"
+			content: "temp-to-delete.txt",
 		}])
 
-		const { stdout, exitCode } = await runNodeScript({
+		const { stdout, exitCode } = await execScript({
 			cwd: tempDir,
-			scriptPath: unpackScript,
-			inputData: md,
+			input: md,
 		})
 
 		assert.strictEqual(exitCode, 0)
 		assert.match(stdout, /Removing files/, "Should announce removal")
-		assert.match(stdout, /Removed: temp-to-delete\.txt/, "Should confirm removal")
+		assert.match(stdout, /Removed: temp-to-delete\.txt/, "Should confirm successful removal")
 
-		// 3️⃣ Verify the file no longer exists
+		// 3️⃣ Verify the file no longer exists.
 		await assert.rejects(() => readFile(filePath, "utf-8"), {
-			code: "ENOENT"
-		}, "File should have been deleted")
+			code: "ENOENT",
+		}, "File must be deleted")
 	})
 
 	it("gracefully handles unknown commands", async () => {
@@ -120,36 +186,42 @@ describe("llimo‑unpack script", () => {
 			filename: "@unknown",
 			label: "Mystery",
 			type: "txt",
-			content: "some data"
+			content: "some data",
 		}])
-		const { stdout, exitCode } = await runNodeScript({
+
+		const { stdout, stderr, exitCode } = await execScript({
 			cwd: tempDir,
-			scriptPath: unpackScript,
-			inputData: md,
+			input: md,
 		})
+
 		assert.strictEqual(exitCode, 0)
-		assert.match(stdout, /Unknown command: @unknown/, "Should warn about unknown command")
-		assert.match(stdout, /Available commands:/, "Should list available commands")
+
+		// The warning is emitted via `console.error`, which goes to **stderr**.
+		assert.match(stderr, /Unknown command: @unknown/, "Should warn about unknown command")
+		assert.match(stderr, /Available commands:/, "Should list available commands")
+		// Ensure the normal progress line is still printed to stdout.
+		assert.match(stdout, /Extracting files/, "Should show the generic header")
 	})
 
 	it("honours the --dry flag (no files are written)", async () => {
 		const md = buildMarkdown([{
 			filename: "dry.txt",
-			content: "Do not persist"
+			content: "Do not persist",
 		}])
-		const { stdout, exitCode } = await runNodeScript({
+
+		const { stdout, exitCode } = await execScript({
 			cwd: tempDir,
-			scriptPath: unpackScript,
 			args: ["--dry"],
-			inputData: md,
+			input: md,
 		})
+
 		assert.strictEqual(exitCode, 0)
 		assert.match(stdout, /dry mode/, "Should announce dry mode")
-		// In dry mode the script uses the "•" marker instead of "+"
-		assert.match(stdout, /• dry\.txt/, "Should show a skip marker")
-		// Verify file does NOT exist
+		// In dry mode the script shows a "•" marker instead of "+".
+		assert.match(stdout, /• dry\.txt/, "Should display a skip marker")
+		// Verify that the file was **not** created.
 		await assert.rejects(() => readFile(join(tempDir, "dry.txt"), "utf-8"), {
-			code: "ENOENT"
+			code: "ENOENT",
 		})
 	})
 })
