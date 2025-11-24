@@ -1,4 +1,4 @@
-import { RESET, GREEN, RED } from "../../utils/ANSI.js"
+import { RESET, GREEN, RED, MAGENTA } from "../../utils/ANSI.js"
 import Command from "./Command.js"
 
 /** @typedef {import("../../FileProtocol.js").ParsedFile} ParsedFile */
@@ -40,6 +40,10 @@ export default class ValidateCommand extends Command {
 		if (JSON.stringify(realLabel) !== JSON.stringify(validateLabel)) {
 			yield ` ${RED}!${RESET} Unexpected response "${this.parsed.validate?.label}"`
 			yield `   but provided: ${realLabel.files} file(s), ${realLabel.commands} command(s)`
+			yield `   label format for @validate is:`
+			yield ` ${MAGENTA}ℹ #### [<a> file(s), <b> command(s)](@validate)${RESET}`
+			yield ` ${MAGENTA}  > <a> - amount of file(s) minus command(s)${RESET}`
+			yield ` ${MAGENTA}  > <b> - amount of commands(s) minus validate command (-1)${RESET}`
 		}
 		if (this.parsed.isValid) {
 			yield ` ${GREEN}+${RESET} Expected validation of files ${GREEN}100% valid${RESET}`
