@@ -60,10 +60,10 @@ as example:
 ## Commands
 
 ### validate
-Validate of the response by comparing provided (parsed) files and commands to expected list of files and commands
+Validate of the response by comparing provided (parsed) files and commands to expected list of files and commands. Label is amount of files provided in the response and commands besides @validate provided in the response.
 
 Example:
-#### [](@validate)
+#### [2 file(s), 1 command(s)](@validate)
 ```markdown
 - [](system.md)
 - [Updated](play/main.js)

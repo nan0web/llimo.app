@@ -3,6 +3,7 @@ import FileSystem from "../../utils/FileSystem.js"
 
 export default class Command {
 	static help = "Command description for user"
+	static label = ""
 	static example = "The example of the content of the command response ```bash\npnpm install\n```"
 	/** @type {string} */
 	cwd = ""

@@ -39,7 +39,7 @@ async function main(argv = process.argv.slice(2)) {
 
 	const list = Array.from(commands.keys()).join(", ")
 	const md = Array.from(commands.values()).map(
-		Command => `### ${Command.name}\n${Command.help}\n\nExample:\n#### [](@${Command.name})\n${Command.example}`
+		Command => `### ${Command.name}\n${Command.help}\n\nExample:\n#### [${Command.label}](@${Command.name})\n${Command.example}`
 	).join("\n\n")
 
 	const output = template.replaceAll("<!--TOOLS_LIST-->", list).replaceAll("<!--TOOLS_MD-->", md)
