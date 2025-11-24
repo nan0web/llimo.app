@@ -1,7 +1,7 @@
 import Command from "./Command.js"
 import micromatch from "micromatch"
 import { promises as fs } from "node:fs"
-import { resolve } from "node:path"
+import { resolve, relative } from "node:path"
 
 /** @typedef {import("../../FileProtocol.js").ParsedFile} ParsedFile */
 
@@ -12,9 +12,7 @@ import { resolve } from "node:path"
  * The label part of the markdown reference can contain **minus patterns**
  * separated by semicolons, e.g.:
  *
- *   - [-**\/*.test.js;-**\/*.test.jsx](src/**)
- *
- * Due to the javascript comments \/ must be changed to / in real code.
+ *   - [-**\/*.test.js;-**\/*.test.jsx](@get)
  *
  * Positive part (the path inside parentheses) is the base glob.
  * Negative patterns (prefixed with `-`) are applied to filter the result.
@@ -41,7 +39,6 @@ export default class GetFilesCommand extends Command {
 	/**
 	 * Parse a label like `[-**\/*.test.js;-**\/*.test.jsx]` into an array
 	 * of negative glob patterns.
-	 * Due to the javascript comments \/ must be changed to / in real code.
 	 *
 	 * @param {string} label
 	 * @returns {string[]}
@@ -55,45 +52,71 @@ export default class GetFilesCommand extends Command {
 			.map((s) => s.slice(1))
 	}
 
-	async _recursiveList(dir = this.cwd) {
+	/**
+	 * Recursively list all files in a directory, respecting ignore patterns
+	 * @param {string} dir - Directory to scan (absolute path)
+	 * @param {string[]} ignorePatterns - Patterns to ignore
+	 * @returns {Promise<string[]>} - Array of relative file paths
+	 */
+	async _recursiveList(dir = this.cwd, ignorePatterns = []) {
 		const entries = await fs.readdir(dir, { withFileTypes: true })
 		const files = []
+
 		for (const entry of entries) {
-			const full = resolve(dir, entry.name)
+			const fullPath = resolve(dir, entry.name)
+			const relPath = relative(this.cwd, fullPath)
+
+			// Check if this path matches any ignore pattern
+			if (ignorePatterns.length > 0 && micromatch.isMatch(relPath, ignorePatterns, { dot: true })) {
+				continue
+			}
+
 			if (entry.isDirectory()) {
-				files.push(...(await this._recursiveList(full)))
+				// Recurse into subdirectories
+				files.push(...(await this._recursiveList(fullPath, ignorePatterns)))
 			} else if (entry.isFile()) {
-				files.push(full)
+				files.push(relPath)
 			}
 		}
 		return files
-	}
-
-	async _listFiles(baseGlob) {
-		const all = await this._recursiveList()
-		const matches = micromatch(all, baseGlob, { dot: true })
-		return matches.map((abs) => this.fs.path.relative(this.cwd, abs))
 	}
 
 	async * run() {
 		const file = this.parsed.correct?.find((f) => f.filename === "@get")
 		if (!file) return
 
-		// Extract user‑provided negative patterns.
+		// Extract user-provided negative patterns from label
 		const userNegatives = this._negativePatterns(file.label || "")
 
-		// Default ignores – always applied.
+		// Default ignores – always applied unless overridden
 		const defaultNegatives = [".git/**", "node_modules/**"]
 
+		// Combine all negative patterns
 		const negatives = [...defaultNegatives, ...userNegatives]
 
-		const baseGlob = (file.content ?? "**/*").trim()
+		// Parse content - can be multiple lines with different patterns
+		const patterns = (file.content ?? "**/*")
+			.trim()
+			.split("\n")
+			.map(p => p.trim())
+			.filter(Boolean)
 
-		const all = await this._listFiles(baseGlob)
-		const filtered = negatives.length ? micromatch.not(all, negatives) : all
+		// Get all files (with ignore patterns applied)
+		const allFiles = await this._recursiveList(this.cwd, negatives)
 
-		for (const relPath of filtered) {
-			// Emit a checklist entry; empty label means default `[]`.
+		// Apply positive patterns to filter the results
+		let matched = []
+		if (patterns.includes("**/*") || patterns.length === 0) {
+			matched = allFiles
+		} else {
+			matched = micromatch(allFiles, patterns, { dot: true })
+		}
+
+		// Sort for consistent output
+		matched.sort()
+
+		// Emit checklist entries
+		for (const relPath of matched) {
 			yield `- [](${relPath})`
 		}
 	}
