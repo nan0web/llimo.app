@@ -101,7 +101,7 @@ export async function packMarkdown(
 					const filename = name || path.basename(relativePath)
 					const size = Buffer.byteLength(content)
 					const type = path.extname(relativePath).slice(1) || "txt"
-					injected.push(`${line} ${ITALIC}${format(size)} bytes${RESET}`)
+					injected.push(`  - ${relativePath} ${ITALIC}${format(size)} bytes${RESET}`)
 					output.push(`#### [${filename}](${relativePath})`)
 					output.push(`\`\`\`${type}`)
 					output.push(content)

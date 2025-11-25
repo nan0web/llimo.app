@@ -7,6 +7,7 @@ import FileSystem from './FileSystem.js'
 
 describe('FileSystem.browse', () => {
 	let tempDir
+	/** @type {FileSystem} */
 	let fileSystem
 
 	before(async () => {
@@ -43,7 +44,7 @@ describe('FileSystem.browse', () => {
 
 	it('should list top-level entries when not recursive', async () => {
 		const results = await fileSystem.browse('.', { recursive: false })
-		const expected = ['file1.txt', 'dir1', 'node_modules', 'dir2', 'test.js', 'test.ts', '.git', 'dist']
+		const expected = ['file1.txt', 'dir1/', 'node_modules/', 'dir2/', 'test.js', 'test.ts', '.git/', 'dist/']
 		assert.deepStrictEqual(results.sort(), expected.sort())
 	})
 
@@ -51,19 +52,19 @@ describe('FileSystem.browse', () => {
 		const results = await fileSystem.browse('.', { recursive: true })
 		const expected = [
 			'file1.txt',
-			'dir1',
+			'dir1/',
 			'dir1/file2.txt',
-			'node_modules',
-			'node_modules/some-package',
+			'node_modules/',
+			'node_modules/some-package/',
 			'node_modules/some-package/index.js',
-			'dir2',
-			'dir2/subdir',
+			'dir2/',
+			'dir2/subdir/',
 			'dir2/subdir/file3.txt',
 			'test.js',
 			'test.ts',
-			'.git',
+			'.git/',
 			'.git/config',
-			'dist',
+			'dist/',
 			'dist/bundle.js'
 		]
 		assert.deepStrictEqual(results.sort(), expected.sort())
@@ -73,13 +74,13 @@ describe('FileSystem.browse', () => {
 		const results = await fileSystem.browse('.', { recursive: true, ignore: ['node_modules', 'dir2'] })
 		const expected = [
 			'file1.txt',
-			'dir1',
+			'dir1/',
 			'dir1/file2.txt',
 			'test.js',
 			'test.ts',
-			'.git',
+			'.git/',
 			'.git/config',
-			'dist',
+			'dist/',
 			'dist/bundle.js'
 		]
 		assert.deepStrictEqual(results.sort(), expected.sort())
@@ -112,10 +113,10 @@ describe('FileSystem.browse', () => {
 		})
 		const expected = [
 			'file1.txt',
-			'dir1',
+			'dir1/',
 			'dir1/file2.txt',
-			'dir2',
-			'dir2/subdir',
+			'dir2/',
+			'dir2/subdir/',
 			'dir2/subdir/file3.txt',
 			'test.ts'
 		]
@@ -126,12 +127,12 @@ describe('FileSystem.browse', () => {
 		const results = await fileSystem.browse('.', { recursive: true, ignore: ['dir*', '.*'] })
 		const expected = [
 			'file1.txt',
-			'node_modules',
-			'node_modules/some-package',
+			'node_modules/',
+			'node_modules/some-package/',
 			'node_modules/some-package/index.js',
 			'test.js',
 			'test.ts',
-			'dist',
+			'dist/',
 			'dist/bundle.js'
 		]
 		assert.deepStrictEqual(results.sort(), expected.sort())
@@ -144,14 +145,14 @@ describe('FileSystem.browse', () => {
 		})
 		const expected = [
 			'file1.txt',
-			'dir1',
+			'dir1/',
 			'dir1/file2.txt',
-			'node_modules',
-			'node_modules/some-package',
+			'node_modules/',
+			'node_modules/some-package/',
 			'node_modules/some-package/index.js',
-			'dir2',
-			'dir2/subdir',
-			'.git',
+			'dir2/',
+			'dir2/subdir/',
+			'.git/',
 			'.git/config'
 		]
 		assert.deepStrictEqual(results.sort(), expected.sort())

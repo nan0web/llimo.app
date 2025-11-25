@@ -1,4 +1,6 @@
+import micromatch from "micromatch"
 import Command from "./Command.js"
+import { FileSystem, Path } from "../../utils.js"
 
 /** @typedef {import("../../FileProtocol.js").ParsedFile} ParsedFile */
 
@@ -9,6 +11,9 @@ export default class ListFilesCommand extends Command {
 
 	/** @type {ParsedFile} */
 	parsed = {}
+	/** @type {FileSystem} */
+	#fs
+
 	/**
 	 * @param {Partial<ListFilesCommand>} [input={}]
 	 */
@@ -18,11 +23,35 @@ export default class ListFilesCommand extends Command {
 			parsed = this.parsed,
 		} = input
 		this.parsed = parsed
+		this.#fs = new FileSystem({ cwd: this.cwd })
 	}
+
 	async * run() {
 		const file = this.parsed.correct?.filter(file => "@ls" === file.filename)[0]
-		const target = String(file?.content || ".").trim()
-		this.cwd
-		// @todo list files relative to this.cwd + target and yield every file
+		const patterns = String(file?.content || ".").trim().split("\n").map(p => p.trim()).filter(Boolean)
+
+		const allFiles = await this.#getAllFiles(this.cwd)
+		let matched = []
+		if (patterns.length === 0 || (patterns.length === 1 && patterns[0] === '.')) {
+			matched = allFiles
+		} else {
+			matched = micromatch(allFiles, patterns, { dot: true })
+		}
+
+		matched.sort()
+		for (const relPath of matched) {
+			if (!relPath.endsWith("/")) {
+				yield relPath
+			}
+		}
+	}
+
+	/**
+	 * Recursively list all files in a directory
+	 * @param {string} dir - Directory to scan (absolute path)
+	 * @returns {Promise<string[]>} - Array of relative file paths
+	 */
+	async #getAllFiles(dir = this.cwd, ignore = ['.git', 'node_modules']) {
+		return await this.#fs.browse(dir, { recursive: true, ignore })
 	}
 }

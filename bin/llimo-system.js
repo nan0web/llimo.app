@@ -9,52 +9,34 @@
  */
 
 import process from "node:process"
-import { FileSystem, Path, GREEN, RESET, ITALIC } from "../src/utils.js"
-import commands from "../src/llm/commands/index.js"
-import loadSystemInstructions from "../src/templates/system.js"
+import { generateSystemPrompt } from "../src/llm/system.js"
+import { GREEN, RESET, ITALIC } from "../utils/ANSI.js"
+import { FileSystem } from "../src/utils.js"
 
 /**
  * Main entry point.
  */
 async function main(argv = process.argv.slice(2)) {
-	const fs = new FileSystem()
-	const pathUtil = new Path()
-
-	// Read the template file
-	const template = await loadSystemInstructions()
-	if (!template) {
-		console.error(`❌ Cannot read template file: ${error.message}`)
-		process.exit(1)
-	}
-
 	let outputPath = undefined
-
-	// Parse arguments - first argument is output file if provided
+	const fs = new FileSystem()
 	if (argv.length > 0) {
-		outputPath = pathUtil.resolve(process.cwd(), argv[0])
+		outputPath = fs.path.resolve(process.cwd(), argv[0])
 	}
 
-	// Generate tools list and documentation
-	const list = Array.from(commands.keys()).join(", ")
-	const md = Array.from(commands.values()).map(
-		Command => `### ${Command.name}\n${Command.help}\n\n`
-			+ `Example:\n#### [${Command.label || ""}](@${Command.name})\n${Command.example}`
-	).join("\n\n")
+	try {
+		const output = await generateSystemPrompt(outputPath)
 
-	// Replace placeholders in template
-	const output = template
-		.replaceAll("<!--TOOLS_LIST-->", list)
-		.replaceAll("<!--TOOLS_MD-->", md)
-
-	// Write output
-	if (outputPath) {
-		const format = new Intl.NumberFormat("en-US").format
-		await fs.writeFile(outputPath, output)
-		const stats = await fs.stat(outputPath)
-		console.info(` ${GREEN}+${RESET} File has been saved (${ITALIC}${format(stats.size)} bytes${RESET})`)
-		console.info(` ${GREEN}+ ${outputPath}${RESET}`)
-	} else {
-		console.info(output)
+		if (outputPath) {
+			const stats = await fs.stat(outputPath)
+			const format = new Intl.NumberFormat("en-US").format
+			console.info(` ${GREEN}+${RESET} File has been saved (${ITALIC}${format(stats.size)} bytes${RESET})`)
+			console.info(` ${GREEN}+ ${outputPath}${RESET}`)
+		} else {
+			console.info(output)
+		}
+	} catch (error) {
+		console.error(`❌ Cannot generate system prompt: ${error.message}`)
+		process.exit(1)
 	}
 }
 

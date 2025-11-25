@@ -7,7 +7,7 @@ import process from 'node:process'
 import Path from './Path.js'
 import { Stream } from 'node:stream'
 import { Stats } from 'node:fs'
-import minimatch from 'minimatch'
+import { minimatch } from 'minimatch'
 
 /**
  * @typedef {import('node:fs').Mode | import('node:fs').MakeDirectoryOptions | null} MkDirOptions
@@ -129,9 +129,11 @@ export default class FileSystem {
 	 * @returns {boolean} True if path should be ignored
 	 */
 	#shouldIgnore(path, dir, patterns) {
+		if (patterns.includes(path)) return true
+		const full = this.path.resolve(dir, path)
+		if (patterns.includes(full)) return true
 		return patterns.some(p => {
-			const full = this.path.resolve(dir, path)
-			return patterns.includes(path) || minimatch(full, p, { dot: true })
+			return minimatch(full, p, { dot: true })
 		})
 	}
 
@@ -149,6 +151,11 @@ export default class FileSystem {
 		const startPath = this.path.resolve(path)
 		const results = []
 
+		/**
+		 * @param {string} dir
+		 * @param {string} dirPathRelative
+		 * @returns {Promise<void>}
+		 */
 		const _traverse = async (dir, dirPathRelative = '.') => {
 			let entries
 			try {
@@ -169,7 +176,8 @@ export default class FileSystem {
 
 			for (const entry of entries) {
 				const fullPath = this.path.resolve(dir, entry.name)
-				const rel = this.path.relative(startPath, fullPath)
+				let rel = this.path.relative(startPath, fullPath)
+				if (entry.isDirectory()) rel += "/"
 
 				if (!this.#shouldIgnore(rel, dir, ignore)) {
 					results.push(rel)
@@ -177,7 +185,7 @@ export default class FileSystem {
 
 				if (entry.isDirectory() && recursive) {
 					const dirRel = this.path.relative(startPath, fullPath)
-					if (!this.#shouldIgnore(dirRel, dir, ignore) && !ignore.some(pattern => minimatch(dirRel, pattern, { dot: true }))) {
+					if (!this.#shouldIgnore(dirRel, dir, ignore)) {
 						await _traverse(fullPath, dirRel)
 					}
 				}
