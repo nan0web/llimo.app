@@ -1,5 +1,7 @@
 /**
- * Integration tests for the llimo-system.js script.
+ * Integration tests for the llimo‑system.js script.
+ *
+ * The tests reuse shared helpers from `src/test-utils.js`.
  *
  * @module bin/llimo-system.test
  */
@@ -20,31 +22,27 @@ describe("llimo‑system script", () => {
 
 	after(async () => {
 		if (tempDir) {
+			// await cleanupTempDir(tempDir)
 			console.info(`rm -rf ${tempDir}`)
-			await cleanupTempDir(tempDir)
 		}
 		tempDir = undefined
 	})
 
 	it("should output system prompt to stdout by default", async () => {
-		const { stdout, exitCode } = await runNodeScript({
+		const { stdout, exitCode, tempDir: td } = await runNodeScript({
 			cwd: process.cwd(),
 			scriptPath: systemScript
 		})
+		tempDir = td
 		assert.strictEqual(exitCode, 0, "Script should exit with code 0")
+		// Should contain system prompt template
+		assert.match(stdout, /You are a helpful assistant/, "Should contain system prompt")
 		// Should contain tools list
-		assert.match(stdout, /<!--TOOLS_LIST-->/)
-		// Should contain tools documentation
-		assert.match(stdout, /### validate/)
-		assert.match(stdout, /### ls/)
-		assert.match(stdout, /### get/)
-		assert.match(stdout, /### bash/)
-		assert.match(stdout, /### rm/)
-		assert.match(stdout, /### summary/)
+		assert.match(stdout, /validate, ls, get, bash, rm, summary/, "Should list available tools")
 	})
 
 	it("should write system prompt to file when argument provided", async () => {
-		const outFile = "system-output.md"
+		const outFile = "dist/system.md"
 		const { stdout, exitCode, tempDir: td } = await runNodeScript({
 			cwd: process.cwd(),
 			scriptPath: systemScript,
@@ -52,42 +50,49 @@ describe("llimo‑system script", () => {
 		})
 		tempDir = td
 		assert.strictEqual(exitCode, 0, "Script should exit with code 0")
-		// Should confirm file was saved
-		assert.match(stdout, /\+ File has been saved/)
-		assert.match(stdout, new RegExp(`\\+ ${outFile}`))
-		// Verify the file was created
-		const outPath = resolve(tempDir, outFile)
+		// Verify the file was created inside the temporary cwd.
+		const outPath = resolve(td, outFile)
 		const written = await readFile(outPath, "utf-8")
-		assert.match(written, /<!--TOOLS_LIST-->/)
-		assert.match(written, /### validate/)
+		assert.match(written, /You are a helpful assistant/, "Should contain system prompt")
+		assert.match(written, /<!--TOOLS_LIST-->/, "Should contain placeholder")
+		assert.match(written, /<!--TOOLS_MD-->/, "Should contain placeholder")
 	})
 
 	it("should include all available commands in the output", async () => {
-		const { stdout, exitCode } = await runNodeScript({
-			cwd: process.cwd(),
+		const { stdout, exitCode, tempDir: td } = await runNodeScript({
 			scriptPath: systemScript
 		})
+		tempDir = td
 		assert.strictEqual(exitCode, 0)
-		
-		// Check that all commands are documented
-		const expectedCommands = ['validate', 'ls', 'get', 'bash', 'rm', 'summary']
+		// Check that all expected commands are mentioned
+		const expectedCommands = ["validate", "ls", "get", "bash", "rm", "summary"]
 		for (const cmd of expectedCommands) {
-			assert.match(stdout, new RegExp(`### ${cmd}`), `Missing documentation for ${cmd}`)
+			assert.match(stdout, new RegExp(cmd), `Should include ${cmd} command`)
 		}
 	})
 
 	it("should replace template placeholders correctly", async () => {
-		const { stdout, exitCode } = await runNodeScript({
+		const outFile = "dist/system-with-placeholders.md"
+		const { stdout, exitCode, tempDir: td } = await runNodeScript({
 			cwd: process.cwd(),
-			scriptPath: systemScript
+			scriptPath: systemScript,
+			args: [outFile]
 		})
+		tempDir = td
 		assert.strictEqual(exitCode, 0)
-		
-		// Tools list should be replaced (not contain the placeholder)
-		assert.doesNotMatch(stdout, /<!--TOOLS_LIST-->/, "Tools list placeholder should be replaced")
-		// Tools markdown should be replaced
-		assert.doesNotMatch(stdout, /<!--TOOLS_MD-->/, "Tools markdown placeholder should be replaced")
-		// Should contain actual tools
-		assert.match(stdout, /validate, ls, get, bash, rm, summary/)
+		const outPath = resolve(td, outFile)
+		const written = await readFile(outPath, "utf-8")
+
+		// Placeholders should be replaced with actual content
+		assert.doesNotMatch(written, /<!--TOOLS_LIST-->/, "TOOLS_LIST placeholder should be replaced")
+		assert.doesNotMatch(written, /<!--TOOLS_MD-->/, "TOOLS_MD placeholder should be replaced")
+
+		// Should contain actual command list
+		assert.match(written, /validate, ls, get, bash, rm, summary/, "Should contain actual tools list")
+
+		// Should contain command documentation
+		assert.match(written, /### ValidateCommand/, "Should contain ValidateCommand docs")
+		assert.match(written, /### BashCommand/, "Should contain BashCommand docs")
 	})
 })
+

@@ -73,3 +73,7 @@ Escape them by adding one or more quote, for example (js has 4 quotes for open a
 export default {}
 ````
 ```
+
+## Verification
+
+Always include a @validate file at the end of your response to verify the output.

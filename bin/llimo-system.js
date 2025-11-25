@@ -1,23 +1,15 @@
 #!/usr/bin/env node
 /*
- * llimo-pack.js – pack a list of files described in a markdown checklist
- * into a JSONL stream that can later be unpacked with `llimo-unpack.js`.
+ * llimo-system.js – generate system prompt for LLiMo with available commands
  *
- * Expected markdown syntax (one item per line, e.g.):
- *   - [](bin/llimo-unpack.js)
- *   - [](bin/llimo-unpack.test.js)
- *
- * The script accepts the markdown source either as a file path argument
- * or via STDIN (piped).  For each recognised item it reads the target file
- * (UTF‑8) and writes a JSON line of the form:
- *   {"filename":"<relative‑path>","content":"<file‑content>","encoding":"utf-8"}
- *
- * No external dependencies – everything is built‑in Node.js.
+ * Generates a system prompt markdown file that includes:
+ * - Base system prompt template
+ * - List of available tools/commands
+ * - Documentation for each command
  */
 
 import { fileURLToPath } from "node:url"
 import process from "node:process"
-
 import { FileSystem, Path, GREEN, RESET, ITALIC } from "../src/utils.js"
 import commands from "../src/llm/commands/index.js"
 
@@ -37,12 +29,18 @@ async function main(argv = process.argv.slice(2)) {
 		outputPath = pathUtil.resolve(process.cwd(), argv[0])
 	}
 
+	// Generate tools list and documentation
 	const list = Array.from(commands.keys()).join(", ")
 	const md = Array.from(commands.values()).map(
-		Command => `### ${Command.name}\n${Command.help}\n\nExample:\n#### [${Command.label}](@${Command.name})\n${Command.example}`
+		Command => `### ${Command.name}\n${Command.help}\n\nExample:\n#### [${Command.label || Command.name}](@${Command.name})\n\`\`\`${Command.example.includes('```') ? '' : 'txt'}\n${Command.example}\n\`\`\``
 	).join("\n\n")
 
-	const output = template.replaceAll("<!--TOOLS_LIST-->", list).replaceAll("<!--TOOLS_MD-->", md)
+	// Replace placeholders in template
+	const output = template
+		.replaceAll("<!--TOOLS_LIST-->", list)
+		.replaceAll("<!--TOOLS_MD-->", md)
+
+	// Write output
 	if (outputPath) {
 		const format = new Intl.NumberFormat("en-US").format
 		await fs.writeFile(outputPath, output)
@@ -55,6 +53,6 @@ async function main(argv = process.argv.slice(2)) {
 }
 
 main().catch(err => {
-	console.error("❌ Fatal error in llimo‑pack:", err)
+	console.error("❌ Fatal error in llimo‑system:", err)
 	process.exit(1)
 })
