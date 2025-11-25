@@ -1,66 +1,65 @@
-import { spawn } from 'node:child_process'
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { dirname } from 'node:path'
+/**
+ * Test utilities for running Node.js scripts in isolated environments.
+ */
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+import { spawn } from "node:child_process"
+import { mkdtemp, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { randomUUID } from "node:crypto"
 
 /**
- * Runs a Node.js script with optional input and arguments.
+ * Execute a Node.js script in a temporary directory.
+ *
  * @param {Object} options
- * @param {string} options.scriptPath - Path to the script.
- * @param {string} [options.inputData] - Data to pipe to stdin.
- * @param {string[]} [options.args] - Arguments to pass.
- * @param {string} [options.cwd] - Working directory.
- * @param {string} [options.tempDir] - Temp dir to use as cwd.
- * @returns {Promise<{stdout: string, stderr: string, exitCode: number, tempDir: string}>}
+ * @param {string} options.scriptPath - Path to the script to execute
+ * @param {string[]} [options.args=[]] - Arguments to pass to the script
+ * @param {string} [options.inputData] - Data to pipe to stdin
+ * @param {string} [options.cwd] - Working directory (defaults to temp dir)
+ * @returns {Promise<{ stdout:string, stderr:string, exitCode:number, tempDir:string }>}
  */
-export async function runNodeScript({ scriptPath, inputData, args = [], cwd, tempDir }) {
-	const workingDir = cwd ?? tempDir ?? await mkdtemp(resolve(tmpdir(), 'llimo-test-'))
+export async function runNodeScript(options) {
+	const { scriptPath, args = [], inputData, cwd } = options
 
-	if (inputData && !args.includes('prompt.md')) {
-		try {
-			await rm(resolve(workingDir, 'prompt.md'))
-		} catch {}
-	} else {
-		const promptPath = resolve(workingDir, 'prompt.md')
-		await writeFile(promptPath, inputData || '')
-	}
+	// Create temporary directory if not provided
+	const tempDir = cwd || await mkdtemp(join(tmpdir(), `llimo-test-${randomUUID().slice(0, 8)}-`))
 
-	const child = spawn('node', [scriptPath, ...args], {
-		cwd: cwd ?? workingDir,
-		stdio: ['pipe', 'pipe', 'pipe'],
-		env: { ...process.env, NODE_ENV: 'test' }
-	})
+	return new Promise((resolve, reject) => {
+		const child = spawn(process.execPath, [scriptPath, ...args], {
+			cwd: tempDir,
+			stdio: ["pipe", "pipe", "pipe"],
+			env: {
+				...process.env,
+				NODE_OPTIONS: "--import=tsx/node"
+			}
+		})
 
-	let stdout = ''
-	let stderr = ''
+		let stdout = ""
+		let stderr = ""
 
-	child.stdout.on('data', (data) => stdout += data.toString())
-	child.stderr.on('data', (data) => stderr += data.toString())
+		child.stdout.on("data", (d) => (stdout += d))
+		child.stderr.on("data", (d) => (stderr += d))
 
-	if (inputData) {
-		child.stdin.write(inputData)
+		child.on("close", (code) => {
+			resolve({ stdout, stderr, exitCode: code || 0, tempDir })
+		})
+
+		child.on("error", reject)
+
+		if (inputData) {
+			child.stdin.write(inputData)
+		}
 		child.stdin.end()
-	}
-
-	const exitCode = await new Promise((resolve) => child.on('close', resolve))
-
-	if (!tempDir) {
-		await rm(workingDir, { recursive: true, force: true })
-	}
-
-	return { stdout: stdout.trim(), stderr: stderr.trim(), exitCode, tempDir: workingDir }
+	})
 }
 
 /**
- * Cleans up a temporary directory.
- * @param {string} tempDir
+ * Clean up a temporary directory.
+ *
+ * @param {string} dir - Directory to remove
  */
-export async function cleanupTempDir(tempDir) {
-	if (tempDir) {
-		await rm(tempDir, { recursive: true, force: true })
+export async function cleanupTempDir(dir) {
+	if (dir) {
+		await rm(dir, { recursive: true, force: true })
 	}
 }

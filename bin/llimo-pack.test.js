@@ -39,18 +39,21 @@ describe("llimo‑pack script", () => {
 	let tempDir
 
 	after(async () => {
-		// await cleanupTempDir(tempDir)
-		console.info(`rm -rf ${tempDir}`)
+		if (tempDir) {
+			await cleanupTempDir(tempDir)
+			console.info(`rm -rf ${tempDir}`)
+		}
 		tempDir = undefined
 	})
 
 	it("should pack a single file from stdin markdown", async () => {
 		const markdown = buildMarkdownChecklist(["bin/llimo-pack.js"])
-		const { stdout, exitCode } = await runNodeScript({
+		const { stdout, exitCode, tempDir: td } = await runNodeScript({
 			cwd: process.cwd(),
 			scriptPath: packScript,
 			inputData: markdown
 		})
+		tempDir = td
 		assert.strictEqual(exitCode, 0, "Script should exit with code 0")
 		// Expected output fragment – header line and fenced code block.
 		assert.match(stdout, /#### \[llimo-pack.js\]\(bin\/llimo-pack.js\)/)
@@ -139,11 +142,12 @@ describe("llimo‑pack script", () => {
 			"does-not-exist.txt",
 			"bin/llimo-unpack.js"
 		])
-		const { stdout, exitCode } = await runNodeScript({
+		const { stdout, exitCode, tempDir: td } = await runNodeScript({
 			cwd: process.cwd(),
 			scriptPath: packScript,
 			inputData: markdown
 		})
+		tempDir = td
 		// The script never aborts – it should exit with 0 even if one file fails.
 		assert.strictEqual(exitCode, 0)
 		// Error message should be present in stdout (the script prints errors via console.error).

@@ -7,6 +7,7 @@
 	"scripts": {
 		"build": "tsc",
 		"test": "node --test --test-timeout=3333 'src/**/*.test.js'",
+		"test:all": "npm run test && npm run build",
 		"prepare": "husky"
 	},
 	"keywords": [],
@@ -16,5 +17,13 @@
 	"devDependencies": {
 		"husky": "^9.1.7",
 		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"@ai-sdk/cerebras": "^1.0.31",
+		"@ai-sdk/huggingface": "^0.0.10",
+		"@ai-sdk/openai": "^2.0.72",
+		"@openrouter/ai-sdk-provider": "^1.2.5",
+		"ai": "^5.0.101",
+		"micromatch": "^4.0.8"
 	}
 }
