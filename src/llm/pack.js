@@ -16,18 +16,20 @@ const format = no => {
 
 /**
  * Packs files into a single markdown string based on a checklist.
- * @param {string} markdownInput - The markdown string containing the checklist.
- * @param {string} [cwd] - The current working directory to resolve files from.
- * @param {(dir: string, entries: string[]) => Promise<void>} [onRead] Callback for each directory read.
- * @param {string[]} [ignore=[]] An array of directory names to ignore.
+ * @param {Object} options
+ * @param {string} [options.input] - The markdown string containing the checklist.
+ * @param {string} [options.cwd] - The current working directory to resolve files from.
+ * @param {(dir: string, entries: string[]) => Promise<void>} [options.onRead] Callback for each directory read.
+ * @param {string[]} [options.ignore=[]] An array of directory names to ignore.
  * @returns {Promise<{ text: string, injected: string[], errors: string[] }>} - The generated markdown string with packed files.
  */
-export async function packMarkdown(
-	markdownInput, cwd = process.cwd(), onRead = undefined, ignore = [".git", "node_modules"]
-) {
+export async function packMarkdown(options = {}) {
+	const {
+		input = "", cwd = process.cwd(), onRead = undefined, ignore = [".git", "node_modules"]
+	}	= options
 	const fs = new FileSystem({ cwd })
 	const path = fs.path
-	const lines = markdownInput.split("\n")
+	const lines = input.split("\n")
 	const output = []
 	const injected = []
 	const errors = []
@@ -149,7 +151,7 @@ export async function main(argv = process.argv.slice(2)) {
 	}
 
 	const outputPath = argv.length > 1 ? path.resolve(argv[1]) : null
-	const { text, injected, errors } = await packMarkdown(inputData)
+	const { text, injected, errors } = await packMarkdown({ input: inputData })
 
 	if (outputPath) {
 		await fs.writeFile(outputPath, text)

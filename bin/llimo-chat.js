@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import process from "node:process"
 import { spawn } from "node:child_process"
-import { FileSystem, Path } from "../src/utils.js"
+import { FileSystem, GREEN, Path, RESET, YELLOW } from "../src/utils.js"
 import AI from "../src/utils/AI.js"
 import Git from "../src/utils/Git.js"
 import Chat from "../src/utils/Chat.js"
@@ -37,9 +37,21 @@ async function main(argv = process.argv.slice(2)) {
 	}
 
 	// 2. Initialize chat
-	const chat = new Chat()
+	const root = "chat"
+	const currentFile = root + "/current"
+	let id
+	if (await fs.exists(currentFile)) {
+		id = await fs.load(currentFile) || undefined
+	}
+	const chat = new Chat({ id, root })
 	await chat.init()
-	console.info(`> no chat history found, creating new chat (${chat.id})`)
+	if (id === chat.id) {
+		console.info(`${GREEN}+ ${chat.id}${RESET} chat loaded`)
+	} else {
+		console.info(`${YELLOW}- no chat history found${RESET}`)
+		console.info(`${GREEN}+ ${chat.id}${RESET} new chat created`)
+	}
+	await fs.save(currentFile, chat.id)
 
 	// 3. Prepare input file
 	if (inputFile) {
@@ -52,15 +64,16 @@ async function main(argv = process.argv.slice(2)) {
 	}
 
 	// 4. Pack input into prompt.md
-	const packedPrompt = await packMarkdown(inputData, chat.dir)
+	const { text: packedPrompt, injected } = await packMarkdown({ input: inputData })
+	// NOTE: previously the whole object was passed to savePrompt, causing a TypeError.
+	// We now correctly save only the markdown string.
 	await chat.savePrompt(packedPrompt)
 	const promptPath = path.resolve(chat.dir, "prompt.md")
 	console.info(`node bin/llimo-pack.js ${path.basename(inputFile) || 'stdin'} chat/${chat.id}/prompt.md`)
 	console.info(`+ prompt.md (${promptPath})`)
 	const stats = await fs.stat(promptPath)
 	const format = new Intl.NumberFormat("en-US").format
-	console.info(`  injected ${packedPrompt.split("#### [").length - 1} file(s).`)
-	console.info(`  Prompt size: ${format(stats.size)} bytes — ${packedPrompt.split("#### [").length - 1} file(s).`)
+	console.info(`  Prompt size: ${format(stats.size)} bytes — ${injected.length} file(s).`)
 
 	// 5. Chat loop
 	let step = 1

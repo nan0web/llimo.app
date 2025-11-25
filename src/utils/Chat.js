@@ -1,6 +1,5 @@
 import { randomUUID } from "node:crypto"
 import FileSystem from "./FileSystem.js"
-import Path from "./Path.js"
 
 /**
  * Manages chat history and files
