@@ -157,11 +157,11 @@ async function main(argv = process.argv.slice(2)) {
 			if (!isDry) {
 				await fs.save(absPath, text, encoding)
 			}
-			const name = label && !filename.includes(label) ? `[${MAGENTA}${label}${RESET}](${filename})` : filename
+			const suffix = label && !filename.includes(label) ? `— ${MAGENTA}${label}${RESET}` : ""
 			const size = Buffer.byteLength(text)
 			const SAVE = `${GREEN}+`
 			const SKIP = `${YELLOW}•`
-			console.info(` ${isDry ? SKIP : SAVE}${RESET} ${name} (${ITALIC}${format(size)} bytes${RESET})`)
+			console.info(` ${isDry ? SKIP : SAVE}${RESET} ${filename} (${ITALIC}${format(size)} bytes${RESET}) ${suffix}`)
 		}
 	}
 
