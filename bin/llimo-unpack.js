@@ -11,7 +11,7 @@
 import process from "node:process"
 import { Readable } from "node:stream"
 
-import { GREEN, RED, RESET, ITALIC, YELLOW, BOLD } from "../src/utils/ANSI.js"
+import { GREEN, RED, RESET, ITALIC, YELLOW, BOLD, MAGENTA } from "../src/utils/ANSI.js"
 import { FileSystem, Path, ReadLine } from "../src/utils.js"
 import Markdown from "../src/utils/Markdown.js"
 import commands from "../src/llm/commands/index.js"
@@ -131,7 +131,7 @@ async function main(argv = process.argv.slice(2)) {
 	console.info(`Extracting files ${isDry ? `${YELLOW}(dry mode, no real saving)` : ''}`)
 
 	for (const file of correct) {
-		const { filename = "", content = "", encoding = "utf-8" } = file
+		const { filename = "", label = "", content = "", encoding = "utf-8" } = file
 		const text = String(content)
 		if (filename.startsWith("@")) {
 			const command = filename.slice(1)
@@ -157,10 +157,11 @@ async function main(argv = process.argv.slice(2)) {
 			if (!isDry) {
 				await fs.save(absPath, text, encoding)
 			}
+			const name = label && !filename.includes(label) ? `[${MAGENTA}${label}${RESET}](${filename})` : filename
 			const size = Buffer.byteLength(text)
 			const SAVE = `${GREEN}+`
 			const SKIP = `${YELLOW}•`
-			console.info(` ${isDry ? SKIP : SAVE}${RESET} ${filename} (${ITALIC}${format(size)} bytes${RESET})`)
+			console.info(` ${isDry ? SKIP : SAVE}${RESET} ${name} (${ITALIC}${format(size)} bytes${RESET})`)
 		}
 	}
 
