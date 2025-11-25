@@ -3,11 +3,12 @@
  */
 import fs from 'node:fs/promises'
 import process from 'node:process'
-
-import Path from './Path.js'
 import { Stream } from 'node:stream'
 import { Stats } from 'node:fs'
-import { minimatch } from 'minimatch'
+
+import micromatch from 'micromatch'
+
+import Path from './Path.js'
 
 /**
  * @typedef {import('node:fs').Mode | import('node:fs').MakeDirectoryOptions | null} MkDirOptions
@@ -122,19 +123,45 @@ export default class FileSystem {
 	}
 
 	/**
+	 * Normalise a path for pattern matching – strip trailing slashes.
+	 * @param {string} p
+	 * @returns {string}
+	 */
+	#normalize(p) {
+		return p.replace(/\/+$/, '')
+	}
+
+	/**
 	 * Check if a path matches any ignore pattern
-	 * @param {string} path The path to check (relative to startPath)
-	 * @param {string} dir The path of the parent directory to check (relative to startPath)
+	 * @param {string} relPath The relative path to check (from startPath)
+	 * @param {string} fullPath The full absolute path
 	 * @param {string[]} patterns Array of ignore patterns (supports glob patterns)
 	 * @returns {boolean} True if path should be ignored
 	 */
-	#shouldIgnore(path, dir, patterns) {
-		if (patterns.includes(path)) return true
-		const full = this.path.resolve(dir, path)
-		if (patterns.includes(full)) return true
-		return patterns.some(p => {
-			return minimatch(full, p, { dot: true })
-		})
+	#shouldIgnore(relPath, fullPath, patterns) {
+		const rel = this.#normalize(relPath)
+		const abs = this.#normalize(fullPath)
+
+		// Direct string match (both with and without trailing slash)
+		if (patterns.includes(rel) || patterns.includes(abs)) return true
+		if (patterns.includes(relPath) || patterns.includes(fullPath)) return true
+
+		// Glob pattern check (on normalised paths)
+		if (micromatch.isMatch(rel, patterns, { dot: true })) return true
+		if (micromatch.isMatch(abs, patterns, { dot: true })) return true
+
+		// For directories, also check each parent segment
+		if (relPath.endsWith('/')) {
+			const parts = relPath.split('/').filter(Boolean)
+			for (let i = 0; i < parts.length; i++) {
+				const parent = parts.slice(0, i + 1).join('/') + '/'
+				const parentNorm = this.#normalize(parent)
+				if (micromatch.isMatch(parentNorm, patterns, { dot: true })) return true
+				if (micromatch.isMatch(parent, patterns, { dot: true })) return true
+			}
+		}
+
+		return false
 	}
 
 	/**
@@ -166,9 +193,12 @@ export default class FileSystem {
 			}
 
 			const entryPaths = entries.map(entry => this.path.resolve(dir, entry.name))
-			const relativeEntries = entryPaths.map(
-				p => this.path.relative(startPath, p)
-			).filter(p => !this.#shouldIgnore(p, dir, ignore))
+			const relativeEntries = entryPaths
+				.map(p => this.path.relative(startPath, p))
+				.filter(p => {
+					const full = this.path.resolve(startPath, p)
+					return !this.#shouldIgnore(p, full, ignore)
+				})
 
 			if (typeof onRead === 'function') {
 				await onRead(dirPathRelative, relativeEntries)
@@ -177,15 +207,15 @@ export default class FileSystem {
 			for (const entry of entries) {
 				const fullPath = this.path.resolve(dir, entry.name)
 				let rel = this.path.relative(startPath, fullPath)
-				if (entry.isDirectory()) rel += "/"
+				if (entry.isDirectory()) rel += '/'
 
-				if (!this.#shouldIgnore(rel, dir, ignore)) {
+				if (!this.#shouldIgnore(rel, fullPath, ignore)) {
 					results.push(rel)
 				}
 
 				if (entry.isDirectory() && recursive) {
 					const dirRel = this.path.relative(startPath, fullPath)
-					if (!this.#shouldIgnore(dirRel, dir, ignore)) {
+					if (!this.#shouldIgnore(dirRel + '/', fullPath, ignore)) {
 						await _traverse(fullPath, dirRel)
 					}
 				}
@@ -231,4 +261,3 @@ export default class FileSystem {
 		return await fs.writeFile(abs, data, options)
 	}
 }
-

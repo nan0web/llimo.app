@@ -106,7 +106,7 @@ describe('FileSystem.browse', () => {
 		assert.deepStrictEqual(readDirs.sort((a, b) => a.dir.localeCompare(b.dir)), expected.sort((a, b) => a.dir.localeCompare(b.dir)))
 	})
 
-	it.todo('should support glob patterns in ignore', async () => {
+	it('should support glob patterns in ignore', async () => {
 		const results = await fileSystem.browse('.', {
 			recursive: true,
 			ignore: ['*.js', 'node_modules/**', '.git/**', 'dist/**']
@@ -123,7 +123,7 @@ describe('FileSystem.browse', () => {
 		assert.deepStrictEqual(results.sort(), expected.sort())
 	})
 
-	it.todo('should ignore directories with glob patterns', async () => {
+	it('should ignore directories with glob patterns', async () => {
 		const results = await fileSystem.browse('.', { recursive: true, ignore: ['dir*', '.*'] })
 		const expected = [
 			'file1.txt',
@@ -138,7 +138,7 @@ describe('FileSystem.browse', () => {
 		assert.deepStrictEqual(results.sort(), expected.sort())
 	})
 
-	it.todo('should handle complex ignore patterns', async () => {
+	it('should handle complex ignore patterns', async () => {
 		const results = await fileSystem.browse('.', {
 			recursive: true,
 			ignore: ['**/file3.txt', 'test.*', 'dist/**']
@@ -158,4 +158,6 @@ describe('FileSystem.browse', () => {
 		assert.deepStrictEqual(results.sort(), expected.sort())
 	})
 })
+
+
 

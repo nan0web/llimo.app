@@ -51,7 +51,8 @@ export default class ListFilesCommand extends Command {
 	 * @param {string} dir - Directory to scan (absolute path)
 	 * @returns {Promise<string[]>} - Array of relative file paths
 	 */
-	async #getAllFiles(dir = this.cwd, ignore = ['.git', 'node_modules']) {
+	async #getAllFiles(dir = this.cwd, ignore = ['.git/**', 'node_modules/**']) {
 		return await this.#fs.browse(dir, { recursive: true, ignore })
 	}
 }
+
