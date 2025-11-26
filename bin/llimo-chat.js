@@ -55,6 +55,21 @@ async function main(argv = process.argv.slice(2)) {
 	const git = new Git()
 	const ai = new AI()
 
+	// Check API key before starting
+	const modelInfo = ai.getModel(DEFAULT_MODEL)
+	if (!modelInfo) {
+		console.error(`❌ Model '${DEFAULT_MODEL}' not found`)
+		process.exit(1)
+	}
+
+	// Pre-validate API key availability
+	try {
+		ai.getProvider(modelInfo.provider)
+	} catch (err) {
+		console.error(`❌ ${err.message}`)
+		process.exit(1)
+	}
+
 	// 1. read input (stdin / file)
 	const { input, inputFile } = await readInput(argv, fs)
 
@@ -71,7 +86,6 @@ async function main(argv = process.argv.slice(2)) {
 	let step = 1
 	let consecutiveErrors = 0
 	const messages = await chat.getMessages()
-	const modelInfo = ai.getModel(DEFAULT_MODEL)
 
 	while (true) {
 		console.info(`\nstep ${step}. ${new Date().toISOString()}`)
@@ -90,11 +104,9 @@ async function main(argv = process.argv.slice(2)) {
 		const startTime = Date.now()
 		let fullResponse = ""
 		let usage = { promptTokens: 0, completionTokens: 0, totalTokens: 0 }
-		let thinkingTokens = 0
-		let writingTokens = 0
-
-		// 5.1. progress tracking
 		const format = new Intl.NumberFormat("en-US").format
+
+		// ---------- progress tracking ----------
 		const progressInterval = setInterval(() => {
 			const elapsed = (Date.now() - startTime) / 1e3
 			const totalTokens = usage.promptTokens + usage.completionTokens
@@ -103,18 +115,11 @@ async function main(argv = process.argv.slice(2)) {
 				(usage.promptTokens / 1e6) * modelInfo.inputPrice +
 				(usage.completionTokens / 1e6) * modelInfo.outputPrice
 
-			let line = `chat progress → ${format(totalTokens)}T | ${format(speed)}T/s | ${elapsed.toFixed(3)}s | $${cost.toFixed(3)}`
-			if (modelInfo.cachePrice && usage.cacheTokens) {
-				line += `\n     thinking ← ${format(thinkingTokens)}T | ${format(thinkingTokens / elapsed)}T/s | ${elapsed.toFixed(3)}s | $${(thinkingTokens / 1e6 * modelInfo.inputPrice).toFixed(3)}`
-			}
-			if (thinkingTokens) {
-				line += `\n     writing  ← ${format(writingTokens)}T | ${format(writingTokens / elapsed)}T/s | ${elapsed.toFixed(3)}s | $${(writingTokens / 1e6 * modelInfo.outputPrice).toFixed(3)}`
-			}
-
+			const line = `chat progress → ${format(totalTokens)}T | ${format(speed)}T/s | ${elapsed.toFixed(3)}s | $${cost.toFixed(3)}`
+			// clear current line and rewrite (no newline)
 			process.stdout.write("\r\x1b[K")
-			console.info(`                 tokens  | speed    | time   | cost`)
-			console.info(line)
-		}, 1000 / PROGRESS_FPS)
+			process.stdout.write(line)
+		}, 1e3 / PROGRESS_FPS)
 
 		try {
 			// 5.2. stream AI answer (no await on iterator)
@@ -141,12 +146,12 @@ async function main(argv = process.argv.slice(2)) {
 			clearInterval(progressInterval)
 		}
 
-		// final progress line
+		// final progress line (with newline)
 		const elapsed = (Date.now() - startTime) / 1e3
 		const totalTokens = usage.promptTokens + usage.completionTokens
 		const speed = totalTokens / elapsed
 		const cost = (usage.promptTokens / 1e6) * modelInfo.inputPrice + (usage.completionTokens / 1e6) * modelInfo.outputPrice
-		console.info(`      total      ${format(totalTokens)}T | ${format(speed)}T/s | ${elapsed.toFixed(2)}s | $${cost.toFixed(3)}`)
+		console.info(`\n      total      ${format(totalTokens)}T | ${format(speed)}T/s | ${elapsed.toFixed(2)}s | $${cost.toFixed(3)}`)
 
 		// persist answer
 		await chat.saveAnswer(fullResponse)

@@ -68,15 +68,27 @@ export default class AI {
 	 * @param {string} provider
 	 * @returns {any}
 	 */
-	#getProvider(provider) {
+	getProvider(provider) {
 		switch (provider) {
 			case 'openai':
+				if (!process.env.OPENAI_API_KEY) {
+					throw new Error(`OpenAI API key is missing. Set the OPENAI_API_KEY environment variable.`)
+				}
 				return createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
 			case 'cerebras':
+				if (!process.env.CEREBRAS_API_KEY) {
+					throw new Error(`Cerebras API key is missing. Set the CEREBRAS_API_KEY environment variable.\n\nTo get an API key:\n1. Visit https://inference-docs.cerebras.ai/\n2. Sign up and get your API key\n3. Export it: export CEREBRAS_API_KEY=your_key_here`)
+				}
 				return createCerebras({ apiKey: process.env.CEREBRAS_API_KEY })
 			case 'huggingface':
+				if (!process.env.HUGGINGFACE_API_KEY) {
+					throw new Error(`HuggingFace API key is missing. Set the HUGGINGFACE_API_KEY environment variable.`)
+				}
 				return createHuggingFace({ apiKey: process.env.HUGGINGFACE_API_KEY })
 			case 'openrouter':
+				if (!process.env.OPENROUTER_API_KEY) {
+					throw new Error(`OpenRouter API key is missing. Set the OPENROUTER_API_KEY environment variable.`)
+				}
 				return createOpenRouter({ apiKey: process.env.OPENROUTER_API_KEY })
 			default:
 				throw new Error(`Unknown provider: ${provider}`)
@@ -93,7 +105,7 @@ export default class AI {
 		const model = this.getModel(modelId)
 		if (!model) throw new Error(`Model not found: ${modelId}`)
 
-		const provider = this.#getProvider(model.provider)
+		const provider = this.getProvider(model.provider)
 		const stream = streamText({
 			model: provider(model.id),
 			messages,
@@ -111,7 +123,7 @@ export default class AI {
 		const model = this.getModel(modelId)
 		if (!model) throw new Error(`Model not found: ${modelId}`)
 
-		const provider = this.#getProvider(model.provider)
+		const provider = this.getProvider(model.provider)
 		const { text, usage } = await generateText({
 			model: provider(model.id),
 			messages,
