@@ -24,9 +24,10 @@ const format = no => {
  * @returns {Promise<{ text: string, injected: string[], errors: string[] }>} - The generated markdown string with packed files.
  */
 export async function packMarkdown(options = {}) {
+	debugger
 	const {
 		input = "", cwd = process.cwd(), onRead = undefined, ignore = [".git", "node_modules"]
-	}	= options
+	} = options
 	const fs = new FileSystem({ cwd })
 	const path = fs.path
 	const lines = input.split("\n")
@@ -41,37 +42,47 @@ export async function packMarkdown(options = {}) {
 			const listOnly = "@ls" === name
 			const absPath = path.resolve(relativePath)
 
+			// Handle ignore patterns supplied via a leading “-” in the checklist label.
+			if (name.startsWith("-")) {
+				name.split(";").forEach(word => {
+					if (word.startsWith("-")) {
+						ignore.push(word.slice(1))
+					}
+				})
+			}
+
 			// Handle glob patterns
-			if (relativePath.includes('*') || relativePath.includes('**')) {
+			if (relativePath.includes("*")) {
 				try {
-					// Find the closest parent directory
-					const parts = relativePath.split('/')
-					let closestDir = '.'
+					// Determine the base directory and the glob pattern.
+					const parts = relativePath.split("/")
+					let closestDir = "."
 					let pattern = relativePath
 
-					// Find the first non-pattern part to use as base directory
 					for (let i = 0; i < parts.length; i++) {
-						if (parts[i].includes('*') || parts[i].includes('**')) {
-							closestDir = parts.slice(0, i).join('/') || '.'
-							pattern = parts.slice(i).join('/')
+						if (parts[i].includes("*")) {
+							closestDir = parts.slice(0, i).join("/") || "."
+							pattern = parts.slice(i).join("/")
 							break
 						}
 					}
 
 					const entries = await fs.browse(closestDir, { recursive: true, onRead, ignore })
 
-					// Filter entries based on pattern
+					// Keep only files matching the glob.
 					const matchedFiles = entries.filter(entry =>
 						micromatch.isMatch(entry, pattern, { dot: true })
 					)
 
-					// Sort files for consistent output
 					matchedFiles.sort()
 
-					// Process each matched file
 					for (const file of matchedFiles) {
-						if (file.endsWith("/")) continue
-						const filePath = path.resolve(closestDir, file)
+						if (file.endsWith("/")) continue // skip directories
+
+						// Build the path relative to the original cwd (e.g. "src/File.js").
+						const relativeFilePath = closestDir === "." ? file : `${closestDir}/${file}`
+						const filePath = path.resolve(relativeFilePath)
+
 						if (listOnly) {
 							output.push(file)
 							continue
@@ -82,8 +93,9 @@ export async function packMarkdown(options = {}) {
 							const size = Buffer.byteLength(content)
 							const type = path.extname(file).slice(1) || "txt"
 
-							injected.push(`  - ${file} ${ITALIC}${format(size)} bytes${RESET}`)
-							output.push(`#### [${filename}](${filePath})`)
+							// Use plain size without colour codes.
+							injected.push(`  - ${relativeFilePath} ${format(size)} bytes`)
+							output.push(`#### [${filename}](${relativeFilePath})`)
 							output.push(`\`\`\`${type}`)
 							output.push(content)
 							output.push("```")
@@ -97,13 +109,13 @@ export async function packMarkdown(options = {}) {
 					output.push(`ERROR: Could not process pattern ${relativePath}`)
 				}
 			} else {
-				// Handle single file
+				// Single file handling
 				try {
 					const content = await fs.readFile(absPath, "utf-8")
 					const filename = name || path.basename(relativePath)
 					const size = Buffer.byteLength(content)
 					const type = path.extname(relativePath).slice(1) || "txt"
-					injected.push(`  - ${relativePath} ${ITALIC}${format(size)} bytes${RESET}`)
+					injected.push(`  - ${relativePath} ${format(size)} bytes`)
 					output.push(`#### [${filename}](${relativePath})`)
 					output.push(`\`\`\`${type}`)
 					output.push(content)
@@ -114,7 +126,7 @@ export async function packMarkdown(options = {}) {
 				}
 			}
 		} else {
-			// Preserve non-checklist lines verbatim
+			// Preserve non‑checklist lines verbatim.
 			output.push(line)
 		}
 	}
@@ -129,18 +141,18 @@ export async function packMarkdown(options = {}) {
 export async function main(argv = process.argv.slice(2)) {
 	const fs = new FileSystem()
 	const path = new Path()
-	let inputData = ""
+	let input = ""
 
 	// Read from stdin if not a TTY
 	if (!process.stdin.isTTY) {
 		for await (const chunk of process.stdin) {
-			inputData += chunk
+			input += chunk
 		}
 	} else if (argv.length > 0) {
 		// Read from file if provided as first argument
 		const inputFile = path.resolve(argv[0])
 		try {
-			inputData = await fs.readFile(inputFile, "utf-8")
+			input = await fs.readFile(inputFile, "utf-8")
 		} catch (/** @type {any} */ error) {
 			console.error(`${RED}❌ Cannot read input file: ${error.message}${RESET}`)
 			process.exit(1)
@@ -151,7 +163,7 @@ export async function main(argv = process.argv.slice(2)) {
 	}
 
 	const outputPath = argv.length > 1 ? path.resolve(argv[1]) : null
-	const { text, injected, errors } = await packMarkdown({ input: inputData })
+	const { text, injected, errors } = await packMarkdown({ input })
 
 	if (outputPath) {
 		await fs.writeFile(outputPath, text)

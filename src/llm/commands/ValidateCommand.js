@@ -1,4 +1,4 @@
-import { RESET, GREEN, RED, MAGENTA } from "../../utils/ANSI.js"
+import { RESET, GREEN, RED, YELLOW } from "../../utils/ANSI.js"
 import Command from "./Command.js"
 
 /** @typedef {import("../../FileProtocol.js").ParsedFile} ParsedFile */
@@ -39,13 +39,16 @@ export default class ValidateCommand extends Command {
 		})
 		const requested = Array.from(this.parsed.requested ?? []).map(([file]) => file)
 		if (JSON.stringify(realLabel) !== JSON.stringify(validateLabel)) {
-			yield ` ${RED}!${RESET} Unexpected response "${this.parsed.validate?.label}"`
-			yield `   but provided: ${realLabel.files} file(s), ${realLabel.commands} command(s)`
-			yield ` ${MAGENTA}ℹ label format for @validate is:`
-			yield ` ${MAGENTA}  #### [N file(s), M command(s)](@validate)${RESET}`
-			yield ` ${MAGENTA}  > N - amount of file(s) minus command(s)${RESET}`
-			yield ` ${MAGENTA}  > M - amount of commands(s) minus validate command (-1)${RESET}`
-			yield ` ${MAGENTA}  > if amount is zero part with its number might be skipped${RESET}`
+			yield `${YELLOW}! LLiMo following format errors ------------------------------`
+			yield `  Unexpected response "${this.parsed.validate?.label}"`
+			yield `  but provided (parsed response): ${realLabel.files} file(s), ${realLabel.commands} command(s)`
+			yield `  ------------------------------------------------------------`
+			yield `  ℹ label format for @validate is "#### [N file(s), M command(s)](@validate)"`
+			yield `    where:`
+			yield `      N - amount of file(s) minus command(s)`
+			yield `      M - amount of commands(s) minus validate command (-1)`
+			yield `    if amount is zero part with its number might be skipped`
+			yield `  ------------------------------------------------------------${RESET}`
 		}
 		if (this.parsed.isValid) {
 			yield ` ${GREEN}+${RESET} Expected validation of files ${GREEN}100% valid${RESET}`

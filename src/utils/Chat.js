@@ -13,8 +13,10 @@ export default class Chat {
 	root
 	/** @type {string} */
 	dir
-	/** @type {FileSystem} */
+	/** @type {FileSystem} Access to the current working directory file system */
 	#fs
+	/** @type {FileSystem} access to the chat directory file system */
+	#db
 
 	/**
 	 * @param {Partial<Chat>} [input={}]
@@ -26,10 +28,21 @@ export default class Chat {
 		this.root = String(root)
 		this.#fs = new FileSystem({ cwd })
 		this.dir = this.#fs.path.resolve(root, id)
+		this.#db = new FileSystem({ cwd: this.dir })
 	}
 
 	get #path() {
 		return this.#fs.path
+	}
+
+	/** @returns {FileSystem} */
+	get fs() {
+		return this.#fs
+	}
+
+	/** @returns {FileSystem} */
+	get db() {
+		return this.#db
 	}
 
 	/**
@@ -80,10 +93,12 @@ export default class Chat {
 	/**
 	 * Save the latest prompt
 	 * @param {string} prompt
+	 * @returns {Promise<string>} The prompt path.
 	 */
 	async savePrompt(prompt) {
 		const promptPath = this.#path.resolve(this.dir, "prompt.md")
 		await this.#fs.writeFile(promptPath, prompt)
+		return promptPath
 	}
 
 	/**

@@ -19,13 +19,16 @@ describe("ValidateCommand", () => {
 			output.push(str)
 		}
 		assert.deepStrictEqual(output, [
-			' ! Unexpected response "2 file(s), 0 command(s)"',
-			'   but provided: 6 file(s), 0 command(s)',
-			' ℹ label format for @validate is:',
-			'   #### [N file(s), M command(s)](@validate)',
-			'   > N - amount of file(s) minus command(s)',
-			'   > M - amount of commands(s) minus validate command (-1)',
-			'   > if amount is zero part with its number might be skipped',
+			'! LLiMo following format errors ------------------------------',
+			'  Unexpected response "2 file(s), 0 command(s)"',
+			'  but provided (parsed response): 6 file(s), 0 command(s)',
+			'  ------------------------------------------------------------',
+			'  ℹ label format for @validate is "#### [N file(s), M command(s)](@validate)"',
+			'    where:',
+			'      N - amount of file(s) minus command(s)',
+			'      M - amount of commands(s) minus validate command (-1)',
+			'    if amount is zero part with its number might be skipped',
+			'  ------------------------------------------------------------',
 			' + Expected validation of files 100% valid',
 		])
 	})

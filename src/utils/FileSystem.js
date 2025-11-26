@@ -174,8 +174,10 @@ export default class FileSystem {
 	 * @returns {Promise<string[]>} A promise that resolves to an array of file/directory paths.
 	 */
 	async browse(path, options = {}) {
+		debugger
 		const { recursive = false, ignore = [], onRead } = options
 		const startPath = this.path.resolve(path)
+		const rel = this.path.relative(this.cwd, startPath)
 		const results = []
 
 		/**
@@ -183,7 +185,8 @@ export default class FileSystem {
 		 * @param {string} dirPathRelative
 		 * @returns {Promise<void>}
 		 */
-		const _traverse = async (dir, dirPathRelative = '.') => {
+		const _traverse = async (dir, dirPathRelative) => {
+			dirPathRelative = dirPathRelative || "."
 			let entries
 			try {
 				entries = await fs.readdir(dir, { withFileTypes: true })
@@ -192,16 +195,14 @@ export default class FileSystem {
 				return
 			}
 
-			const entryPaths = entries.map(entry => this.path.resolve(dir, entry.name))
-			const relativeEntries = entryPaths
-				.map(p => this.path.relative(startPath, p))
-				.filter(p => {
-					const full = this.path.resolve(startPath, p)
-					return !this.#shouldIgnore(p, full, ignore)
-				})
-
 			if (typeof onRead === 'function') {
-				await onRead(dirPathRelative, relativeEntries)
+				await onRead(dirPathRelative, entries.map(e => {
+					const full = this.path.resolve(e.parentPath, e.name)
+					if (this.#shouldIgnore(e.name, full, ignore)) {
+						return ""
+					}
+					return this.path.relative(this.cwd, full)
+				}).filter(Boolean))
 			}
 
 			for (const entry of entries) {
@@ -222,7 +223,7 @@ export default class FileSystem {
 			}
 		}
 
-		await _traverse(startPath)
+		await _traverse(startPath, rel)
 		return results
 	}
 
@@ -259,5 +260,16 @@ export default class FileSystem {
 		const dir = this.path.dirname(abs)
 		await fs.mkdir(dir, { recursive: true, mode: options?.mode || 0o777 })
 		return await fs.writeFile(abs, data, options)
+	}
+
+	/**
+	 * Relative proxy of mkdir() & writeFile(path, data, { flag: "a" }).
+	 * @param {string} path
+	 * @param {any} data
+	 * @param {any} [options]
+	 * @returns {Promise<void>}
+	 */
+	async append(path, data, options = {}) {
+		return await this.save(path, data, { ...options, flag: "a" })
 	}
 }

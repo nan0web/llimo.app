@@ -6,88 +6,86 @@ import AI from "../src/utils/AI.js"
 import Git from "../src/utils/Git.js"
 import Chat from "../src/utils/Chat.js"
 import { packMarkdown } from "../src/llm/pack.js"
+import {
+	readInput,
+	initialiseChat,
+	copyInputToChat,
+	packPrompt,
+	startStreaming,
+	decodeAnswerAndRunTests,
+	commitStep,
+} from "../src/utils/chatSteps.js"
 
 const PROGRESS_FPS = 30
 const MAX_ERRORS = 3
 const DEFAULT_MODEL = "gpt-oss-120b"
 
 /**
- * Main chat loop
+ * Helper – determines whether an AI error is a rate‑limit (HTTP 429)
  *
- * @todo extract step blocks into separate isolated functions if possible in src/** and tests for them.
+ * @param {any} err
+ * @returns {boolean}
+ */
+function isRateLimit(err) {
+	if (err?.status === 429 || err?.statusCode === 429) return true
+	if (typeof err?.message === "string" && /429/.test(err.message)) return true
+	return false
+}
+
+/**
+ * Run a command and return output
+ */
+async function runCommand(command, cwd = process.cwd()) {
+	return new Promise((resolve) => {
+		const child = spawn(command, [], { shell: true, cwd, stdio: ["pipe", "pipe", "pipe"] })
+		let stdout = ""
+		let stderr = ""
+		child.stdout.on("data", (d) => (stdout += d))
+		child.stderr.on("data", (d) => (stderr += d))
+		child.on("close", (code) => resolve({ stdout, stderr, exitCode: code }))
+	})
+}
+
+/**
+ * Main chat loop
  */
 async function main(argv = process.argv.slice(2)) {
 	const fs = new FileSystem()
-	const path = new Path()
+	const pathUtil = new Path()
 	const git = new Git()
 	const ai = new AI()
 
-	let inputData = ""
-	let inputFile = null
+	// 1. read input (stdin / file)
+	const { input, inputFile } = await readInput(argv, fs)
 
-	// 1. Get input data
-	if (!process.stdin.isTTY) {
-		for await (const chunk of process.stdin) inputData += chunk
-	} else if (argv.length > 0) {
-		inputFile = path.resolve(argv[0])
-		inputData = await fs.readFile(inputFile, "utf-8")
-	} else {
-		console.error("❌ No input provided.")
-		process.exit(1)
-	}
+	// 2. initialise / load chat
+	const { chat } = await initialiseChat(Chat, fs)
 
-	// 2. Initialize chat
-	const root = "chat"
-	const currentFile = root + "/current"
-	let id
-	if (await fs.exists(currentFile)) {
-		id = await fs.load(currentFile) || undefined
-	}
-	const chat = new Chat({ id, root })
-	await chat.init()
-	if (id === chat.id) {
-		console.info(`${GREEN}+ ${chat.id}${RESET} chat loaded`)
-	} else {
-		console.info(`${YELLOW}- no chat history found${RESET}`)
-		console.info(`${GREEN}+ ${chat.id}${RESET} new chat created`)
-	}
-	await fs.save(currentFile, chat.id)
+	// 3. copy source file to chat directory (if any)
+	await copyInputToChat(inputFile, input, chat)
 
-	// 3. Prepare input file
-	if (inputFile) {
-		const chatInputFile = path.resolve(chat.dir, path.basename(inputFile))
-		await fs.save(chatInputFile, inputData)
-		console.info(`> preparing ${path.basename(inputFile)} (${inputFile})`)
-		console.info(`+ ${path.basename(inputFile)} (${chatInputFile})`)
-		console.info(`  copied to chat session`)
-		inputData = `- [](${path.basename(inputFile)})\n${inputData}`
-	}
+	// 4. pack prompt
+	const { packedPrompt } = await packPrompt(packMarkdown, input, chat)
 
-	// 4. Pack input into prompt.md
-	const { text: packedPrompt, injected } = await packMarkdown({ input: inputData })
-	// NOTE: previously the whole object was passed to savePrompt, causing a TypeError.
-	// We now correctly save only the markdown string.
-	await chat.savePrompt(packedPrompt)
-	const promptPath = path.resolve(chat.dir, "prompt.md")
-	console.info(`node bin/llimo-pack.js ${path.basename(inputFile) || 'stdin'} chat/${chat.id}/prompt.md`)
-	console.info(`+ prompt.md (${promptPath})`)
-	const stats = await fs.stat(promptPath)
-	const format = new Intl.NumberFormat("en-US").format
-	console.info(`  Prompt size: ${format(stats.size)} bytes — ${injected.length} file(s).`)
-
-	// 5. Chat loop
+	// 5. chat loop
 	let step = 1
 	let consecutiveErrors = 0
 	const messages = await chat.getMessages()
+	const modelInfo = ai.getModel(DEFAULT_MODEL)
 
 	while (true) {
 		console.info(`\nstep ${step}. ${new Date().toISOString()}`)
 
-		// 5.1 Get AI response
-		const modelInfo = ai.getModel(DEFAULT_MODEL)
 		console.info(`\nsending prompt to API (streaming)`)
-		console.info(`model [${DEFAULT_MODEL}](@${modelInfo.provider}) → $${modelInfo.inputPrice}/MT ← $${modelInfo.outputPrice}/MT (cache - $${modelInfo.cachePrice}/MT)`)
-		console.info(`\n! batch processing has 50% discount comparing to streaming\n`)
+		console.info(
+			`model [${DEFAULT_MODEL}](@${modelInfo.provider}) → $${modelInfo.inputPrice}/MT ← $${modelInfo.outputPrice}/MT (cache - $${modelInfo.cachePrice}/MT)`
+		)
+
+		// batch discount info
+		if (modelInfo.cachePrice && modelInfo.cachePrice < modelInfo.inputPrice) {
+			const discount = Math.round((1 - modelInfo.cachePrice / modelInfo.inputPrice) * 100)
+			console.info(`\n! batch processing has ${discount}% discount compared to streaming\n`)
+		}
 
 		const startTime = Date.now()
 		let fullResponse = ""
@@ -95,90 +93,83 @@ async function main(argv = process.argv.slice(2)) {
 		let thinkingTokens = 0
 		let writingTokens = 0
 
-		// Progress tracking
-		let lastProgressUpdate = 0
+		// 5.1. progress tracking
+		const format = new Intl.NumberFormat("en-US").format
 		const progressInterval = setInterval(() => {
-			const elapsed = (Date.now() - startTime) / 1000
+			const elapsed = (Date.now() - startTime) / 1e3
 			const totalTokens = usage.promptTokens + usage.completionTokens
 			const speed = totalTokens / elapsed
-			const cost = (usage.promptTokens / 1e6 * modelInfo.inputPrice) + (usage.completionTokens / 1e6 * modelInfo.outputPrice)
+			const cost =
+				(usage.promptTokens / 1e6) * modelInfo.inputPrice +
+				(usage.completionTokens / 1e6) * modelInfo.outputPrice
 
-			let progressLine = `chat progress → ${format(totalTokens)}T | ${format(speed)}T/s | ${elapsed.toFixed(3)}s | $${cost.toFixed(3)}`
+			let line = `chat progress → ${format(totalTokens)}T | ${format(speed)}T/s | ${elapsed.toFixed(3)}s | $${cost.toFixed(3)}`
 			if (modelInfo.cachePrice && usage.cacheTokens) {
-				progressLine += `\n     thinking ← ${format(thinkingTokens)}T | ${format(thinkingTokens / elapsed)}T/s | ${elapsed.toFixed(3)}s | $${(thinkingTokens / 1e6 * modelInfo.inputPrice).toFixed(3)}`
+				line += `\n     thinking ← ${format(thinkingTokens)}T | ${format(thinkingTokens / elapsed)}T/s | ${elapsed.toFixed(3)}s | $${(thinkingTokens / 1e6 * modelInfo.inputPrice).toFixed(3)}`
 			}
 			if (thinkingTokens) {
-				progressLine += `\n     writing  ← ${format(writingTokens)}T | ${format(writingTokens / elapsed)}T/s | ${elapsed.toFixed(3)}s | $${(writingTokens / 1e6 * modelInfo.outputPrice).toFixed(3)}`
+				line += `\n     writing  ← ${format(writingTokens)}T | ${format(writingTokens / elapsed)}T/s | ${elapsed.toFixed(3)}s | $${(writingTokens / 1e6 * modelInfo.outputPrice).toFixed(3)}`
 			}
 
-			// Clear previous lines and print new progress
-			process.stdout.write('\r\x1b[K') // Clear line
-			process.stdout.write(`\x1b[2A\x1b[K`) // Move up 2 lines and clear
-			process.stdout.write(`\x1b[2A\x1b[K`) // Move up 2 lines and clear
+			process.stdout.write("\r\x1b[K")
 			console.info(`                 tokens  | speed    | time   | cost`)
-			console.info(progressLine)
+			console.info(line)
 		}, 1000 / PROGRESS_FPS)
 
-		const stream = await ai.streamText(DEFAULT_MODEL, [
-			{ role: "user", content: packedPrompt },
-			...messages
-		])
+		try {
+			// 5.2. stream AI answer (no await on iterator)
+			const { stream, result } = startStreaming(ai, DEFAULT_MODEL, packedPrompt, messages)
 
-		for await (const part of stream) {
-			if (part.type === 'text-delta') fullResponse += part.textDelta
-			if (part.type === 'usage') usage = part.usage
+			for await (const part of stream) {
+				if (part.type === "text-delta") fullResponse += part.textDelta
+				if (part.type === "usage") usage = part.usage
+			}
+			// persist raw result for debugging
+			const chatDb = new FileSystem({ cwd: chat.dir })
+			await chatDb.save("response.json", JSON.stringify(result, null, 2))
+		} catch (err) {
+			clearInterval(progressInterval)
+
+			if (isRateLimit(err)) {
+				console.warn(`${YELLOW}⚠️ Rate limit reached – waiting before retry${RESET}`)
+				await new Promise((r) => setTimeout(r, 5000))
+				continue // retry same step
+			}
+			console.error(`❌ Fatal error in llimo‑chat (AI):`, err)
+			process.exit(1)
+		} finally {
+			clearInterval(progressInterval)
 		}
-		clearInterval(progressInterval)
 
-		// Final progress update
-		const elapsed = (Date.now() - startTime) / 1000
+		// final progress line
+		const elapsed = (Date.now() - startTime) / 1e3
 		const totalTokens = usage.promptTokens + usage.completionTokens
 		const speed = totalTokens / elapsed
-		const cost = (usage.promptTokens / 1e6 * modelInfo.inputPrice) + (usage.completionTokens / 1e6 * modelInfo.outputPrice)
+		const cost = (usage.promptTokens / 1e6) * modelInfo.inputPrice + (usage.completionTokens / 1e6) * modelInfo.outputPrice
 		console.info(`      total      ${format(totalTokens)}T | ${format(speed)}T/s | ${elapsed.toFixed(2)}s | $${cost.toFixed(3)}`)
 
+		// persist answer
 		await chat.saveAnswer(fullResponse)
-		console.info(`\n+ think.md (${path.resolve(chat.dir, "think.md")})`)
-		console.info(`+ answer.md (${path.resolve(chat.dir, "answer.md")})`)
+		console.info(`\n+ think.md (${pathUtil.resolve(chat.dir, "think.md")})`)
+		console.info(`+ answer.md (${pathUtil.resolve(chat.dir, "answer.md")})`)
 
-		// 5.2 Decode answer
-		console.info(`\ndecoding answer`)
-		const promptMd = path.resolve(chat.dir, "prompt.md")
-		await fs.writeFile(promptMd, `echo '\`\`\`bash' # > chat/${chat.id}/prompt.md\n`, { flag: "a" })
-		await fs.writeFile(promptMd, `node bin/llimo-unpack.js chat/${chat.id}/answer.md # >> chat/${chat.id}/prompt.md 2>&1\n`, { flag: "a" })
+		// 6. decode answer & run tests
+		await decodeAnswerAndRunTests(chat, fs, pathUtil, runCommand)
 
-		const {
-			stdout: unpackStdout
-		} = await runCommand(`node bin/llimo-unpack.js chat/${chat.id}/answer.md`)
-		await fs.writeFile(promptMd, unpackStdout, { flag: "a" })
-		await fs.writeFile(promptMd, `echo '\`\`\`' # >> chat/${chat.id}/prompt.md\n`, { flag: "a" })
-
-		// 5.3 Run tests
-		console.info(`\nrunning tests`)
-		await fs.writeFile(promptMd, `pnpm test # >> chat/${chat.id}/prompt.md\n`, { flag: "a" })
-		const {
-			stdout: testStdout, exitCode: testExitCode
-		} = await runCommand("pnpm test")
-		await fs.writeFile(promptMd, testStdout, { flag: "a" })
-
+		// 7. check if tests passed – same logic as original script
+		const testStdout = await fs.readFile(pathUtil.resolve(chat.dir, "prompt.md"), "utf-8")
 		const testFailed = testStdout.includes("fail") && testStdout.split("fail")[1].trim().split(" ")[0] !== "0"
 
-		// 5.4 Check conditions
 		if (!testFailed) {
-			console.info(`All tests passed, no typed mistakes.`)
-			// @todo it is hardcoded here, must be changed to the variable,
-			// format: 2511/llimo-chat/done | 2511/llimo-chat/fail
 			await git.renameBranch(`2511/llimo-chat/done`)
 			await git.push(`2511/llimo-chat/done`)
 			break
 		}
 
-		if (testExitCode !== 0) {
+		if (testFailed) {
 			consecutiveErrors++
 			if (consecutiveErrors >= MAX_ERRORS) {
 				console.error(`LLiMo stuck after ${MAX_ERRORS} consecutive errors.`)
-				// @todo it is hardcoded here, must be changed to the variable,
-				// format: 2511/llimo-chat/done | 2511/llimo-chat/fail
 				await git.renameBranch(`2511/llimo-chat/fail`)
 				break
 			}
@@ -186,28 +177,15 @@ async function main(argv = process.argv.slice(2)) {
 			consecutiveErrors = 0
 		}
 
-		// 5.5 Commit and continue
-		await git.commitAll(`step ${step}: response and test results`)
+		// 8. commit step and continue
+		await commitStep(git, `step ${step}: response and test results`)
 		step++
 	}
 }
 
-/**
- * Run a command and return output
- * @todo show the command output in a progress withing a few lines with cursor up.
- */
-async function runCommand(command, cwd = process.cwd()) {
-	return new Promise((resolve) => {
-		const child = spawn(command, [], { shell: true, cwd, stdio: ["pipe", "pipe", "pipe"] })
-		let stdout = ""
-		let stderr = ""
-		child.stdout.on("data", (d) => stdout += d)
-		child.stderr.on("data", (d) => stderr += d)
-		child.on("close", (code) => resolve({ stdout, stderr, exitCode: code }))
-	})
-}
+/* -------------------------------------------------------------------------- */
 
-main().catch(err => {
-	console.error("❌ Fatal error in llimo-chat:", err)
+main().catch((err) => {
+	console.error("❌ Fatal error in llimo‑chat:", err)
 	process.exit(1)
 })

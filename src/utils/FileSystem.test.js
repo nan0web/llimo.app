@@ -49,7 +49,11 @@ describe('FileSystem.browse', () => {
 	})
 
 	it('should list all entries recursively', async () => {
-		const results = await fileSystem.browse('.', { recursive: true })
+		const map = new Map()
+		const onRead = (dir, entries) => {
+			map.set(dir, entries)
+		}
+		const results = await fileSystem.browse('.', { recursive: true, onRead })
 		const expected = [
 			'file1.txt',
 			'dir1/',
@@ -67,6 +71,25 @@ describe('FileSystem.browse', () => {
 			'dist/',
 			'dist/bundle.js'
 		]
+		assert.deepStrictEqual(map, new Map([
+			[".", [
+				'.git',
+				'dir1',
+				'dir2',
+				'dist',
+				'file1.txt',
+				'node_modules',
+				'test.js',
+				'test.ts',
+			]],
+			['.git', ['.git/config']],
+			['dir1', ['dir1/file2.txt']],
+			['dir2', ['dir2/subdir']],
+			['dir2/subdir', ['dir2/subdir/file3.txt']],
+			['dist', ['dist/bundle.js']],
+			['node_modules', ['node_modules/some-package']],
+			['node_modules/some-package', ['node_modules/some-package/index.js']],
+		]))
 		assert.deepStrictEqual(results.sort(), expected.sort())
 	})
 
