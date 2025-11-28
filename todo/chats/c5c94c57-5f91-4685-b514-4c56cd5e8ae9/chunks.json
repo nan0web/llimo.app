@@ -1,0 +1,6650 @@
+[
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "role": "assistant"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "<think>"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "<think>"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "\nOkay, let's see what the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "\nOkay, let's see what the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " user is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " user is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " asking for. They want me"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " asking for. They want me"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to act as a psycho-social"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to act as a psycho-social"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " architect of software"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " architect of software"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", focusing on"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", focusing on"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " harmony"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " harmony"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " and quality in"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " and quality in"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " code."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " code."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " They want concise,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " They want concise,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " precise, and harmonious"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " precise, and harmonious"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " responses. The response should"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " responses. The response should"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " be in markdown format with specific"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " be in markdown format with specific"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " file entries"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " file entries"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " and a validation file"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " and a validation file"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".\n\n"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".\n\n"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "First"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "First"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", I need to look at the provided"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", I need to look at the provided"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " code"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " code"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " and"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " and"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " tests. The user has a project structure with various files including"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " tests. The user has a project structure with various files including"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " JavaScript, test files,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " JavaScript, test files,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " and some data files. They mentioned"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " and some data files. They mentioned"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " a"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " a"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test failure in the Subscription"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test failure in the Subscription"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "Service"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "Service"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test for adding and getting plans. The error is that"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test for adding and getting plans. The error is that"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test expects"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test expects"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the added plan to be in the list but"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the added plan to be in the list but"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " it"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " it"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "'s not.\n\nLooking"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "'s not.\n\nLooking"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " at"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " at"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " Subscription"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " Subscription"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "Service"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "Service"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " code"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " code"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ","
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ","
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " add"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " add"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "Plan method is pushing a cloned plan into"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "Plan method is pushing a cloned plan into"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " this.plans array. The test uses includes to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " this.plans array. The test uses includes to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " check"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " check"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " if"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " if"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the plan is present. But since objects are"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the plan is present. But since objects are"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " reference"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " reference"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " types, even if the plan is cloned, the reference"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " types, even if the plan is cloned, the reference"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " might"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " might"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " not match. The test is checking if"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " not match. The test is checking if"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " original plan object is in the array, which it won't"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " original plan object is in the array, which it won't"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " be because the array contains clones.\n\n"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " be because the array contains clones.\n\n"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "Wait, in"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "Wait, in"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test, they create"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test, they create"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " a plan object and"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " a plan object and"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " add it. The service's"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " add it. The service's"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " addPlan uses {"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " addPlan uses {"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " ...plan }, which"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " ...plan }, which"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " creates a shallow copy. When the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " creates a shallow copy. When the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test does service.get"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test does service.get"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "Plans().includes"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "Plans().includes"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "(plan), it's checking for reference"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "(plan), it's checking for reference"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " equality"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " equality"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ","
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ","
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " not value equality. Since the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " not value equality. Since the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " array contains a clone, the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " array contains a clone, the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " reference"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " reference"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " is different, so includes"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " is different, so includes"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " returns"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " returns"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " false. That's why the test"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " false. That's why the test"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " is failing"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " is failing"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".\n\nSo the fix is to ensure that the plan added to the array is the same reference as the one"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".\n\nSo the fix is to ensure that the plan added to the array is the same reference as the one"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " in the test, or modify"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " in the test, or modify"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test to check for deep"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test to check for deep"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " equality. But since the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " equality. But since the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " code is supposed to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " code is supposed to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " pass the test, the better"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " pass the test, the better"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " approach is to adjust the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " approach is to adjust the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " code so that the added"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " code so that the added"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " plan is the same instance."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " plan is the same instance."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " However, the current"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " However, the current"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " code uses a spread operator"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " code uses a spread operator"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " which creates a new object"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " which creates a new object"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ". To fix"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ". To fix"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test, maybe the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test, maybe the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test should check if the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test should check if the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " properties match instead of"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " properties match instead of"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " reference. But"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " reference. But"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " according to the user's"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " according to the user's"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " instructions, the tests should"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " instructions, the tests should"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " cover all exported"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " cover all exported"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " functions, so maybe the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " functions, so maybe the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test is correctly asserting"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test is correctly asserting"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the content, not"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the content, not"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the reference.\n\nWait,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the reference.\n\nWait,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test in subscription.service"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test in subscription.service"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".test.js has:\n\nconst"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".test.js has:\n\nconst"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " plan = { id: '1', name: 'test', price"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " plan = { id: '1', name: 'test', price"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ": 9.99, durationDays: 30, features: []"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ": 9.99, durationDays: 30, features: []"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " }\nservice.addPlan(plan)\nassert"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " }\nservice.addPlan(plan)\nassert"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".ok(service.getPlans().includes(plan))\n\nBut getPlans"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".ok(service.getPlans().includes(plan))\n\nBut getPlans"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " returns a copy"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " returns a copy"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " of the array using [..."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " of the array using [..."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "this.plans], so"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "this.plans], so"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the array in the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the array in the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " service has the cloned"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " service has the cloned"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " object, not"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " object, not"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the original. Therefore,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the original. Therefore,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test is failing because"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test is failing because"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the references are different. The solution is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the references are different. The solution is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to compare the objects'"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to compare the objects'"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " properties instead of references. The test"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " properties instead of references. The test"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " should check if the plan is in"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " should check if the plan is in"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the array by checking if"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the array by checking if"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " any element matches"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " any element matches"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the plan's properties"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the plan's properties"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", not the reference"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", not the reference"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".\n\nBut the user wants to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".\n\nBut the user wants to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " keep the test as is. So perhaps the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " keep the test as is. So perhaps the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " fix is in the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " fix is in the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test, but the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test, but the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " user's instruction says to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " user's instruction says to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " cover every exported"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " cover every exported"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " function and component. Alternatively"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " function and component. Alternatively"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", maybe the code should"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", maybe the code should"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " return the same object reference."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " return the same object reference."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " Let me check the code"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " Let me check the code"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " again.\n\nIn SubscriptionService's add"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " again.\n\nIn SubscriptionService's add"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "Plan method:\n\naddPlan"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "Plan method:\n\naddPlan"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "(plan) {\n    this"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "(plan) {\n    this"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".plans.push({ ...plan })\n}\n\nThis creates"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".plans.push({ ...plan })\n}\n\nThis creates"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " a new object. So the test"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " a new object. So the test"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "'s plan is not the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "'s plan is not the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " same as the one in the array."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " same as the one in the array."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " To make includes"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " To make includes"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " work, the test should check for"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " work, the test should check for"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the presence"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the presence"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " by value,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " by value,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " not reference. But the test uses"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " not reference. But the test uses"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " includes, which checks reference equality"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " includes, which checks reference equality"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ". Therefore, the test is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ". Therefore, the test is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " incorrect. The correct approach would be"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " incorrect. The correct approach would be"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to iterate through the array and check for property"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to iterate through the array and check for property"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " equality. However"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " equality. However"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", according to the user's"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", according to the user's"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " instructions, they want every exported"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " instructions, they want every exported"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " function to be covered by tests."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " function to be covered by tests."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " The current test"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " The current test"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " is trying to verify that"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " is trying to verify that"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the plan is added,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the plan is added,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " but it's failing because"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " but it's failing because"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " of reference mismatch.\n\n"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " of reference mismatch.\n\n"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "So the fix is to adjust the test"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "So the fix is to adjust the test"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to check for deep equality. But since"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to check for deep equality. But since"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the user's example uses includes"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the user's example uses includes"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", perhaps the code needs"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", perhaps the code needs"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to be modified to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to be modified to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " store the same reference"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " store the same reference"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ". Alternatively,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ". Alternatively,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test should be adjusted. However"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test should be adjusted. However"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", the user's instruction says to cover every"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", the user's instruction says to cover every"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " exported function, so"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " exported function, so"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " maybe the test for addPlan is incomplete."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " maybe the test for addPlan is incomplete."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " The current test is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " The current test is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " not sufficient because it"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " not sufficient because it"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "'s checking for reference equality.\n\nBut"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "'s checking for reference equality.\n\nBut"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the user wants precise and"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the user wants precise and"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " harmonious solutions. The code"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " harmonious solutions. The code"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " is written"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " is written"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " with the expectation"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " with the expectation"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " that includes will work"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " that includes will work"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", which it won"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", which it won"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "'t with objects."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "'t with objects."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " Therefore, the error is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " Therefore, the error is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " in the test. The correct approach is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " in the test. The correct approach is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to modify the test to check for"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to modify the test to check for"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the presence of an object with the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the presence of an object with the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " same properties. However, the user"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " same properties. However, the user"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " might want to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " might want to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " keep the test as is, so maybe"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " keep the test as is, so maybe"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the code should be adjusted to store the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the code should be adjusted to store the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " plan without cloning, i"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " plan without cloning, i"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".e., push the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".e., push the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " original plan instead of a cloned one"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " original plan instead of a cloned one"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ". But that might not be safe if"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ". But that might not be safe if"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the user modifies the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the user modifies the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " plan later. Alternatively, maybe the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " plan later. Alternatively, maybe the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test is wrong and should use"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test is wrong and should use"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " a deep equality"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " a deep equality"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " check.\n\nBut according to the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " check.\n\nBut according to the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " user's validation instructions, the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " user's validation instructions, the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test should be in the same file"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test should be in the same file"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " path with ."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " path with ."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "test.js and cover"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "test.js and cover"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " every exported function. The current"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " every exported function. The current"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test for addPlan is 'should"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test for addPlan is 'should"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " add and get plans' but it's failing. To"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " add and get plans' but it's failing. To"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " fix this, the test should check if the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " fix this, the test should check if the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " plan's properties exist in"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " plan's properties exist in"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " any of the returned plans"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " any of the returned plans"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ". So the test should"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ". So the test should"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " iterate through the plans and check"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " iterate through the plans and check"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " for a match on id"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " for a match on id"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " or other unique"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " or other unique"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " properties.\n\nBut the user wants the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " properties.\n\nBut the user wants the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test to pass, so"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test to pass, so"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " modifying the test to check for deep equality would be"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " modifying the test to check for deep equality would be"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " necessary, but"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " necessary, but"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the user's validation expects"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the user's validation expects"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test to cover the function"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test to cover the function"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ". The current code"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ". The current code"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "'s addPlan"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "'s addPlan"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " method creates a new object, which is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " method creates a new object, which is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " correct to avoid mutation,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " correct to avoid mutation,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " but the test is expecting reference"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " but the test is expecting reference"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " equality, which"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " equality, which"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " is incorrect. So the correct fix"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " is incorrect. So the correct fix"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " is in the test, not"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " is in the test, not"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the code. However, the user"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the code. However, the user"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " might want the code"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " might want the code"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to be adjusted to ensure the test"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to be adjusted to ensure the test"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " passes. But the user provided the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " passes. But the user provided the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " validation.js file which expects"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " validation.js file which expects"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the test to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the test to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " be fixed. Since the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " be fixed. Since the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test is part of"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test is part of"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the project, maybe the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the project, maybe the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " user wants the test adjusted.\n\nWait"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " user wants the test adjusted.\n\nWait"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", the user's initial message"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", the user's initial message"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " says \"Вся"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " says \"Вся"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "ка людина здат"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "ка людина здат"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "на проявляти свою Божу волю"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "на проявляти свою Божу волю"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " через кріз свою душу і розум, матеріалі"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " через кріз свою душу і розум, матеріалі"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "зуючи тілом. Воля можлива"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "зуючи тілом. Воля можлива"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " без порушень волі іншої душ"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " без порушень волі іншої душ"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "і.\" So harmony and will are"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "і.\" So harmony and will are"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " important. The test is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " important. The test is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " not in"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " not in"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " harmony with the code"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " harmony with the code"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", leading to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", leading to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " failure."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " failure."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " The fix is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " The fix is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to adjust the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to adjust the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test to check for"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test to check for"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the properties of the plan rather"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the properties of the plan rather"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " than the reference.\n\nIn the test,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " than the reference.\n\nIn the test,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " replace the assert.ok"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " replace the assert.ok"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "(service.getPlans().includes(plan)) with checking"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "(service.getPlans().includes(plan)) with checking"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " if any plan in"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " if any plan in"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the array has the same id or"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the array has the same id or"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " properties. For example, check"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " properties. For example, check"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " if the plans array has an"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " if the plans array has an"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " object with the same id as the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " object with the same id as the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test plan. So the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test plan. So the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test should be modified to:\n\nassert"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test should be modified to:\n\nassert"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "(service.getPlans().some(p =>"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "(service.getPlans().some(p =>"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " p.id === plan.id && p.name === plan"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " p.id === plan.id && p.name === plan"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".name ...)).\n\nBut"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".name ...)).\n\nBut"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the user's instruction for validation"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the user's instruction for validation"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".js is to have the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".js is to have the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test cover every exported function. The current test is not correctly asserting"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test cover every exported function. The current test is not correctly asserting"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ", leading"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ", leading"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " to failure. So the correct action"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " to failure. So the correct action"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " is to update the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " is to update the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " test to check for the existence"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " test to check for the existence"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " based on"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " based on"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " properties, not reference.\n\nTherefore,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " properties, not reference.\n\nTherefore,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " modifying the test in subscription.service"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " modifying the test in subscription.service"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": ".test.js to check for the plan's properties would resolve"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": ".test.js to check for the plan's properties would resolve"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the issue."
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the issue."
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " The code is correct"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " The code is correct"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " in creating a clone to"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " in creating a clone to"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " prevent mutation, but the test is"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " prevent mutation, but the test is"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " incorrect. However,"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " incorrect. However,"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " user"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " user"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "'s response should include the"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "'s response should include the"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " corrected test"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " corrected test"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " file.\n</think>"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " file.\n</think>"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "\n\n---\n#### [1"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "\n\n---\n#### [1"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " file(s),"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " file(s),"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": " 1 command(s)](@validate)\n```markdown\n- [Updated"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": " 1 command(s)](@validate)\n```markdown\n- [Updated"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "](src/gateway"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "](src/gateway"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "/subscription.service.test.js)\n```\n---\n\n"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "/subscription.service.test.js)\n```\n---\n\n"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {
+            "content": "---"
+          },
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk"
+    }
+  },
+  {
+    "type": "text-delta",
+    "id": "txt-0",
+    "text": "---"
+  },
+  {
+    "type": "raw",
+    "rawValue": {
+      "id": "chatcmpl-9b8a8306-9c2e-428e-922a-7e2fd322612d",
+      "choices": [
+        {
+          "delta": {},
+          "finish_reason": "stop",
+          "index": 0
+        }
+      ],
+      "created": 1764273742,
+      "model": "qwen-3-32b",
+      "system_fingerprint": "fp_97c94e9dbd8cb9620d7f",
+      "object": "chat.completion.chunk",
+      "usage": {
+        "total_tokens": 33399,
+        "completion_tokens": 1512,
+        "prompt_tokens": 31887
+      },
+      "time_info": {
+        "queue_time": 0.000578013,
+        "prompt_time": 0.734406018,
+        "completion_time": 1.429326613,
+        "total_time": 2.169854164123535,
+        "created": 1764273742.620222
+      }
+    }
+  }
+]

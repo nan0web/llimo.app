@@ -23,7 +23,7 @@ export async function runNodeScript({ cwd, scriptPath, args = [], input = "" }) 
 
 	// Copy the script to temp directory to ensure it's isolated
 	const scriptName = scriptPath.split('/').pop()
-	const tempScriptPath = join(tempDir, scriptName)
+	const tempScriptPath = join(tempDir, scriptName || "")
 	const scriptContent = await readFile(scriptPath, 'utf-8')
 	await writeFile(tempScriptPath, scriptContent, 'utf-8')
 

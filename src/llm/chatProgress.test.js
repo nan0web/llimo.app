@@ -1,6 +1,7 @@
 import { describe, it } from "node:test"
 import assert from "node:assert"
 import { formatChatProgress } from "./chatProgress.js"
+import ModelInfo from "./ModelInfo.js"
 
 describe("formatChatProgress – pure formatting logic", () => {
 	it("produces correctly padded lines", () => {
@@ -11,15 +12,15 @@ describe("formatChatProgress – pure formatting logic", () => {
 			reasonTime: now - 3e3,
 			answerTime: now - 2e3,
 		}
-		const modelInfo = {
+		const model = new ModelInfo({
 			pricing: { prompt: 0.00035, completion: 0.00075 },
-		}
+		})
 
 		const lines = formatChatProgress({
 			elapsed: 5,
 			usage,
 			clock,
-			modelInfo,
+			model,
 			now
 		})
 		assert.deepStrictEqual(lines, [

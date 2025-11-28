@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto"
-import FileSystem from "./FileSystem.js"
+import FileSystem from "../utils/FileSystem.js"
 
 /** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
 
@@ -72,7 +72,7 @@ export default class Chat {
 	 * @returns {number}
 	 */
 	getTokensCount() {
-		return this.messages.reduce((acc, msg) => acc + msg.content.length / 4, 0)
+		return Math.round(this.messages.reduce((acc, msg) => acc + msg.content.length, 0) / 4)
 	}
 
 	async clear() {

@@ -8,15 +8,18 @@ export default class Git {
     constructor(input?: Partial<Git>);
     /** @type {string} */
     cwd: string;
+    /** @type {boolean} */
+    dry: boolean;
     /**
      * Execute a git command
      * @param {string[]} args
-     * @returns {Promise<{stdout: string, stderr: string, exitCode: number}>}
+     * @returns {Promise<{stdout: string, stderr: string, exitCode: number, command: string}>}
      */
     exec(args: string[], options?: {}): Promise<{
         stdout: string;
         stderr: string;
         exitCode: number;
+        command: string;
     }>;
     /**
      * Create a new branch
@@ -32,12 +35,22 @@ export default class Git {
      * Rename current branch
      * @param {string} newName
      */
-    renameBranch(newName: string): Promise<void>;
+    renameBranch(newName: string): Promise<{
+        stdout: string;
+        stderr: string;
+        exitCode: number;
+        command: string;
+    }>;
     /**
      * Push branch to remote
      * @param {string} name
      */
-    push(name: string): Promise<void>;
+    push(name: string): Promise<{
+        stdout: string;
+        stderr: string;
+        exitCode: number;
+        command: string;
+    }>;
     /**
      * Get the current branch name
      * @returns {Promise<string>}

@@ -131,7 +131,8 @@ export default class FileSystem {
 	 */
 	async exists(path) {
 		try {
-			await fs.access(path)
+			const abs = this.path.resolve(path)
+			await fs.access(abs)
 			return true
 		} catch {
 			return false
@@ -323,7 +324,7 @@ export default class FileSystem {
 			await fs.appendFile(path, data, options)
 			return
 		}
-		const payload = JSON.stringify(data, null, 2)
+		const payload = "string" === typeof data ? data : JSON.stringify(data, null, 2)
 		await fs.writeFile(path, payload, options)
 	}
 	/**

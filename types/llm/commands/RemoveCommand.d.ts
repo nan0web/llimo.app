@@ -14,8 +14,6 @@ export default class RemoveCommand extends Command {
      * @param {Partial<RemoveCommand>} [input={}]
      */
     constructor(input?: Partial<RemoveCommand>);
-    /** @type {ParsedFile} */
-    parsed: ParsedFile;
     run(): AsyncGenerator<string, void, unknown>;
 }
 export type ParsedFile = import("../../FileProtocol.js").ParsedFile;

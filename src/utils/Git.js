@@ -6,6 +6,8 @@ import { spawn } from "node:child_process"
 export default class Git {
 	/** @type {string} */
 	cwd
+	/** @type {boolean} */
+	dry
 
 	/**
 	 * @param {Partial<Git>} [input={}]

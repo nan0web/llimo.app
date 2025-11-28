@@ -12,7 +12,7 @@ import {
 } from "../src/utils.js"
 import AI from "../src/llm/AI.js"
 import Git from "../src/utils/Git.js"
-import Chat from "../src/utils/Chat.js"
+import Chat from "../src/llm/Chat.js"
 import { packMarkdown } from "../src/llm/pack.js"
 import {
 	readInput,
@@ -21,13 +21,20 @@ import {
 	packPrompt,
 	startStreaming,
 	decodeAnswerAndRunTests,
-} from "../src/utils/chatSteps.js"
+} from "../src/llm/chatSteps.js"
 import ModelProvider from "../src/llm/ModelProvider.js"
-import { formatChatProgress } from "../src/utils/chatProgress.js" // ← fixed import path
+import { formatChatProgress } from "../src/llm/chatProgress.js" // ← fixed import path
+import Usage from "../src/llm/LanguageModelUsage.js"
 
 const PROGRESS_FPS = 30
-const MAX_ERRORS = 3
-const DEFAULT_MODEL = "gpt-oss-120b"
+const MAX_ERRORS = 9
+// const DEFAULT_MODEL = "gpt-oss-120b"
+// const DEFAULT_MODEL = "zai-glm-4.6"
+// const DEFAULT_MODEL = "qwen-3-235b-a22b-instruct-2507"
+// const DEFAULT_MODEL = "qwen-3-32b"
+// const DEFAULT_MODEL = "x-ai/grok-code-fast-1"
+const DEFAULT_MODEL = "x-ai/grok-4-fast"
+
 
 /**
  * Create progress interval to call the fn() with provided fps.
@@ -113,6 +120,7 @@ async function loadModels() {
  * Main chat loop
  */
 async function main(argv = process.argv.slice(2)) {
+	console.info(RESET)
 	const fs = new FileSystem()
 	const path = new Path()
 	const git = new Git({ dry: true })
@@ -124,15 +132,27 @@ async function main(argv = process.argv.slice(2)) {
 
 	// Verify model existence
 	/** @type {import("../src/llm/AI.js").ModelInfo} */
-	const modelInfo = ai.getModel(DEFAULT_MODEL)
-	if (!modelInfo) {
+	const model = ai.getModel(DEFAULT_MODEL)
+	if (!model) {
 		console.error(`❌ Model '${DEFAULT_MODEL}' not found`)
 		process.exit(1)
 	}
 
+	const format = new Intl.NumberFormat("en-US").format
+	const pricing = new Intl.NumberFormat("en-US", { currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format
+	const valuta = new Intl.NumberFormat("en-US", { currency: "USD", minimumFractionDigits: 6, maximumFractionDigits: 6 }).format
+
+	const inputPer1MT = parseFloat(model.pricing?.prompt || "0") * 1e6
+	const outputPer1MT = parseFloat(model.pricing?.completion || "0") * 1e6
+	const cachePer1MT = parseFloat(model.pricing?.input_cache_read || "0") + parseFloat(model.pricing?.input_cache_write || "0")
+
+	console.info(`> ${model.id} selected with modality ${model.architecture?.modality ?? "?"}`)
+	console.info(`  pricing: → ${pricing(inputPer1MT)} ← ${pricing(outputPer1MT)} (cache: ${pricing(cachePer1MT)})`)
+	console.info(`  provider: ${model.provider}`)
+
 	// Validate API key before proceeding
 	try {
-		ai.getProvider(modelInfo.provider)
+		ai.getProvider(model.provider)
 	} catch (err) {
 		console.error(`❌ ${err.stack || err.message}`)
 		process.exit(1)
@@ -154,8 +174,6 @@ async function main(argv = process.argv.slice(2)) {
 	// 5. chat loop
 	let step = 1
 	let consecutiveErrors = 0
-	const format = new Intl.NumberFormat("en-US").format
-	const valuta = new Intl.NumberFormat("en-US", { currency: "USD" }).format
 
 	// Define branch names in one place – easy to change later.
 	const DONE_BRANCH = `2511/llimo-chat/done`
@@ -164,11 +182,11 @@ async function main(argv = process.argv.slice(2)) {
 	while (true) {
 		console.info(`\nstep ${step}. ${new Date().toISOString()}`)
 
-		console.info(`\nsending (streaming) [${DEFAULT_MODEL}](@${modelInfo.provider})`)
+		console.info(`\nsending (streaming) [${DEFAULT_MODEL}](@${model.provider})`)
 
 		// Show batch discount information
-		if (modelInfo.cachePrice && modelInfo.cachePrice < modelInfo.inputPrice) {
-			const discount = Math.round((1 - modelInfo.cachePrice / modelInfo.inputPrice) * 100)
+		if (model.cachePrice && model.cachePrice < model.inputPrice) {
+			const discount = Math.round((1 - model.cachePrice / model.inputPrice) * 100)
 			console.info(`\n! batch processing has ${discount}% discount compared to streaming\n`)
 		}
 
@@ -177,8 +195,7 @@ async function main(argv = process.argv.slice(2)) {
 		let fullResponse = ""
 		let reasoning = ""
 		let prev = 0
-		/** @type {import("../src/llm/AI.js").Usage} */
-		let usage = { inputTokens: 0, reasoningTokens: 0, outputTokens: 0, totalTokens: 0 }
+		let usage = new Usage()
 		let timeInfo
 		const clock = { startTime, reasonTime: 0, answerTime: 0 }
 
@@ -188,7 +205,7 @@ async function main(argv = process.argv.slice(2)) {
 					elapsed: (Date.now() - startTime) / 1e3,
 					usage,
 					clock,
-					modelInfo,
+					model,
 					format,
 					valuta,
 				})
@@ -200,6 +217,7 @@ async function main(argv = process.argv.slice(2)) {
 			PROGRESS_FPS
 		)
 
+		const chatDb = new FileSystem({ cwd: chat.dir })
 		try {
 			const chunks = []
 			/** @type {import("../src/llm/AI.js").StreamOptions} */
@@ -231,10 +249,12 @@ async function main(argv = process.argv.slice(2)) {
 
 			const { stream, result } = startStreaming(ai, DEFAULT_MODEL, chat, options)
 
+			await chatDb.save("stream.md", "")
 			const parts = []
 			for await (const part of stream) {
 				if ("string" === typeof part || "text-delta" == part.type) {
-					fullResponse += part
+					fullResponse += part.text ?? part
+					await chatDb.append("stream.md", part.text ?? part)
 				} else if ("usage" == part.type) {
 					usage = part.usage
 				}
@@ -261,7 +281,6 @@ async function main(argv = process.argv.slice(2)) {
 			}
 
 			// persist raw result for debugging
-			const chatDb = new FileSystem({ cwd: chat.dir })
 			await chatDb.save("response.json", result)
 			await chatDb.save("stream.json", parts)
 			await chatDb.save("chunks.json", chunks)
@@ -283,7 +302,7 @@ async function main(argv = process.argv.slice(2)) {
 			elapsed: (Date.now() - startTime) / 1e3,
 			usage,
 			clock,
-			modelInfo,
+			model,
 			format,
 		})
 		if (timeInfo) {
@@ -302,11 +321,13 @@ async function main(argv = process.argv.slice(2)) {
 		// 6. decode answer & run tests
 		const testsCode = await decodeAnswerAndRunTests(chat, runCommand, isYes)
 		const input = await chat.db.load("prompt.md")
-		packedPrompt = await packPrompt(packMarkdown, input, chat)
+		const data = await packPrompt(packMarkdown, input, chat)
+		packedPrompt = data.packedPrompt
 
 		// 7. check if tests passed – same logic as original script
 		if (true === testsCode) {
 			// Task is complete, let's commit and exit
+			console.info(`  ${GREEN}+ Task is complete${RESET}`)
 			await git.renameBranch(DONE_BRANCH)
 			await git.push(DONE_BRANCH)
 			break
@@ -321,7 +342,8 @@ async function main(argv = process.argv.slice(2)) {
 		}
 
 		// 8. commit step and continue
-		await git.commitAll(`step ${step}: response and test results`)
+		// console
+		// await git.commitAll(`step ${step}: response and test results`)
 		step++
 	}
 }

@@ -1,0 +1,56 @@
+<think>
+Okay, let's see what the user is asking for. They want me to act as a psycho-social architect of software, focusing on harmony and quality in code. They want concise, precise, and harmonious responses. The response should be in markdown format with specific file entries and a validation file.
+
+First, I need to look at the provided code and tests. The user has a project structure with various files including JavaScript, test files, and some data files. They mentioned a test failure in the SubscriptionService test for adding and getting plans. The error is that the test expects the added plan to be in the list but it's not.
+
+Looking at the SubscriptionService code, the addPlan method is pushing a cloned plan into the this.plans array. The test uses includes to check if the plan is present. But since objects are reference types, even if the plan is cloned, the reference might not match. The test is checking if the original plan object is in the array, which it won't be because the array contains clones.
+
+Wait, in the test, they create a plan object and add it. The service's addPlan uses { ...plan }, which creates a shallow copy. When the test does service.getPlans().includes(plan), it's checking for reference equality, not value equality. Since the array contains a clone, the reference is different, so includes returns false. That's why the test is failing.
+
+So the fix is to ensure that the plan added to the array is the same reference as the one in the test, or modify the test to check for deep equality. But since the code is supposed to pass the test, the better approach is to adjust the code so that the added plan is the same instance. However, the current code uses a spread operator which creates a new object. To fix the test, maybe the test should check if the properties match instead of reference. But according to the user's instructions, the tests should cover all exported functions, so maybe the test is correctly asserting the content, not the reference.
+
+Wait, the test in subscription.service.test.js has:
+
+const plan = { id: '1', name: 'test', price: 9.99, durationDays: 30, features: [] }
+service.addPlan(plan)
+assert.ok(service.getPlans().includes(plan))
+
+But getPlans returns a copy of the array using [...this.plans], so the array in the service has the cloned object, not the original. Therefore, the test is failing because the references are different. The solution is to compare the objects' properties instead of references. The test should check if the plan is in the array by checking if any element matches the plan's properties, not the reference.
+
+But the user wants to keep the test as is. So perhaps the fix is in the test, but the user's instruction says to cover every exported function and component. Alternatively, maybe the code should return the same object reference. Let me check the code again.
+
+In SubscriptionService's addPlan method:
+
+addPlan(plan) {
+    this.plans.push({ ...plan })
+}
+
+This creates a new object. So the test's plan is not the same as the one in the array. To make includes work, the test should check for the presence by value, not reference. But the test uses includes, which checks reference equality. Therefore, the test is incorrect. The correct approach would be to iterate through the array and check for property equality. However, according to the user's instructions, they want every exported function to be covered by tests. The current test is trying to verify that the plan is added, but it's failing because of reference mismatch.
+
+So the fix is to adjust the test to check for deep equality. But since the user's example uses includes, perhaps the code needs to be modified to store the same reference. Alternatively, the test should be adjusted. However, the user's instruction says to cover every exported function, so maybe the test for addPlan is incomplete. The current test is not sufficient because it's checking for reference equality.
+
+But the user wants precise and harmonious solutions. The code is written with the expectation that includes will work, which it won't with objects. Therefore, the error is in the test. The correct approach is to modify the test to check for the presence of an object with the same properties. However, the user might want to keep the test as is, so maybe the code should be adjusted to store the plan without cloning, i.e., push the original plan instead of a cloned one. But that might not be safe if the user modifies the plan later. Alternatively, maybe the test is wrong and should use a deep equality check.
+
+But according to the user's validation instructions, the test should be in the same file path with .test.js and cover every exported function. The current test for addPlan is 'should add and get plans' but it's failing. To fix this, the test should check if the plan's properties exist in any of the returned plans. So the test should iterate through the plans and check for a match on id or other unique properties.
+
+But the user wants the test to pass, so modifying the test to check for deep equality would be necessary, but the user's validation expects the test to cover the function. The current code's addPlan method creates a new object, which is correct to avoid mutation, but the test is expecting reference equality, which is incorrect. So the correct fix is in the test, not the code. However, the user might want the code to be adjusted to ensure the test passes. But the user provided the validation.js file which expects the test to be fixed. Since the test is part of the project, maybe the user wants the test adjusted.
+
+Wait, the user's initial message says "Всяка людина здатна проявляти свою Божу волю через кріз свою душу і розум, матеріалізуючи тілом. Воля можлива без порушень волі іншої душі." So harmony and will are important. The test is not in harmony with the code, leading to failure. The fix is to adjust the test to check for the properties of the plan rather than the reference.
+
+In the test, replace the assert.ok(service.getPlans().includes(plan)) with checking if any plan in the array has the same id or properties. For example, check if the plans array has an object with the same id as the test plan. So the test should be modified to:
+
+assert(service.getPlans().some(p => p.id === plan.id && p.name === plan.name ...)).
+
+But the user's instruction for validation.js is to have the test cover every exported function. The current test is not correctly asserting, leading to failure. So the correct action is to update the test to check for the existence based on properties, not reference.
+
+Therefore, modifying the test in subscription.service.test.js to check for the plan's properties would resolve the issue. The code is correct in creating a clone to prevent mutation, but the test is incorrect. However, the user's response should include the corrected test file.
+</think>
+
+---
+#### [1 file(s), 1 command(s)](@validate)
+```markdown
+- [Updated](src/gateway/subscription.service.test.js)
+```
+---
+
+---

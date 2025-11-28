@@ -1,8 +1,8 @@
 import process from "node:process"
 import { Readable } from "node:stream"
-import { ReadLine } from "../utils/ReadLine.js"
-import { FileSystem } from "../utils/FileSystem.js"
-import { Path } from "../utils/Path.js"
+import ReadLine from "../utils/ReadLine.js"
+import FileSystem from "../utils/FileSystem.js"
+import Path from "../utils/Path.js"
 
 /**
  * Shared logic for parsing command‑line arguments and optional STDIN data.

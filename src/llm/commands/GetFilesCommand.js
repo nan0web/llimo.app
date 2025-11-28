@@ -24,18 +24,6 @@ export default class GetFilesCommand extends Command {
 	static help = "Get the files from the project one file or pattern per line (including micromatch patterns)"
 	static example = "```\nsrc/index.js\ntypes/**\npackage.json\n```"
 
-	/** @type {ParsedFile} */
-	parsed = {}
-
-	/**
-	 * @param {Partial<GetFilesCommand>} [input={}]
-	 */
-	constructor(input = {}) {
-		super(input)
-		const { parsed = this.parsed } = input
-		this.parsed = parsed
-	}
-
 	/**
 	 * Parse a label like `[-**\/*.test.js;-**\/*.test.jsx]` into an array
 	 * of negative glob patterns.

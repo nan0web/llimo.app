@@ -5,7 +5,7 @@ import os from "node:os"
 import path from "node:path"
 
 import * as chatSteps from "./chatSteps.js"
-import FileSystem from "./FileSystem.js"
+import FileSystem from "../utils/FileSystem.js"
 import Chat from "./Chat.js"
 
 /* -------------------------------------------------
@@ -113,3 +113,4 @@ describe("chatSteps – packPrompt (integration with mock)", () => {
 		assert.equal(stats.size, (await fsInstance.stat(promptPath)).size)
 	})
 })
+

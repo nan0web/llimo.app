@@ -4,81 +4,17 @@ import { createHuggingFace } from '@ai-sdk/huggingface'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { streamText, generateText } from 'ai'
 import ModelProvider from "./ModelProvider.js"
-
-/**
- * @typedef {Object} Pricing
- * @property {number} completion
- * @property {number} image
- * @property {number} input_cache_read
- * @property {number} input_cache_write
- * @property {number} internal_reasoning
- * @property {number} prompt
- * @property {number} request
- * @property {number} web_search
- */
-
-/**
- * @typedef {Object} Architecture
- * @property {string[]} input_modalities
- * @property {string} instruct_type
- * @property {string} modality
- * @property {string[]} output_modalities
- * @property {string} tokenizer
- */
-
-/**
- * @typedef {Object} TopProvider
- * @property {number} context_length
- * @property {boolean} is_moderated
- * @property {number} max_completion_tokens
- */
-
-/**
- * @typedef {Object} ModelInfo
- * @property {string} id - Model ID
- * @property {Architecture} architecture - Model architecture
- * @property {string} canonical_slug
- * @property {number} context_length
- * @property {number} created
- * @property {object} default_parameters
- * @property {string} description
- * @property {string} hugging_face_id
- * @property {string} name
- * @property {string} per_request_limit
- * @property {Pricing} pricing
- * @property {string[]} supported_parameters - Supported parameters
- * @property {import('./ModelProvider.js').AvailableProvider} provider - Provider name (openai, cerebras, …)
- * @property {TopProvider} top_provider
- */
-
-/**
- * @typedef {"reasoning-delta" | "text-delta"} ChunkType
- */
-
-/**
- * @typedef {Object} Chunk
- * @property {ChunkType} type
- * @property {string} id
- * @property {string} text
- */
+import ModelInfo from './ModelInfo.js'
+import LanguageModelUsage from './LanguageModelUsage.js'
 
 /**
  * @typedef {Object} StreamOptions callbacks and abort signal
  * @property {AbortSignal} [abortSignal] aborts the request when signaled
- * @property {(chunk: Chunk)=>void} [onChunk] called for each raw chunk
- * @property {(step:number,totalSteps?:number)=>void} [onStepFinish] called after a logical step finishes (see description above)
- * @property {(error:any)=>void} [onError] called on stream error
+ * @property {import('ai').StreamTextOnChunkCallback<import('ai').ToolSet>} [onChunk] called for each raw chunk
+ * @property {import('ai').StreamTextOnStepFinishCallback<import('ai').ToolSet>} [onStepFinish] called after a logical step finishes (see description above)
+ * @property {import('ai').StreamTextOnErrorCallback} [onError] called on stream error
  * @property {()=>void} [onFinish] called when the stream ends successfully
  * @property {()=>void} [onAbort] called when the stream is aborted
- */
-
-/**
- * @typedef {Object} Usage
- * {promptTokens:number,completionTokens:number,totalTokens:number}
- * @property {number} inputTokens
- * @property {number} reasoningTokens
- * @property {number} outputTokens
- * @property {number} totalTokens
  */
 
 /**
@@ -145,6 +81,16 @@ export default class AI {
 	}
 
 	/**
+	 * Add a model to the internal map (for testing).
+	 *
+	 * @param {string} id
+	 * @param {Partial<ModelInfo>} info
+	 */
+	addModel(id, info) {
+		this.#models.set(id, info)
+	}
+
+	/**
 	 * Get provider instance for a model.
 	 *
 	 * @param {string} provider
@@ -193,7 +139,7 @@ export default class AI {
 	 *
 	 * @param {string} modelId
 	 * @param {import('ai').ModelMessage[]} messages
-	 * @param {StreamOptions} [options={}]
+	 * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage>} [options={}]
 	 * @returns {import('ai').StreamTextResult<import('ai').ToolSet>}
 	 */
 	streamText(modelId, messages, options = {}) {
@@ -237,7 +183,7 @@ export default class AI {
 	 *
 	 * @param {string} modelId
 	 * @param {import('ai').ModelMessage[]} messages
-	 * @returns {Promise<{text: string, usage: import('ai').LanguageModelUsage}>}
+	 * @returns {Promise<{text: string, usage: LanguageModelUsage}>}
 	 */
 	async generateText(modelId, messages) {
 		const model = this.getModel(modelId)
@@ -251,3 +197,4 @@ export default class AI {
 		return { text, usage }
 	}
 }
+

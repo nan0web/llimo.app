@@ -101,7 +101,6 @@ async function main(argv = process.argv.slice(2)) {
 					input: (await fs.open(mdFile)).createReadStream(),
 					crlfDelay: Infinity,
 				})
-				baseDir = path.dirname(mdFile)
 				// If a second argument exists, treat it as the destination file.
 				if (argv.length > 1) {
 					outputPath = path.resolve(process.cwd(), argv[1])

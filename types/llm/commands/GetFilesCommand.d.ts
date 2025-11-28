@@ -16,12 +16,6 @@
 export default class GetFilesCommand extends Command {
     static name: string;
     /**
-     * @param {Partial<GetFilesCommand>} [input={}]
-     */
-    constructor(input?: Partial<GetFilesCommand>);
-    /** @type {ParsedFile} */
-    parsed: ParsedFile;
-    /**
      * Parse a label like `[-**\/*.test.js;-**\/*.test.jsx]` into an array
      * of negative glob patterns.
      *

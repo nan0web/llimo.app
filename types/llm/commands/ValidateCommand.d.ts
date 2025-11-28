@@ -5,8 +5,6 @@ export default class ValidateCommand extends Command {
      * @param {Partial<ValidateCommand>} [input={}]
      */
     constructor(input?: Partial<ValidateCommand>);
-    /** @type {ParsedFile} */
-    parsed: ParsedFile;
     run(): AsyncGenerator<string, void, unknown>;
 }
 export type ParsedFile = import("../../FileProtocol.js").ParsedFile;

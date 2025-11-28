@@ -1,0 +1,268 @@
+> entrypoint@1.0.0 test:all /Users/i/src/purejs/entrypoint
+> npm run test && npm run build
+
+
+> entrypoint@1.0.0 test
+> node --test --test-timeout=3333 "src/**/*.test.js"
+
+TAP version 13
+# Subtest: Router
+    # Subtest: should handle GET route
+    ok 1 - should handle GET route
+      ---
+      duration_ms: 1.833709
+      type: 'test'
+      ...
+    # Subtest: should handle POST route
+    ok 2 - should handle POST route
+      ---
+      duration_ms: 0.400792
+      type: 'test'
+      ...
+    # Subtest: should skip non-matching routes
+    ok 3 - should skip non-matching routes
+      ---
+      duration_ms: 0.250375
+      type: 'test'
+      ...
+    # Subtest: should call middleware
+    ok 4 - should call middleware
+      ---
+      duration_ms: 0.559041
+      type: 'test'
+      ...
+    # Subtest: should not call next handler if res.end() called
+    ok 5 - should not call next handler if res.end() called
+      ---
+      duration_ms: 0.128209
+      type: 'test'
+      ...
+    # Subtest: should use middleware on path
+    ok 6 - should use middleware on path
+      ---
+      duration_ms: 0.168667
+      type: 'test'
+      ...
+    # Subtest: should handle mounted routers
+    ok 7 - should handle mounted routers
+      ---
+      duration_ms: 0.111417
+      type: 'test'
+      ...
+    1..7
+ok 1 - Router
+  ---
+  duration_ms: 4.249417
+  type: 'suite'
+  ...
+# HTTPS server listening on https://localhost:8444
+# (node:10033) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# [2025-11-27T19:57:46.757Z] POST /api/jyotish/calculate
+# Subtest: Jyotish HTTPS API
+    # Subtest: should calculate birth Nakshatra
+    ok 1 - should calculate birth Nakshatra
+      ---
+      duration_ms: 34.9915
+      type: 'test'
+      ...
+    1..1
+ok 2 - Jyotish HTTPS API
+  ---
+  duration_ms: 36.534667
+  type: 'suite'
+  ...
+# HTTPS server listening on https://localhost:8445
+# (node:10034) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# [2025-11-27T19:57:46.757Z] POST /api/nakshatra/calculate
+# Subtest: Nakshatra HTTPS API
+    # Subtest: Тестовий випадок 1
+    ok 1 - Тестовий випадок 1
+      ---
+      duration_ms: 35.581333
+      type: 'test'
+      ...
+# [2025-11-27T19:57:46.771Z] POST /api/nakshatra/calculate
+    # Subtest: Тестовий випадок 2
+    ok 2 - Тестовий випадок 2
+      ---
+      duration_ms: 5.390959
+      type: 'test'
+      ...
+# [2025-11-27T19:57:46.775Z] POST /api/nakshatra/calculate
+    # Subtest: Тестовий випадок 3
+    ok 3 - Тестовий випадок 3
+      ---
+      duration_ms: 2.863417
+      type: 'test'
+      ...
+    1..3
+ok 3 - Nakshatra HTTPS API
+  ---
+  duration_ms: 45.432917
+  type: 'suite'
+  ...
+# Subtest: AuthProvider
+    # Subtest: should not allow direct instantiation
+    ok 1 - should not allow direct instantiation
+      ---
+      duration_ms: 1.384083
+      type: 'test'
+      ...
+    # Subtest: should allow inheritance
+    ok 2 - should allow inheritance
+      ---
+      duration_ms: 0.448916
+      type: 'test'
+      ...
+    # Subtest: register throws not implemented
+    ok 3 - register throws not implemented
+      ---
+      duration_ms: 0.243625
+      type: 'test'
+      ...
+    # Subtest: login throws not implemented
+    ok 4 - login throws not implemented
+      ---
+      duration_ms: 0.132416
+      type: 'test'
+      ...
+    # Subtest: verify throws not implemented
+    ok 5 - verify throws not implemented
+      ---
+      duration_ms: 0.085334
+      type: 'test'
+      ...
+    # Subtest: getProfile throws not implemented
+    ok 6 - getProfile throws not implemented
+      ---
+      duration_ms: 0.151083
+      type: 'test'
+      ...
+    1..6
+ok 4 - AuthProvider
+  ---
+  duration_ms: 4.606083
+  type: 'suite'
+  ...
+# Subtest: BotInterface
+    # Subtest: should not allow direct instantiation
+    ok 1 - should not allow direct instantiation
+      ---
+      duration_ms: 0.956209
+      type: 'test'
+      ...
+    # Subtest: should allow inheritance
+    ok 2 - should allow inheritance
+      ---
+      duration_ms: 0.194875
+      type: 'test'
+      ...
+    # Subtest: handleMessage throws not implemented
+    ok 3 - handleMessage throws not implemented
+      ---
+      duration_ms: 0.158041
+      type: 'test'
+      ...
+    # Subtest: sendMessage throws not implemented
+    ok 4 - sendMessage throws not implemented
+      ---
+      duration_ms: 0.082917
+      type: 'test'
+      ...
+    # Subtest: start throws not implemented
+    ok 5 - start throws not implemented
+      ---
+      duration_ms: 0.06625
+      type: 'test'
+      ...
+    # Subtest: stop throws not implemented
+    ok 6 - stop throws not implemented
+      ---
+      duration_ms: 0.132125
+      type: 'test'
+      ...
+    1..6
+ok 5 - BotInterface
+  ---
+  duration_ms: 3.643458
+  type: 'suite'
+  ...
+# Subtest: SubscriptionService
+    # Subtest: should not allow direct instantiation
+    ok 1 - should not allow direct instantiation
+      ---
+      duration_ms: 0.571125
+      type: 'test'
+      ...
+    # Subtest: should allow inheritance
+    ok 2 - should allow inheritance
+      ---
+      duration_ms: 1.101834
+      type: 'test'
+      ...
+    # Subtest: should add and get plans
+    not ok 3 - should add and get plans
+      ---
+      duration_ms: 15.899792
+      type: 'test'
+      location: '/Users/i/src/purejs/entrypoint/src/gateway/subscription.service.test.js:17:2'
+      failureType: 'testCodeFailure'
+      error: |-
+        The expression evaluated to a falsy value:
+
+          assert.ok(service.getPlans().includes(plan))
+
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        TestContext.<anonymous> (file:///Users/i/src/purejs/entrypoint/src/gateway/subscription.service.test.js:20:10)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: subscribe throws not implemented
+    ok 4 - subscribe throws not implemented
+      ---
+      duration_ms: 0.189792
+      type: 'test'
+      ...
+    # Subtest: getStatus throws not implemented
+    ok 5 - getStatus throws not implemented
+      ---
+      duration_ms: 0.089708
+      type: 'test'
+      ...
+    # Subtest: cancel throws not implemented
+    ok 6 - cancel throws not implemented
+      ---
+      duration_ms: 0.073291
+      type: 'test'
+      ...
+    1..6
+not ok 6 - SubscriptionService
+  ---
+  duration_ms: 18.971542
+  type: 'suite'
+  location: '/Users/i/src/purejs/entrypoint/src/gateway/subscription.service.test.js:7:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..6
+# tests 29
+# suites 6
+# pass 28
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 281.142666
+ ELIFECYCLE  Command failed with exit code 1.

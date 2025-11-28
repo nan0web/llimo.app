@@ -14,6 +14,8 @@ export default class Command {
     timeout: number;
     /** @type {FileEntry} */
     file: FileEntry;
+    /** @type {import("../../FileProtocol.js").ParsedFile} */
+    parsed: import("../../FileProtocol.js").ParsedFile;
     /**
      * @returns {AsyncGenerator<string>}
      */

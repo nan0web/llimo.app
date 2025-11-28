@@ -57,10 +57,6 @@ as example:
 ```
 ---
 
-## Commands
-
-<!--TOOLS_MD-->
-
 ## Escaping special chars
 
 The only specials chars we need to escape are triple ` inside code blocks.
@@ -73,6 +69,10 @@ Escape them by adding one or more quote, for example (js has 4 quotes for open a
 export default {}
 ````
 ```
+
+## Commands
+
+<!--TOOLS_MD-->
 
 ## Verification
 

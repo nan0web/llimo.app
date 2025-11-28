@@ -6,14 +6,15 @@
  * @module utils/chatSteps
  */
 import { ReadStream } from "node:tty"
-import Chat from "./Chat.js"
-import FileSystem from "./FileSystem.js"
-import AI from "../llm/AI.js"
-import { BOLD, GREEN, ITALIC, RESET, overwriteLine, cursorUp } from "./ANSI.js"
-import { generateSystemPrompt } from "../llm/system.js"
-import MarkdownProtocol from "./Markdown.js"
-import { unpackAnswer } from "../llm/unpack.js"
 import readline from "node:readline"
+
+import Chat from "./Chat.js"
+import AI from "./AI.js"
+import { generateSystemPrompt } from "./system.js"
+import { unpackAnswer } from "./unpack.js"
+import { BOLD, GREEN, ITALIC, RESET, overwriteLine, cursorUp } from "../utils/ANSI.js"
+import FileSystem from "../utils/FileSystem.js"
+import MarkdownProtocol from "../utils/Markdown.js"
 
 /**
  * Read the input either from STDIN or from the first CLI argument.
@@ -47,42 +48,21 @@ export async function readInput(argv, fs, stdin = process.stdin) {
  * For compatibility with the test suite we also support the legacy
  * positional signature: `initialiseChat(ChatClass, fsInstance)`.
  *
- * @param {typeof Chat|object} ChatClassOrOpts – either the Chat class
+ * @param {object} [input] either the Chat class
  *   itself (positional form) or an options object (named form).
- * @param {FileSystem} [maybeFs] – required only when using the positional form.
- * @param {object} [namedOpts] – additional options when using the positional form.
+ * @param {typeof Chat} [input.ChatClass] required only when using the positional form.
+ * @param {FileSystem} [input.fs] required only when using the positional form.
+ * @param {string} [input.root] chat root directory
+ * @param {boolean} [input.isNew] additional options when using the positional form.
  * @returns {Promise<{chat: Chat, currentFile: string}>}
  */
-export async function initialiseChat(ChatClassOrOpts, maybeFs, namedOpts = {}) {
-	// -----------------------------------------------------------------
-	// Detect calling convention
-	// -----------------------------------------------------------------
-	let ChatClass
-	let fs
-	let root = "chat"
-	let isNew = false
-
-	if (typeof ChatClassOrOpts === "function") {
-		// Positional form: initialiseChat(ChatClass, fsInstance, {root?, isNew?})
-		ChatClass = ChatClassOrOpts
-		fs = maybeFs ?? new FileSystem()
-		if (namedOpts) {
-			if (namedOpts.root !== undefined) root = namedOpts.root
-			if (namedOpts.isNew !== undefined) isNew = namedOpts.isNew
-		}
-	} else {
-		// Object form – the original API
-		const {
-			ChatClass: CC,
-			fs: fsOpt = new FileSystem(),
-			root: r = "chat",
-			isNew: n = false,
-		} = ChatClassOrOpts
-		ChatClass = CC
-		fs = fsOpt
-		root = r
-		isNew = n
-	}
+export async function initialiseChat(input = {}) {
+	const {
+		ChatClass = Chat,
+		fs = new FileSystem(),
+		isNew = false,
+		root = "chat",
+	} = input
 
 	const format = new Intl.NumberFormat("en-US").format
 	const currentFile = fs.path.resolve(root, "current")
@@ -90,12 +70,13 @@ export async function initialiseChat(ChatClassOrOpts, maybeFs, namedOpts = {}) {
 
 	if (await fs.exists(currentFile)) id = await fs.load(currentFile) || undefined
 
+	/** @type {Chat} */
 	const chat = new ChatClass({ id, root, cwd: fs.cwd })
 	await chat.init()
 
 	if (id === chat.id && !isNew) {
 		if (await chat.load()) {
-			console.info(`+ loaded ${format(chat.messages.length)} messages`)
+			console.info(`+ loaded ${format(chat.messages.length)} messages from existing chat ${chat.id}`)
 		} else {
 			console.info(`+ ${chat.id} empty chat loaded`)
 		}
@@ -208,7 +189,7 @@ export async function decodeAnswerAndRunTests(chat, runCommand, isYes = false) {
 	const parsed = await MarkdownProtocol.parse(content)
 	let prompt = isYes ? "yes" : ""
 
-	logs.push("% llimo-unpack")
+	logs.push("#### llimo-unpack")
 	logs.push("```bash")
 	if (!isYes) {
 		// Dry‑run unpack to show what would be written
@@ -278,7 +259,7 @@ export async function decodeAnswerAndRunTests(chat, runCommand, isYes = false) {
 	}
 
 	const { stdout: testStdout, stderr: testStderr } = await runCommand("pnpm test:all", { onData })
-	logs.push("$ pnpm test:all")
+	logs.push("#### pnpm test:all")
 	logs.push("```bash")
 	logs.push(testStderr)
 	logs.push(testStdout)

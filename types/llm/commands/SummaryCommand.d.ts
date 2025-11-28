@@ -16,8 +16,6 @@ export default class SummaryCommand extends Command {
      * @param {Partial<SummaryCommand>} [input={}]
      */
     constructor(input?: Partial<SummaryCommand>);
-    /** @type {ParsedFile} */
-    parsed: ParsedFile;
     run(): AsyncGenerator<string, void, unknown>;
 }
 export type ParsedFile = import("../../FileProtocol.js").ParsedFile;

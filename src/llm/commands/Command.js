@@ -13,6 +13,8 @@ export default class Command {
 	timeout = 0
 	/** @type {FileEntry} */
 	file = new FileEntry()
+	/** @type {import("../../FileProtocol.js").ParsedFile} */
+	parsed = {}
 	/**
 	 * @param {Partial<Command>} input
 	 */
@@ -22,11 +24,13 @@ export default class Command {
 			timeout = this.timeout,
 			file = this.file,
 			fs = this.fs,
+			parsed = this.parsed,
 		} = input
 		this.cwd = String(cwd)
 		this.timeout = Number(timeout)
 		this.file = new FileEntry(file)
 		this.fs = fs
+		this.parsed = parsed
 	}
 	/**
 	 * @returns {AsyncGenerator<string>}

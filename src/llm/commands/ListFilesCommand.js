@@ -1,6 +1,5 @@
 import micromatch from "micromatch"
 import Command from "./Command.js"
-import { FileSystem, Path } from "../../utils.js"
 
 /** @typedef {import("../../FileProtocol.js").ParsedFile} ParsedFile */
 
@@ -8,23 +7,6 @@ export default class ListFilesCommand extends Command {
 	static name = "ls"
 	static help = "List the files inside project one directory or pattern per line (including micromatch patterns)"
 	static example = "```\ntypes\nsrc/**/*.test.js\n```"
-
-	/** @type {ParsedFile} */
-	parsed = {}
-	/** @type {FileSystem} */
-	#fs
-
-	/**
-	 * @param {Partial<ListFilesCommand>} [input={}]
-	 */
-	constructor(input = {}) {
-		super(input)
-		const {
-			parsed = this.parsed,
-		} = input
-		this.parsed = parsed
-		this.#fs = new FileSystem({ cwd: this.cwd })
-	}
 
 	async * run() {
 		const file = this.parsed.correct?.filter(file => "@ls" === file.filename)[0]
@@ -52,7 +34,7 @@ export default class ListFilesCommand extends Command {
 	 * @returns {Promise<string[]>} - Array of relative file paths
 	 */
 	async #getAllFiles(dir = this.cwd, ignore = ['.git/**', 'node_modules/**']) {
-		return await this.#fs.browse(dir, { recursive: true, ignore })
+		return await this.fs.browse(dir, { recursive: true, ignore })
 	}
 }
 

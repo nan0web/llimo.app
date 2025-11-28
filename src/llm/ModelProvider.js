@@ -136,9 +136,11 @@ export default class ModelProvider {
 				break
 			case "openrouter":
 				// OpenRouter uses *_usd naming.
+				norm.provider = "openrouter"
 				break
 			case "huggingface":
 				// HuggingFace payload format (if ever used) – fallback to generic names.
+				norm.provider = "huggingface"
 				break
 		}
 		return norm
@@ -158,8 +160,8 @@ export default class ModelProvider {
 	 */
 	async getAll(options = {}) {
 		const {
-			onBefore = () => {},
-			onData = () => {},
+			onBefore = () => { },
+			onData = () => { },
 		} = options
 		const cached = await this.#loadCache()
 		if (cached) {
@@ -194,8 +196,8 @@ export default class ModelProvider {
 		}
 
 		/** @todo fix: Type 'Map<string | undefined, Partial<ModelInfo>>' is not assignable to type 'Map<string, ModelInfo>'.
-			  Type 'string | undefined' is not assignable to type 'string'.
-			    Type 'undefined' is not assigned to type 'string'.ts(2322) */
+				Type 'string | undefined' is not assignable to type 'string'.
+					Type 'undefined' is not assigned to type 'string'.ts(2322) */
 		// Ensure we only include entries with a defined string id.
 		const cleanEntries = all
 			.filter((m) => typeof m.id === "string" && m.id.length > 0)

@@ -7,7 +7,7 @@
  * @typedef {Object} ChatProgressInput
  * @property {import("../llm/AI.js").Usage} usage
  * @property {{ startTime: number, reasonTime?: number, answerTime?: number }} clock
- * @property {import("../llm/AI.js").ModelInfo} modelInfo
+ * @property {import("../llm/AI.js").ModelInfo} model
  * @property {(n:number)=>string} [format]     number formatter (e.g. Intl.NumberFormat)
  * @property {(n:number)=>string} [valuta]     price formatter (prefixed with $)
  * @property {number} [elapsed]                total elapsed seconds (overrides clock calculation)
@@ -20,7 +20,7 @@ export function formatChatProgress(input) {
 	const {
 		usage,
 		clock,
-		modelInfo,
+		model,
 		format = new Intl.NumberFormat("en-US").format,
 		valuta = (value) => {
 			const f = new Intl.NumberFormat("en-US", {
@@ -43,7 +43,7 @@ export function formatChatProgress(input) {
 		const nowReading = clock.reasonTime ?? clock.answerTime ?? now
 		const spent = (nowReading - clock.startTime) / 1e3
 		const speed = Math.round(usage.inputTokens / spent)
-		inputPrice = usage.inputTokens * modelInfo.pricing.prompt
+		inputPrice = usage.inputTokens * model.pricing.prompt
 		rows.push([
 			"reading",
 			spent,
@@ -57,7 +57,7 @@ export function formatChatProgress(input) {
 	if (usage.reasoningTokens) {
 		const spent = ((clock.answerTime ?? now) - (clock.reasonTime ?? clock.startTime)) / 1e3
 		const speed = Math.round(usage.reasoningTokens / spent)
-		reasonPrice = usage.reasoningTokens * modelInfo.pricing.completion
+		reasonPrice = usage.reasoningTokens * model.pricing.completion
 		rows.push([
 			"reasoning",
 			spent,
@@ -74,7 +74,7 @@ export function formatChatProgress(input) {
 				(clock.answerTime ?? clock.reasonTime ?? clock.startTime)) /
 			1e3
 		const speed = Math.round(usage.outputTokens / spent)
-		answerPrice = usage.outputTokens * modelInfo.pricing.completion
+		answerPrice = usage.outputTokens * model.pricing.completion
 		rows.push([
 			"answering",
 			spent,
