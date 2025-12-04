@@ -26,7 +26,9 @@ import {
 import ModelProvider from "../src/llm/ModelProvider.js"
 import { formatChatProgress } from "../src/llm/chatProgress.js"
 import LanguageModelUsage from "../src/llm/LanguageModelUsage.js"
+import ChatOptions from "../src/Chat/Options.js"
 import Ui from "../src/cli/Ui.js"
+import { parseArgv } from "../src/cli/argvHelper.js"
 
 const PROGRESS_FPS = 30
 const MAX_ERRORS = 9
@@ -36,46 +38,6 @@ const MAX_ERRORS = 9
 // const DEFAULT_MODEL = "qwen-3-32b"
 // const DEFAULT_MODEL = "x-ai/grok-code-fast-1"
 const DEFAULT_MODEL = process.env.LLIMO_MODEL || "x-ai/grok-4-fast"
-
-/**
- * Simple argument parser to extract flags and clean positional args.
- * @param {string[]} argv - Raw arguments (process.argv.slice(2))
- * @returns {{ cleanArgv: string[], isNew: boolean, isYes: boolean, testMode: string | null, testDir: string | null }}
- */
-function parseArgs(argv) {
-	const flags = { isNew: false, isYes: false, testMode: null, testDir: null }
-	const cleanArgv = []
-	let i = 0
-
-	while (i < argv.length) {
-		const arg = argv[i]
-		if (arg === "--new") {
-			flags.isNew = true
-		} else if (arg === "--yes") {
-			flags.isYes = true
-		} else if (arg.startsWith("--test=")) {
-			flags.testMode = arg.split("=")[1]
-		} else if (arg === "--test-dir") {
-			i++
-			if (i < argv.length) {
-				flags.testDir = argv[i]
-			} else {
-				console.error("! --test-dir requires a directory path")
-				process.exit(1)
-			}
-		} else {
-			cleanArgv.push(arg)
-		}
-		i++
-	}
-
-	// If testMode without dir, assume it's a chat ID relative to 'chat/'
-	if (flags.testMode && !flags.testDir) {
-		flags.testDir = `chat/${flags.testMode}`
-	}
-
-	return { ...flags, cleanArgv }
-}
 
 /**
  * Create progress interval to call the fn() with provided fps.
@@ -172,7 +134,8 @@ async function main(argv = process.argv.slice(2)) {
 	const ui = new Ui()
 
 	// Parse arguments
-	const { cleanArgv, isNew, isYes, testMode, testDir } = parseArgs(argv)
+	const command = parseArgv(argv, ChatOptions)
+	const { argv: cleanArgv, isNew, isYes, testMode, testDir } = command
 
 	const format = new Intl.NumberFormat("en-US").format
 	const pricing = new Intl.NumberFormat("en-US", { currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format
@@ -563,5 +526,6 @@ async function main(argv = process.argv.slice(2)) {
 
 main().catch((err) => {
 	console.error("❌ Fatal error in llimo‑chat:", err.message)
+	if (err.stack && process.argv.includes("--debug")) console.error(err.stack)
 	process.exit(1)
 })

@@ -45,6 +45,12 @@ export default class AI {
      */
     getModel(modelId: string): ModelInfo | undefined;
     /**
+     * Find a model from all of the models by partial comparasion.
+     * @param {string} modelId The full or partial model id.
+     * @returns {ModelInfo | undefined}
+     */
+    findModel(modelId: string): ModelInfo | undefined;
+    /**
      * Add a model to the internal map (for testing).
      *
      * @param {string} id
