@@ -106,9 +106,17 @@ export default class AI {
 		/** @type {ModelInfo[]} */
 		const result = []
 		const str = String(modelId).toLowerCase()
+		const parts = str.split(/[^\w]+/)
 		for (const [id, info] of this.#models.entries()) {
-			if (String(id).toLowerCase().includes(str)) result.push(info)
+			const lc = String(id).toLowerCase()
+			if (lc.includes(str)) {
+				result.push(info)
+			}
+			if (parts.some(p => lc.includes(p))) {
+				result.push(info)
+			}
 		}
+		result.sort((a, b) => a.id.localeCompare(b.id))
 		return result
 	}
 

@@ -164,16 +164,20 @@ class TestRunner {
  */
 async function main(argv = process.argv.slice(2)) {
 	const command = parseArgv(argv, TestOptions)
-	const { argv: cleanArgv, mode, step, outputDir, delay } = command
+	const cleanArgv = command.argv
 
-	if (cleanArgv.length < 1) {
+	const modes = ["info", "unpack", "test"]
+	const mode = modes.find(a => modes.includes(a)) ?? modes[0]
+
+	const chatDir = cleanArgv.find(a => !modes.includes(a))
+
+	if (!chatDir) {
 		console.error("Usage: llimo-chat-test <chat-dir> [mode] [--step N] [--dir /path] [--delay ms]")
 		console.error("Modes: info (default), unpack, test")
 		process.exit(1)
 	}
 
-	const chatDir = cleanArgv[0]
-	const options = { mode, step, outputDir, delay }
+	const options = { ...command, mode }
 
 	const runner = new TestRunner(chatDir, options)
 	await runner.run()

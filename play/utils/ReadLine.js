@@ -10,7 +10,7 @@ async function main() {
 		stopWord: "#",               // type # on a line by itself to finish
 		stopKeys: [],                // no special key combos
 	})
-	console.log('\n▶️  Result (stop‑word only):', answer1)
+	console.info('\n▶️  Result (stop‑word only):', answer1)
 
 	// Example 2: stop on **plain Enter** (no stop word)
 	const answer2 = await rl.interactive({
@@ -19,7 +19,7 @@ async function main() {
 		stopWord: "",                // empty → never triggers
 		stopKeys: "enter",           // plain Enter ends input
 	})
-	console.log('\n▶️  Result (plain Enter):', answer2)
+	console.info('\n▶️  Result (plain Enter):', answer2)
 
 	// Example 3: stop on **Ctrl‑Enter** (or Cmd‑Enter on macOS)
 	const answer3 = await rl.interactive({
@@ -28,7 +28,7 @@ async function main() {
 		stopWord: "",                // empty → never triggers
 		stopKeys: ["ctrl", "meta"],  // accept either Ctrl+Enter or Cmd+Enter
 	})
-	console.log('\n▶️  Result (Ctrl/Cmd‑Enter):', answer3)
+	console.info('\n▶️  Result (Ctrl/Cmd‑Enter):', answer3)
 }
 
 main().catch(err => {

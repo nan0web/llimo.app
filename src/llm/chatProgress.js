@@ -33,8 +33,10 @@ export function formatChatProgress(input) {
 			return `$${f(value)}`
 		},
 		now = Date.now(),
-		elapsed = (now - clock.startTime) / 1e3,
 	} = input
+
+	let elapsed = input.elapsed ?? ((now - clock.startTime) / 1e3)
+	if (elapsed > 3600) elapsed = (now - clock.startTime) / 1e3 // Sanity check for overflow
 
 	/** @type {Array<Array<any>>} */
 	const rows = []
@@ -42,8 +44,12 @@ export function formatChatProgress(input) {
 		reasonPrice = 0,
 		answerPrice = 0
 
-	const safeSpent = (spent) => Math.max(0, spent)
-	const safeSpeed = (tokens, spent) => spent > 0 ? Math.round(tokens / spent) : 0
+	const safeSpent = (spent) => Math.max(0, isNaN(spent) ? 0 : spent)
+	const safeSpeed = (tokens, spent) => {
+		const safeTokens = isNaN(tokens) ? 0 : tokens
+		const safeSpentVal = safeSpent(spent)
+		return safeSpentVal > 0 ? Math.round(safeTokens / safeSpentVal) : 0
+	}
 
 	// Reading (input / prompt) line
 	if (usage.inputTokens) {
@@ -51,13 +57,13 @@ export function formatChatProgress(input) {
 		let readingSpent = safeSpent((nowReading - clock.startTime) / 1e3)
 		if (!clock.reasonTime && !clock.answerTime) readingSpent = elapsed  // Full time if no phases
 		const speed = safeSpeed(usage.inputTokens, readingSpent)
-		inputPrice = usage.inputTokens * (model.pricing.prompt / 1e6)
+		inputPrice = (usage.inputTokens * model.pricing.prompt) / 1e6
 		rows.push([
 			"reading",
-			readingSpent,
-			usage.inputTokens,
-			format(speed),
-			valuta(inputPrice),
+			isNaN(readingSpent) ? "0.0" : readingSpent.toFixed(1),
+			usage.inputTokens !== undefined ? `${format(Number(usage.inputTokens))}T` : "",
+			speed !== undefined ? `${format(Number(speed))}T/s` : "",
+			inputPrice >= 0 ? valuta(inputPrice) : "$0.000000",
 		])
 	}
 
@@ -65,13 +71,13 @@ export function formatChatProgress(input) {
 	if (usage.reasoningTokens && clock.reasonTime) {
 		const spent = safeSpent(((clock.answerTime ?? now) - clock.reasonTime) / 1e3)
 		const speed = safeSpeed(usage.reasoningTokens, spent)
-		reasonPrice = usage.reasoningTokens * (model.pricing.completion / 1e6)
+		reasonPrice = (usage.reasoningTokens * model.pricing.completion) / 1e6
 		rows.push([
 			"reasoning",
-			spent,
-			usage.reasoningTokens,
-			format(speed),
-			valuta(reasonPrice),
+			isNaN(spent) ? "0.0" : spent.toFixed(1),
+			usage.reasoningTokens !== undefined ? `${format(Number(usage.reasoningTokens))}T` : "",
+			speed !== undefined ? `${Number(speed)}T/s` : "",
+			reasonPrice >= 0 ? valuta(reasonPrice) : "$0.000000",
 		])
 	}
 
@@ -79,28 +85,33 @@ export function formatChatProgress(input) {
 	if (usage.outputTokens && clock.answerTime) {
 		const spent = safeSpent((now - clock.answerTime) / 1e3)
 		const speed = safeSpeed(usage.outputTokens, spent)
-		answerPrice = usage.outputTokens * (model.pricing.completion / 1e6)
+		answerPrice = (usage.outputTokens * model.pricing.completion) / 1e6
 		rows.push([
 			"answering",
-			spent,
-			usage.outputTokens,
-			format(speed),
-			valuta(answerPrice),
+			isNaN(spent) ? "0.0" : spent.toFixed(1),
+			usage.outputTokens !== undefined ? `${format(Number(usage.outputTokens))}T` : "",
+			speed !== undefined ? `${Number(speed)}T/s` : "",
+			answerPrice >= 0 ? valuta(answerPrice) : "$0.000000",
 		])
 	}
 
-	const total = usage.inputTokens + usage.outputTokens + usage.reasoningTokens
+	const total = usage.inputTokens + usage.reasoningTokens + usage.outputTokens
 	const sum = inputPrice + reasonPrice + answerPrice
-	const whole = elapsed
-	rows.unshift(["chat progress", whole, total, safeSpeed(total, whole), valuta(sum)])
+	rows.unshift([
+		"chat progress",
+		`${Number(elapsed).toFixed(1)}`,
+		total ? `${format(Number(total))}T` : "",
+		format(safeSpeed(total, elapsed)) + "T/s",
+		valuta(sum)
+	])
 
 	/** Transform rows into printable columns */
 	const formattedRows = rows.map(
 		([label, spent, tokens, speed, price]) => [
 			label,
-			`${Number(spent).toFixed(1)}s`,
-			tokens !== undefined && tokens !== "" ? `${format(Number(tokens))}T` : "",
-			speed !== undefined && speed !== "" ? `${Number(speed)}T/s` : "",
+			String(spent) + "s",
+			tokens ?? "",
+			speed ?? "",
 			price ?? "",
 		]
 	)
@@ -108,14 +119,14 @@ export function formatChatProgress(input) {
 	/** Determine max width of each column */
 	const colWidths = formattedRows.reduce(
 		(acc, row) =>
-			row.map((cell, i) => Math.max(acc[i] ?? 0, cell.length)),
+			row.map((cell, i) => Math.max(acc[i] ?? 0, String(cell).length)),
 		[]
 	)
 
 	/** Pad each cell to its column width and join with a pipe */
 	const paddedLines = formattedRows.map(row =>
 		row
-			.map((cell, i) => cell.padStart(colWidths[i]))
+			.map((cell, i) => String(cell).padStart(colWidths[i]))
 			.join(" | ")
 	)
 

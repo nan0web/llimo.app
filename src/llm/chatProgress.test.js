@@ -6,7 +6,7 @@ import LanguageModelUsage from "./LanguageModelUsage.js"
 
 describe("formatChatProgress – pure formatting logic", () => {
 	it("produces correctly padded lines", () => {
-		const usage = new LanguageModelUsage({ inputTokens: 1200, reasoningTokens: 300, outputTokens: 500, totalTokens: 2000 })
+		const usage = new LanguageModelUsage({ inputTokens: 120_000, reasoningTokens: 300, outputTokens: 500, totalTokens: 2000 })
 		const now = 1e6
 		const clock = {
 			startTime: now - 5e4,  // 50 seconds ago
@@ -26,11 +26,15 @@ describe("formatChatProgress – pure formatting logic", () => {
 			now
 		})
 		assert.deepStrictEqual(lines, [
-			'chat progress | 50.0s | 2,000T |  40T/s | $1.020000',
-			'      reading | 47.0s | 1,200T |  26T/s | $0.420000',
-			'    reasoning |  1.0s |   300T | 300T/s | $0.225000',
-			'    answering |  2.0s |   500T | 250T/s | $0.375000',
+			'chat progress | 50.0s | 120,800T | 2,416T/s | $42.600000',
+			'      reading | 47.0s | 120,000T | 2,553T/s | $42.000000',
+			'    reasoning |  1.0s |     300T |   300T/s |  $0.225000',
+			'    answering |  2.0s |     500T |   250T/s |  $0.375000',
 		])
+	})
+
+	it.todo("add tests with different chunks to see the closest test to real life", async () => {
+		// @todo write a test to imitate chatProgress
 	})
 
 	it("handles zero tokens gracefully", () => {

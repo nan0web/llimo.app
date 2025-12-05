@@ -8,7 +8,6 @@ async function main(argv = process.argv.slice(2)) {
 	for (const [name, info] of result.entries()) {
 		console.info(`@${name}: ${info.provider}`)
 	}
-	// console.log(result)
 }
 
 main().catch((err) => {
