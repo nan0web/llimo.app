@@ -12,9 +12,9 @@ import { BOLD, RESET } from '../cli/ANSI.js'
 function parseStopKeys(stopKeys = []) {
 	const set = new Set(Array.isArray(stopKeys) ? stopKeys : [stopKeys])
 	return {
-		enter: set.has('enter'),   // plain Enter
-		ctrl: set.has('ctrl'),    // Ctrl+Enter
-		meta: set.has('meta'),    // Cmd/Meta+Enter (macOS ⌘)
+		enter: set.has('enter'), // plain Enter
+		ctrl: set.has('ctrl'),   // Ctrl+Enter
+		meta: set.has('meta'),   // Cmd/Meta+Enter (macOS ⌘)
 	}
 }
 
@@ -40,10 +40,7 @@ export default class ReadLine {
 	 * @param {Object} [options] you can override the default stdin/stdout here.
 	 */
 	constructor(options = {}) {
-		const {
-			input = process.stdin,
-			output = process.stdout,
-		} = options
+		const { input = process.stdin, output = process.stdout } = options
 		this.input = input
 		this.output = output
 	}
@@ -60,26 +57,29 @@ export default class ReadLine {
 		const stopWord = String(options.stopWord ?? '')
 		const help = Boolean(options.help ?? false)
 		const question = String(options.question ?? '')
-		const stopKeys = parseStopKeys(options.stopKeys ?? []) // {enter, ctrl, meta}
+		const stopKeys = parseStopKeys(options.stopKeys ?? [])
 
-		// --------------------------- 1️⃣ Enable key‑press events ---------------------------
-		readline.emitKeypressEvents(stdin)
-		if (stdin.isTTY) stdin.setRawMode(true)
+		// ------------------------------------------------- 1️⃣ enable key‑press events
+		if (stdin.isTTY) {
+			readline.emitKeypressEvents(stdin)
+			stdin.setRawMode(true)
+		}
 
-		// --------------------------- 2️⃣ UI ----------------------------------------------------------------
+		// ------------------------------------------------- 2️⃣ UI
 		if (question) console.info(question)
 		if (help) {
-			console.info(`  • Type the stop word ${BOLD}${JSON.stringify(stopWord)}${RESET} on a line by itself`)
-			console.info('  • OR press **Ctrl + Enter** (keep the cursor on an empty line, then press Ctrl+Enter)')
+			console.info(
+				`  • Type the stop word ${BOLD}${JSON.stringify(stopWord)}${RESET} on a line by itself`,
+			)
+			console.info(
+				'  • OR press **Ctrl + Enter** (keep the cursor on an empty line, then press Ctrl+Enter)',
+			)
 			console.info('--- start typing ---------------------------------------------------\n')
 		}
 
-		// --------------------------- 3️⃣ Collect data -------------------------------------------------
+		// ------------------------------------------------- 3️⃣ collect data
 		const collected = []
 
-		// -------------------------------------------------------------------------------
-		// The Promise that will be returned
-		// -------------------------------------------------------------------------------
 		return new Promise((resolve) => {
 			const rl = readline.createInterface({
 				input: stdin,
@@ -88,78 +88,47 @@ export default class ReadLine {
 				crlfDelay: Infinity,
 			})
 
-			// ----- 3️⃣1️⃣ Line events (stop‑word) -----------------------------------------
+			// ----- line (stop‑word) -----
 			rl.on('line', (rawLine) => {
 				if (stopWord && rawLine.trim() === stopWord) {
-					finish(rl)
+					finish()
 					return
 				}
 				collected.push(rawLine)
 			})
 
-			// ----- 3️⃣2️⃣ Key‑press events (stop‑keys) ------------------------------------
+			// ----- key‑press (stop‑keys) -----
 			const onKeyPress = (str, key) => {
-				// Debug – uncomment if you need to see every raw key:
-				// console.log('KEY:', JSON.stringify(key))
-
-				// ---- Plain Enter ---------------------------------------------------------
-				if (key.name === 'return' && !key.ctrl && !key.meta) {
-					if (stopKeys.enter) {
-						// If we are on an *empty* line, we stop immediately.
-						// If the user typed something, the line‑event above already stored it,
-						// so we can safely finish.
-						finish(rl)
-						return
-					}
-				}
-
-				// ---- Ctrl+Enter ----------------------------------------------------------
-				// Unfortunately on most terminals Ctrl+Enter is transmitted as a
-				// *control character* (`\x0d` with `ctrl:true`) **plus** a `return`
-				// event.  The easiest way to catch it is to look for `key.ctrl && key.name === 'return'`.
-				if (key.name === 'return' && key.ctrl) {
-					if (stopKeys.ctrl) finish(rl)
-					return
-				}
-
-				// ---- Cmd/Meta+Enter (macOS ⌘) --------------------------------------------
-				if (key.name === 'return' && key.meta) {
-					if (stopKeys.meta) finish(rl)
-					return
-				}
-
-				// ---- If the user presses Ctrl+<letter> (e.g. Ctrl+S) we *ignore* it
-				//      – it will appear as a control character (like '\x13') and is not a
-				//      finishing command.  Nothing else needed.
+				if (key.name === 'return' && !key.ctrl && !key.meta && stopKeys.enter) finish()
+				if (key.name === 'return' && key.ctrl && stopKeys.ctrl) finish()
+				if (key.name === 'return' && key.meta && stopKeys.meta) finish()
 			}
 
-			// -------------------------------------------------------------------------------
-			// Helper that resolves the Promise and restores the terminal.
-			// -------------------------------------------------------------------------------
-			const finish = (rlInstance) => {
-				rlInstance.close()
+			// ----- cleanup & resolve -----
+			const finish = () => {
+				rl.pause()
 				if (stdin.isTTY) stdin.setRawMode(false)
 				stdin.removeListener('keypress', onKeyPress)
-				resolve(collected.join('\n'))
+
+				// Preserve trailing newline to match test expectations.
+				const result = collected.length ? collected.join('\n') + '\n' : ''
+				resolve(result)
 			}
 
-			// Attach the listener only once.
-			stdin.on('keypress', onKeyPress)
+			// attach keypress listener only for TTY streams
+			if (stdin.isTTY) stdin.on('keypress', onKeyPress)
 
-			// ---------------------------------------------------------------------------
-			// 4️⃣ Graceful abort on SIGINT (Ctrl‑C)
-			// ---------------------------------------------------------------------------
+			// ----- graceful abort (Ctrl‑C) -----
 			rl.on('SIGINT', () => {
 				console.info('\n✋ Interrupted – exiting without returning data.')
-				finish(rl)
-				// Resolve with an empty string – you can change this behaviour if you want.
+				finish()
 				resolve('')
 			})
 		})
 	}
 
 	/**
-	 * Helper kept for backward compatibility – just forwards to `readline`
+	 * Backward‑compatible helper – forwards to `readline.createInterface`.
 	 * @param {import('node:readline').ReadLineOptions} options
 	 * @returns {Interface}
 	 */

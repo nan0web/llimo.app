@@ -55,7 +55,7 @@ export async function selectModel(models, modelPartial, providerPartial, ui, fs)
 		ui.console.info(`  ${i + 1}) ${m.id} (provider: ${m.provider})`)
 	})
 
-	const answer = await ui.askYesNo("Select a model by number (or type a full id): ")
+	const answer = await ui.ask("Select a model by number (or type a full id): ")
 	const trimmed = answer.trim()
 
 	// Direct id entry?

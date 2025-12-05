@@ -173,4 +173,3 @@ export default class TestAI extends AI {
 		return { text: result.fullResponse, usage: result.usage }
 	}
 }
-

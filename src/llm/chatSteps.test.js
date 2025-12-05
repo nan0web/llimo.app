@@ -10,8 +10,8 @@ import Chat from "./Chat.js"
 import Ui from "../cli/Ui.js"
 
 /* -------------------------------------------------
-   Helper mocks
-   ------------------------------------------------- */
+	 Helper mocks
+	 ------------------------------------------------- */
 class DummyAI {
 	streamText() {
 		// mimic the shape used by `startStreaming`
@@ -34,8 +34,8 @@ const mockRunCommand = async (cmd, options = {}) => {
 }
 
 /* -------------------------------------------------
-   Tests
-   ------------------------------------------------- */
+	 Tests
+	 ------------------------------------------------- */
 describe("chatSteps – readInput", () => {
 	let tempDir
 	let fsInstance
@@ -67,12 +67,12 @@ describe("chatSteps – readInput", () => {
 describe("chatSteps – startStreaming", () => {
 	it("returns a stream that yields expected parts", async () => {
 		const ai = new DummyAI()
-		const mockChat = { messages: [], add: () => {}, getTokensCount: () => 0 }
+		const mockChat = { messages: [], add: () => { }, getTokensCount: () => 0 }
 		const { stream } = chatSteps.startStreaming(
 			ai,
 			"model",
 			mockChat,
-			{ onChunk: () => {} }
+			{ onChunk: () => { } }
 		)
 		const parts = []
 		for await (const p of stream) parts.push(p)
@@ -136,5 +136,92 @@ describe("chatSteps – decodeAnswerAndRunTests (mocked)", () => {
 		}
 		const result = await chatSteps.decodeAnswerAndRunTests(mockUiMock, mockChat, mockRunCommand, true)
 		assert.ok(result.testsCode !== undefined)
+	})
+})
+
+describe("chatSteps – initialiseChat", () => {
+	let tempDir
+	let fsInstance
+
+	before(async () => {
+		tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "init-chat-"))
+		fsInstance = new FileSystem({ cwd: tempDir })
+	})
+
+	after(async () => {
+		await fs.rm(tempDir, { recursive: true, force: true })
+	})
+
+	it("creates new chat with system prompt", async () => {
+		const mockUiMock = { console: { info: () => { } } } // Mock to prevent output
+		const { chat } = await chatSteps.initialiseChat({
+			fs: fsInstance,
+			ui: mockUiMock,
+			isNew: true
+		})
+
+		assert.ok(chat.id)
+		assert.ok(await fsInstance.exists("chat/current"))
+		assert.strictEqual(chat.messages.length, 1) // System message
+		assert.ok(chat.messages[0].content.includes("<!--TOOLS_LIST-->") === false)
+	})
+})
+
+describe("chatSteps - parseOutput", () => {
+	it("should parse two tests", () => {
+		const stdout = [
+			"ℹ tests 9",
+			"ℹ suites 1",
+			"ℹ pass 7",
+			"ℹ fail 2",
+			"ℹ cancelled 0",
+			"ℹ skipped 0",
+			"ℹ todo 0",
+			"ℹ duration_ms 333",
+			"# tests 3",
+			"# suites 1",
+			"# pass 0",
+			"# fail 0",
+			"# cancelled 1",
+			"# skipped 1",
+			"# todo 1",
+			"# duration_ms 33.333",
+		].join("\n")
+		const stderr = [
+			"src/CLiMessage.js(1,23): error TS2307: Cannot find module './ui/Message.js' or its corresponding type declarations.",
+			"src/InputAdapter.js(380,13): error TS2339: Property 'output' does not exist on type 'UiMessage'.",
+			"src/CLiMessage.js:1:23 - error TS2307: Cannot find module './ui/Message.js' or its corresponding type declarations.",
+			"",
+			"1 import UiMessage from \"./ui/Message.js\"",
+			"                        ~~~~~~~~~~~~~~~~~",
+			"",
+			"src/InputAdapter.js:380:13 - error TS2339: Property 'output' does not exist on type 'UiMessage'.",
+			"",
+			"380     if (msg.output) {",
+			"                ~~~~~~",
+			"",
+			"Found 4 errors in 3 files.",
+			"",
+			"Errors  Files",
+			"     1  src/CLiMessage.js:1",
+			"     2  src/InputAdapter.js:380",
+			"     1  src/ui/Adapter.js:1",
+			" ELIFECYCLE  Command failed with exit code 2.",
+		].join("\n")
+		const obj = {}
+		const parsed = chatSteps.parseOutput(stdout, stderr, obj)
+		assert.deepStrictEqual(parsed, {
+			fail: 2, pass: 7, cancelled: 1, skip: 1, todo: 1, duration: 366.333, types: 2,
+			tests: 12, suites: 2,
+		})
+		assert.equal(obj.logs.fail.length, 2)
+		assert.equal(obj.logs.pass.length, 2)
+		assert.equal(obj.logs.cancelled.length, 2)
+		assert.equal(obj.logs.skip.length, 2)
+		assert.equal(obj.logs.todo.length, 2)
+		assert.equal(obj.logs.duration.length, 2)
+		assert.equal(obj.logs.types.length, 2)
+		assert.equal(obj.logs.tests.length, 2)
+		assert.equal(obj.logs.suites.length, 2)
 	})
 })

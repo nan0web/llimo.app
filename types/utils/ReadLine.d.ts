@@ -29,7 +29,7 @@ export default class ReadLine {
      */
     interactive(options?: InteractiveReadLineOptions): Promise<string>;
     /**
-     * Helper kept for backward compatibility – just forwards to `readline`
+     * Backward‑compatible helper – forwards to `readline.createInterface`.
      * @param {import('node:readline').ReadLineOptions} options
      * @returns {Interface}
      */

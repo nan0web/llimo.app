@@ -37,10 +37,10 @@ export default class TestOptions {
 			delay = Number(TestOptions.delay.default),
 			argv = Array.from(TestOptions.argv.default),
 		} = input
-		this.mode = mode
-		this.step = step
-		this.outputDir = outputDir
-		this.delay = delay
+		this.mode = String(mode)
+		this.step = Number(step)
+		this.outputDir = String(outputDir)
+		this.delay = Number(delay)
 		this.argv = argv
 	}
 }

@@ -89,9 +89,19 @@ describe("TestAI – file-based chat simulation", () => {
 		// For unit test, verify files are loaded but not in response
 		const ai = new TestAI()
 		const messages = [{ role: "user", content: "Test" }]
-		const consoleDebugSpy = () => {}  // Mock if needed for CI
 		const result = await ai.streamText("test-model", messages, { cwd: chatDir })
 		assert.equal(result.fullResponse, "Hello world!\nAppended stream content")  // No change from debug files
 		// In practice, tests.txt, todo.md, unknown.json are logged via console.debug
+	})
+
+	it("supports per-step files", async () => {
+		await writeFile(resolve(chatDir, "step2-chunks.json"), JSON.stringify([
+			{ type: "text-delta", text: "Step 2 response" }
+		]))
+		await writeFile(resolve(chatDir, "step2-answer.md"), "Step 2 full")
+
+		const ai = new TestAI()
+		const result = await ai.streamText("test-model", [], { cwd: chatDir, step: 2 })
+		assert.equal(result.fullResponse, "Step 2 full")
 	})
 })

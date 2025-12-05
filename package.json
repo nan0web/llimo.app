@@ -22,11 +22,11 @@
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
-		"@ai-sdk/cerebras": "^1.0.31",
+		"@ai-sdk/cerebras": "^1.0.32",
 		"@ai-sdk/huggingface": "^0.0.10",
-		"@ai-sdk/openai": "^2.0.72",
-		"@openrouter/ai-sdk-provider": "^1.2.5",
-		"ai": "^5.0.101",
+		"@ai-sdk/openai": "^2.0.77",
+		"@openrouter/ai-sdk-provider": "^1.4.0",
+		"ai": "^5.0.107",
 		"micromatch": "^4.0.8"
 	},
 	"bin": {

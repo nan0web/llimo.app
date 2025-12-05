@@ -3,10 +3,28 @@
  */
 
 import { spawn } from "node:child_process"
-import { mkdtemp, rm, readFile, writeFile } from "node:fs/promises"
-import { join } from "node:path"
+import { mkdtemp, rm, readFile, writeFile, mkdir } from "node:fs/promises"
+import { join, dirname } from "node:path"
 import { tmpdir } from "node:os"
 import { randomUUID } from "node:crypto"
+
+/**
+ * Create a temporary workspace with test files
+ * @param {Object} files - Map of filename -> content
+ * @returns {Promise<string>} - Path to temporary directory
+ */
+export async function createTempWorkspace(files = {}) {
+	const tempDir = await mkdtemp(join(tmpdir(), `llimo-workspace-${randomUUID().slice(0, 8)}-`))
+
+	for (const [filename, content] of Object.entries(files)) {
+		const filePath = join(tempDir, filename)
+		const dir = dirname(filePath)
+		await mkdir(dir, { recursive: true })
+		await writeFile(filePath, content, 'utf-8')
+	}
+
+	return tempDir
+}
 
 /**
  * Execute a Node.js script in an isolated temporary directory
@@ -15,24 +33,18 @@ import { randomUUID } from "node:crypto"
  * @param {string} options.scriptPath - Path to the script to execute
  * @param {string[]} [options.args=[]] - Arguments to pass to the script
  * @param {string} [options.input] - Data to pipe to stdin
- * @returns {Promise<{ stdout:string, stderr:string, exitCode:number, tempDir:string }>}
+ * @returns {Promise<{ stdout:string, stderr:string, exitCode:number }>}
  */
 export async function runNodeScript({ cwd, scriptPath, args = [], input = "" }) {
-	// Create a unique temporary directory for this test run
-	const tempDir = await mkdtemp(join(tmpdir(), `llimo-test-${randomUUID().slice(0, 8)}-`))
-
 	// Copy the script to temp directory to ensure it's isolated
 	const scriptName = scriptPath.split('/').pop()
-	const tempScriptPath = join(tempDir, scriptName || "")
+	const tempScriptPath = join(cwd, scriptName || "")
 	const scriptContent = await readFile(scriptPath, 'utf-8')
 	await writeFile(tempScriptPath, scriptContent, 'utf-8')
 
-	// Make script executable
-	await writeFile(tempScriptPath + ".test", scriptContent, 'utf-8')
-
 	return new Promise((resolve, reject) => {
 		const child = spawn(process.execPath, [tempScriptPath, ...args], {
-			cwd: tempDir,
+			cwd,
 			stdio: ["pipe", "pipe", "pipe"],
 			env: {
 				...process.env,
@@ -53,7 +65,6 @@ export async function runNodeScript({ cwd, scriptPath, args = [], input = "" }) 
 				stdout,
 				stderr,
 				exitCode: code ?? 0,
-				tempDir
 			})
 		})
 
@@ -86,20 +97,4 @@ export async function cleanupTempDir(tempDir) {
 	} catch (/** @type {any} */ error) {
 		console.warn(`⚠️  Failed to clean up temp dir ${tempDir}:`, error.message)
 	}
-}
-
-/**
- * Create a temporary workspace with test files
- * @param {Object} files - Map of filename -> content
- * @returns {Promise<string>} - Path to temporary directory
- */
-export async function createTempWorkspace(files = {}) {
-	const tempDir = await mkdtemp(join(tmpdir(), `llimo-workspace-${randomUUID().slice(0, 8)}-`))
-
-	for (const [filename, content] of Object.entries(files)) {
-		const filePath = join(tempDir, filename)
-		await writeFile(filePath, content, 'utf-8')
-	}
-
-	return tempDir
 }

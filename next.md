@@ -3,6 +3,11 @@
 - імітація запуску (prompt) і автоматичної відповіді (chunks) у визначені терміни (швидкість відповіді), наприклад `llimo-chat-test chat/b651551f-8212-405a-a787-5634706f87a2 --step 3` - що має запустити з третього повідомлення user, або `llimo-chat-test chat/b651551f-8212-405a-a787-5634706f87a2 info` - показує інформацію стосовно повідомлень, їхньої ваги і можливість запустити тест з будь якого повідомлення
 - імітація розпаковки `llimo-chat-test chat/b651551f-8212-405a-a787-5634706f87a2 --step 3 unpack --dir /tmp/unpack-chat`
 - імітація тестування `llimo-chat-test chat/b651551f-8212-405a-a787-5634706f87a2 --step 3 test`
+1. transform all console and process.stdout.write to ui.console or ui.write.
+1. Розбий bin на методи, які імпортуються з `src/**` і покриті тестами на 100%.
+1. Write node:tests with describe > it format.
+1. Follow @todo comments in the code.
+1. Add missing jsdoc in English in the code.
 
 
 - [](bin/**)

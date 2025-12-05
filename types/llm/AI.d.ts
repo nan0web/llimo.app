@@ -22,8 +22,8 @@ export default class AI {
      * @param {Array<readonly [string, Partial<ModelInfo>]> | Map<string, Partial<ModelInfo>>} input
      */
     constructor(input?: object);
-    /** @type {ModelInfo} */
-    selectedModel: ModelInfo;
+    /** @type {ModelInfo?} */
+    selectedModel: ModelInfo | null;
     /**
      * Refresh model information from remote providers.
      *

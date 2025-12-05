@@ -15,9 +15,12 @@
  *
  * @param {string[]} argv   Command‑line arguments (already sliced).
  * @param {string} stdinData Raw data read from stdin (empty string if none).
+ * @param {FileSystem} [fs] FileSystem instance (for testing)
+ * @param {Path} [pathUtil] Path utility instance (for testing)
+ * @param {ReadLine} [rl] ReadLine instance (for testing)
  * @returns {Promise<{mdStream: import('readline').Interface|null, outputPath?: string, baseDir: string}>}
  */
-export function parseIO(argv: string[], stdinData: string): Promise<{
+export function parseIO(argv: string[], stdinData: string, fs?: FileSystem, pathUtil?: Path, rl?: ReadLine): Promise<{
     mdStream: import("readline").Interface | null;
     outputPath?: string;
     baseDir: string;
@@ -31,3 +34,6 @@ export function parseIO(argv: string[], stdinData: string): Promise<{
  * @returns {T}
  */
 export function parseArgv<T>(argv: string[], Model: new (...args: any) => T): T;
+import FileSystem from "../utils/FileSystem.js";
+import Path from "../utils/Path.js";
+import ReadLine from "../utils/ReadLine.js";

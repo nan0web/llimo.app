@@ -1,16 +1,21 @@
-import { describe, it, beforeEach, mock } from "node:test"
+import { describe, it, afterEach, beforeEach, mock } from "node:test"
 import assert from "node:assert/strict"
 import { unpackAnswer } from "./unpack.js"
 
 import FileSystem from "../utils/FileSystem.js"
 
-const mockFs = new FileSystem()
-
 describe("unpackAnswer", () => {
+	let mockFs
+
 	beforeEach(() => {
 		mock.restoreAll()
+		mockFs = new FileSystem()
+		global.__llimoFs = mockFs
 		mock.method(console, "info", () => {})
-		mock.method(mockFs, "save", async () => {})
+	})
+
+	afterEach(() => {
+		delete global.__llimoFs
 	})
 
 	it("processes file entries in dry mode", async () => {

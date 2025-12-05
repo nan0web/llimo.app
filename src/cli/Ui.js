@@ -115,23 +115,30 @@ export class Ui {
 	/** @type {string|null} */
 	logFile = null
 
+	/** @type {NodeJS.ReadStream} */
+	stdin = process.stdin
+	/** @type {NodeJS.WriteStream} */
+	stdout = process.stdout
+	/** @type {NodeJS.WriteStream} */
+	stderr = process.stderr
+
 	/** @type {UiConsole} */
 	console = new UiConsole()
 
 	/**
-	 * @param {Object} [options={}]
-	 * @param {NodeJS.ReadStream} [options.stdin=process.stdin]
-	 * @param {NodeJS.WriteStream} [options.stdout=process.stdout]
-	 * @param {NodeJS.WriteStream} [options.stderr=process.stderr]
-	 * @param {UiConsole} [options.console=this.console]
+	 * @param {Partial<Ui>} [options={}]
 	 */
 	constructor(options = {}) {
 		const {
-			stdin = process.stdin,
-			stdout = process.stdout,
-			stderr = process.stderr,
+			debugMode = this.debugMode,
+			logFile = this.logFile,
+			stdin = this.stdin,
+			stdout = this.stdout,
+			stderr = this.stderr,
 			console = this.console,
 		} = options
+		this.debugMode = Boolean(debugMode)
+		this.logFile = String(logFile)
 		this.stdin = stdin
 		this.stdout = stdout
 		this.stderr = stderr
@@ -215,6 +222,25 @@ export class Ui {
 		if (["yes", "y", ""].includes(lower)) return "yes"
 		if (["no", "n"].includes(lower)) return "no"
 		return answer
+	}
+
+	/**
+	 * Create progress interval to call the fn() with provided fps.
+	 *
+	 * @typedef {Object} ProgressFnInput
+	 * @property {number} elapsed
+	 * @property {number} startTime
+	 *
+	 * @param {(input: ProgressFnInput) => void} fn
+	 * @param {number} [startTime]
+	 * @param {number} [fps]
+	 * @returns {NodeJS.Timeout}
+	 */
+	createProgress(fn, startTime = Date.now(), fps = 33) {
+		return setInterval(() => {
+			const elapsed = (Date.now() - startTime) / 1e3
+			fn({ elapsed, startTime })
+		}, 1e3 / fps)
 	}
 }
 

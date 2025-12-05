@@ -57,8 +57,7 @@ export default class ChatOptions {
 		this.testMode = String(testMode)
 		this.testDir = String(testDir)
 		this.model = model
-		this.provider = provider
+		this.provider = String(provider)
 		this.argv = argv
 	}
 }
-

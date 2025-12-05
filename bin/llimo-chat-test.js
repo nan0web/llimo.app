@@ -14,6 +14,8 @@ import Ui from "../src/cli/Ui.js"
 import FileSystem from "../src/utils/FileSystem.js"
 import MarkdownProtocol from "../src/utils/Markdown.js"
 
+import { GREEN, RESET, YELLOW } from "../src/cli/ANSI.js"
+
 class TestRunner {
 	/** @type {string} */
 	chatDir
@@ -50,14 +52,14 @@ class TestRunner {
 				await this.simulateTest(chat)
 				break
 			default:
-				console.error(`Unknown mode: ${this.options.mode}`)
+				this.ui.console.error(`Unknown mode: ${this.options.mode}`)
 				process.exit(1)
 		}
 	}
 
 	async showInfo(chat) {
-		console.info(`Chat info for ${this.chatDir}`)
-		console.info(`Total messages: ${chat.messages.length}`)
+		this.ui.console.info(`Chat info for ${this.chatDir}`)
+		this.ui.console.info(`Total messages: ${chat.messages.length}`)
 
 		let totalTokens = 0
 		const userSteps = []
@@ -67,44 +69,44 @@ class TestRunner {
 				const tokens = Math.round(msg.content.length / 4)
 				totalTokens += tokens
 				userSteps.push({ step: (i + 1) / 2, tokens })
-				console.info(`${(i + 1) / 2}. User: ${tokens} tokens (cumulative: ${totalTokens})`)
+				this.ui.console.info(`${(i + 1) / 2}. User: ${tokens} tokens (cumulative: ${totalTokens})`)
 			}
 		}
 
-		console.info(`Total estimated tokens: ${totalTokens}`)
+		this.ui.console.info(`Total estimated tokens: ${totalTokens}`)
 
 		// List available step files
 		const stepFiles = (await this.fs.readdir(this.chatDir)).filter(f => f.startsWith('step') && f.endsWith('.json'))
-		console.info(`Available step data: ${stepFiles.join(', ') || 'none'}`)
+		this.ui.console.info(`Available step data: ${stepFiles.join(', ') || 'none'}`)
 
 		if (this.options.step > 0) {
 			const stepInfo = userSteps.find(s => s.step === this.options.step)
 			if (stepInfo) {
-				console.info(`Step ${this.options.step}: ${stepInfo.tokens} tokens`)
+				this.ui.console.info(`Step ${this.options.step}: ${stepInfo.tokens} tokens`)
 			} else {
-				console.warn(`Step ${this.options.step} exceeds history (${userSteps.length} user messages)`)
+				this.ui.console.warn(`Step ${this.options.step} exceeds history (${userSteps.length} user messages)`)
 			}
 		}
 	}
 
 	async simulateUnpack(chat) {
 		const { fullResponse, parsed } = await this.simulateStep(chat)
-		console.info(`${GREEN}Simulating unpack for step ${this.options.step}${RESET}`)
+		this.ui.console.info(`${GREEN}Simulating unpack for step ${this.options.step}${RESET}`)
 
 		const outputDir = this.options.outputDir || path.join(this.chatDir, `unpack-step${this.options.step}`)
 		await this.fs.mkdir(outputDir, { recursive: true })
 
 		const stream = unpackAnswer(parsed, false, outputDir)
 		for await (const line of stream) {
-			console.info(line)
+			this.ui.console.info(line)
 		}
 
-		console.info(`${GREEN}✅ Unpack simulation complete, files in ${outputDir}${RESET}`)
+		this.ui.console.info(`${GREEN}✅ Unpack simulation complete, files in ${outputDir}${RESET}`)
 	}
 
 	async simulateTest(chat) {
 		await this.simulateUnpack(chat) // Unpack first
-		console.info(`${GREEN}Simulating tests for step ${this.options.step}${RESET}`)
+		this.ui.console.info(`${GREEN}Simulating tests for step ${this.options.step}${RESET}`)
 
 		// Load saved test output
 		const testFile = `test-step${this.options.step}.txt`
@@ -116,13 +118,13 @@ class TestRunner {
 		}
 
 		// "Run" by printing
-		console.info(`${YELLOW}=== Simulated pnpm test:all output ===${RESET}`)
-		console.info(testOutput)
+		this.ui.console.info(`${YELLOW}=== Simulated pnpm test:all output ===${RESET}`)
+		this.ui.console.info(testOutput)
 
 		// Parse summary as in decodeAnswerAndRunTests
 		const fail = (testOutput.match(/# fail (\d+)/) || [])[1] || 0
 		const passed = (testOutput.match(/# pass (\d+)/) || [])[1] || 0
-		console.info(`${GREEN}Tests: ${passed} passed, ${fail} failed${RESET}`)
+		this.ui.console.info(`${GREEN}Tests: ${passed} passed, ${fail} failed${RESET}`)
 	}
 
 	async simulateStep(chat) {
@@ -135,9 +137,9 @@ class TestRunner {
 		const userMessage = chat.messages[userIndex]
 
 		// Pack prompt (reuse packPrompt, mock ui/fs)
-		const uiMock = { console: console } // Minimal UI
+		const mockUi = { console: this.ui.console } // Minimal UI
 		const mockChat = { ...chat, messages: prefixMessages, savePrompt: async (p) => p, db: chat.db }
-		const packed = await packPrompt(packMarkdown, userMessage.content, mockChat, uiMock)
+		const packed = await packPrompt(packMarkdown, userMessage.content, mockChat, mockUi)
 		prefixMessages.push({ role: "user", content: packed.packedPrompt })
 
 		const ai = new TestAI()
@@ -158,6 +160,7 @@ class TestRunner {
 
 /**
  * Main entry
+ * @param {string[]} [argv]
  */
 async function main(argv = process.argv.slice(2)) {
 	const command = parseArgv(argv, TestOptions)

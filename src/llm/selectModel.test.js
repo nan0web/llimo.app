@@ -1,6 +1,6 @@
-import { describe, it, beforeEach, afterEach } from "node:test"
+import { describe, it, beforeEach, afterEach, mock } from "node:test"
 import assert from "node:assert/strict"
-import { mkdtemp, rm } from "node:fs/promises"
+import { mkdtemp, rm, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { selectModel } from "./selectModel.js"
@@ -13,7 +13,7 @@ describe("selectModel – model/provider selection logic", () => {
 	const ui = new Ui()
 	const mockUi = {
 		...ui,
-		askYesNo: async (msg) => "1", // default selection for multiple‑choice tests
+		ask: async () => "1", // default selection for multiple‑choice tests
 	}
 
 	beforeEach(async () => {
@@ -75,5 +75,16 @@ describe("selectModel – model/provider selection logic", () => {
 		// Verify that the config file was written
 		const cfg = await fs.load(".cache/llimo.json")
 		assert.deepStrictEqual(cfg, { model: "gpt-oss-120b", provider: "openai" })
+	})
+
+	it("handles direct ID input", async () => {
+		const map = makeMap([
+			{ id: "exact-match", provider: "test" },
+		])
+		const fs = new FileSystem({ cwd })
+		const mockUiDirect = { ...ui, ask: async () => "exact-match" }
+
+		const chosen = await selectModel(map, "", "", mockUiDirect, fs)
+		assert.strictEqual(chosen.id, "exact-match")
 	})
 })
