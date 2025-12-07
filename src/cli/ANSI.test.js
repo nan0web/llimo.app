@@ -71,4 +71,12 @@ describe("ANSI", () => {
 		const result = ANSI.cursorUp(3)
 		assert.strictEqual(result, "\x1b[3A")
 	})
+
+	it("should strip ANSI special characters", () => {
+		// Use the accessor to trigger updateAnsiExports()
+		process.stdout.isTTY = true
+		const str = ANSI.RED + "RED"
+		assert.ok(str !== "RED")
+		assert.equal(ANSI.stripANSI(str), "RED")
+	})
 })

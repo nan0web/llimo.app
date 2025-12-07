@@ -1,6 +1,7 @@
 import { describe, it, beforeEach } from "node:test"
 import assert from "node:assert/strict"
 import { Ui, UiConsole } from "./Ui.js"
+import { ITALIC, RESET } from "./ANSI.js"
 
 describe("UiConsole", () => {
 	let mockConsole
@@ -8,11 +9,11 @@ describe("UiConsole", () => {
 
 	beforeEach(() => {
 		mockConsole = {
-			debug: () => {},
-			info: () => {},
-			log: () => {},
-			warn: () => {},
-			error: () => {},
+			debug: () => { },
+			info: () => { },
+			log: () => { },
+			warn: () => { },
+			error: () => { },
 		}
 		consoleInstance = new UiConsole({ uiConsole: mockConsole, debugMode: false })
 	})
@@ -38,6 +39,25 @@ describe("UiConsole", () => {
 		consoleInstance.success("done")
 		// Ensure the message contains the original text; colour codes may be stripped in some environments
 		assert.ok(logged?.includes("done"), "logged message should contain the provided text")
+	})
+
+	it("should properly print table", () => {
+		const rows = [
+			[`+ 33`, "message(s)", `(${ITALIC}111,222 byte(s)${RESET})`],
+			[1, "system message(s)", `(${ITALIC}222 byte(s)${RESET})`],
+			[15, "user message(s)", `(${ITALIC}100,000 byte(s)${RESET})`],
+			[15, "assistant message(s)", `(${ITALIC}8,000 byte(s)${RESET})`],
+			[3, "tool message(s)", `(${ITALIC}3,000 byte(s)${RESET})`],
+		]
+		const console = new UiConsole()
+		const result = console.table(rows, { aligns: ["right", "left", "right"] })
+		assert.deepStrictEqual(result, [
+			'+ 33 | message(s)           | (111,222 byte(s))',
+			'   1 | system message(s)    |     (222 byte(s))',
+			'  15 | user message(s)      | (100,000 byte(s))',
+			'  15 | assistant message(s) |   (8,000 byte(s))',
+			'   3 | tool message(s)      |   (3,000 byte(s))',
+		])
 	})
 })
 

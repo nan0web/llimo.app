@@ -21,7 +21,7 @@ describe("unpackAnswer", () => {
 	it("processes file entries in dry mode", async () => {
 		const parsed = {
 			correct: [
-				{ filename: "example.js", content: "console.log('test')" },
+				{ filename: "example.js", content: "console.info('test')" },
 				{ filename: "example.txt", content: "hello world" }
 			],
 			failed: []

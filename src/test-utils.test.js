@@ -11,7 +11,7 @@ describe("test-utils – workspace and script execution", () => {
 	beforeEach(async () => {
 		tempDir = await createTempWorkspace({
 			"test.txt": "Hello, world!",
-			"nested/sub.js": "console.log('sub')"
+			"nested/sub.js": "console.info('sub')"
 		})
 	})
 
@@ -24,7 +24,7 @@ describe("test-utils – workspace and script execution", () => {
 		assert.strictEqual(content, "Hello, world!")
 
 		const subContent = await readFile(join(tempDir, "nested/sub.js"), "utf-8")
-		assert.strictEqual(subContent, "console.log('sub')")
+		assert.strictEqual(subContent, "console.info('sub')")
 	})
 
 	describe("runNodeScript", () => {
@@ -34,7 +34,7 @@ describe("test-utils – workspace and script execution", () => {
 			await writeFile(echoScriptPath, `
 import process from "node:process";
 const args = process.argv.slice(2);
-console.log("Echo:", ...args);
+console.info("Echo:", ...args);
 `)
 
 			const { stdout, stderr, exitCode } = await runNodeScript({

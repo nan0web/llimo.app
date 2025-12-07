@@ -68,7 +68,6 @@ export default class JSONL extends FileProtocol {
 					const index = Math.max(0, parseInt(matches[1]) - 1)
 					const start = index > shift ? index - shift : 0
 					const limit = index > shift ? shift : index + 1
-					console.log(index, start, limit)
 					target = line.slice(start, start + limit + shift) + "\n"
 					target += "   " + "—".repeat(limit - 1) + "^" + "—".repeat(shift) + "\n"
 				}

@@ -3,7 +3,7 @@ import { appendFileSync, existsSync, mkdirSync } from "node:fs"
 import process from "node:process"
 import { dirname } from "node:path"
 
-import { YELLOW, RED, RESET, GREEN, overwriteLine, cursorUp } from "./ANSI.js"
+import { YELLOW, RED, RESET, GREEN, overwriteLine, cursorUp, DIM, stripANSI } from "./ANSI.js"
 
 /**
  * @typedef {'debug'|'info'|'log'|'warn'|'error'|'success'} LogTarget
@@ -56,6 +56,14 @@ export class UiConsole {
 	}
 
 	/**
+	 * Set's the prefix such as color before every message in .info method.
+	 * @param {string} prefix
+	 */
+	style(prefix = RESET) {
+		this.prefixedStyle = prefix
+	}
+
+	/**
 	 * Output a debug message when debug mode is enabled.
 	 *
 	 * @param {...any} args
@@ -63,13 +71,13 @@ export class UiConsole {
 	debug(...args) {
 		if (!this.debugMode) return
 		const msg = args.join(" ")
-		this.console.debug(msg)
+		this.console.debug(DIM + msg + RESET)
 		this.appendFile("debug", msg)
 	}
 
 	/** @param {...any} args */
 	info(...args) {
-		const msg = args.join(" ")
+		const msg = this.prefixedStyle + args.join(" ") + RESET
 		this.console.info(msg)
 		this.appendFile("info", msg)
 	}
@@ -102,6 +110,45 @@ export class UiConsole {
 		this.console.info(msg)
 		this.appendFile("success", msg)
 	}
+
+	/**
+	 * @todo cover with tests.
+	 * @param {any[][]} rows
+	 * @param {{divider?: string | number, aligns?: string[]}} [options={}]
+	 * @returns {string[]}
+	 */
+	table(rows = [], options = {}) {
+		const { divider = " | ", aligns = [] } = options
+		const div = "number" === typeof divider ? " ".repeat(divider) : divider
+
+		// Determine column widths based on visible (ANSI‑stripped) length
+		const colWidths = []
+		rows.forEach(row => {
+			row.forEach((cell, j) => {
+				const visible = stripANSI(String(cell)).trim().length
+				colWidths[j] = Math.max(colWidths[j] ?? 0, visible)
+			})
+		})
+
+		// Build formatted lines respecting alignment
+		const lines = rows.map(row =>
+			row.map((cell, j) => {
+				const raw = String(cell).trim()
+				const visible = stripANSI(raw).trim().length
+				const pad = colWidths[j] - visible
+				const align = aligns[j] ?? "left"
+				if (align === "right") {
+					return " ".repeat(pad) + raw
+				}
+				// default "left"
+				return raw + " ".repeat(pad)
+			}).join(div)
+		)
+
+		// Emit to the wrapped console and return the lines
+		lines.forEach(l => this.console.info(l))
+		return lines
+	}
 }
 
 /**
@@ -123,7 +170,7 @@ export class Ui {
 	stderr = process.stderr
 
 	/** @type {UiConsole} */
-	console = new UiConsole()
+	console
 
 	/**
 	 * @param {Partial<Ui>} [options={}]
@@ -135,14 +182,14 @@ export class Ui {
 			stdin = this.stdin,
 			stdout = this.stdout,
 			stderr = this.stderr,
-			console = this.console,
+			console,
 		} = options
 		this.debugMode = Boolean(debugMode)
 		this.logFile = String(logFile)
 		this.stdin = stdin
 		this.stdout = stdout
 		this.stderr = stderr
-		this.console = console
+		this.console = console ? console : new UiConsole({ debugMode: this.debugMode })
 	}
 
 	/**

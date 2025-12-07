@@ -52,6 +52,26 @@ export default class Chat {
 		return this.#db
 	}
 
+	/** @returns {import("ai").ModelMessage[]} */
+	get systemMessages() {
+		return this.messages.filter(m => m.role === "system")
+	}
+
+	/** @returns {import("ai").ModelMessage[]} */
+	get userMessages() {
+		return this.messages.filter(m => m.role === "user")
+	}
+
+	/** @returns {import("ai").ModelMessage[]} */
+	get assistantMessages() {
+		return this.messages.filter(m => m.role === "assistant")
+	}
+
+	/** @returns {import("ai").ModelMessage[]} */
+	get toolMessages() {
+		return this.messages.filter(m => m.role === "tool")
+	}
+
 	/**
 	 * Initialize chat directory
 	 */
@@ -87,9 +107,10 @@ export default class Chat {
 			const rows = await this.db.load("messages.jsonl") ?? []
 			for (const row of rows) {
 				if (row instanceof Error) {
-					throw row
+					// Ignore bad rows instead of throwing
+				} else {
+					this.add(row)
 				}
-				this.add(row)
 			}
 			return true
 		}
