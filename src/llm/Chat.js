@@ -16,10 +16,10 @@ export default class Chat {
 	cwd
 	/** @type {string} */
 	root
-	/** @type {string} */
-	dir
 	/** @type {import("ai").ModelMessage[]} */
 	messages = []
+	/** @type {string} */
+	#dir
 	/** @type {FileSystem} Access to the current working directory file system */
 	#fs
 	/** @type {FileSystem} access to the chat directory file system */
@@ -35,10 +35,14 @@ export default class Chat {
 		this.id = String(id)
 		this.cwd = String(cwd)
 		this.root = String(root)
-		this.#fs = new FileSystem({ cwd })
 		this.messages = messages
-		this.dir = this.#fs.path.resolve(root, id)
+		this.#fs = new FileSystem({ cwd })
+		this.#dir = this.#fs.path.resolve(root, id)
 		this.#db = new FileSystem({ cwd: this.dir })
+	}
+
+	get dir() {
+		return this.#dir
 	}
 
 	get #path() {
