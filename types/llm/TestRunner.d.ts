@@ -30,15 +30,9 @@ export default class TestRunner {
      * Locate the N-th user message and delegate to the simulation runner.
      */
     simulateStep(chat: any): Promise<{
-        fullResponse: string;
+        fullResponse: any;
         parsed: import("../FileProtocol.js").ParsedFile;
-        simResult: {
-            textStream: AsyncIterable<any>;
-            fullResponse: string;
-            reasoning: string;
-            usage: import("./LanguageModelUsage.js").default;
-            chunks: any[];
-        };
+        simResult: import("ai").StreamTextResult<import("ai").ToolSet, any>;
     }>;
     #private;
 }

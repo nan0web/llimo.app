@@ -1,7 +1,9 @@
+import { UiCommand } from "../../cli/Ui.js"
+import { Alert, Table } from "../../cli/components/index.js"
 import { FileEntry } from "../../FileProtocol.js"
 import FileSystem from "../../utils/FileSystem.js"
 
-export default class Command {
+export default class Command extends UiCommand {
 	static help = "Command description for user"
 	static label = ""
 	static example = "The example of the content of the command response ```bash\npnpm install\n```"
@@ -19,6 +21,7 @@ export default class Command {
 	 * @param {Partial<Command>} input
 	 */
 	constructor(input = {}) {
+		super()
 		const {
 			cwd = this.cwd,
 			timeout = this.timeout,
@@ -32,8 +35,9 @@ export default class Command {
 		this.fs = fs
 		this.parsed = parsed
 	}
+
 	/**
-	 * @returns {AsyncGenerator<string>}
+	 * @returns {AsyncGenerator<string | Alert | Table>}
 	 */
 	async * run() {
 		yield "Run method must be realized by subclasses"

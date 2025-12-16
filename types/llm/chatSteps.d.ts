@@ -39,9 +39,10 @@ export function initialiseChat(input: {
  * @param {string} input raw text (used when `inputFile` is null)
  * @param {Chat} chat Chat instance (used for paths)
  * @param {import("../cli/Ui.js").default} ui User interface instance
+ * @param {number} [step=1]
  * @returns {Promise<void>}
  */
-export function copyInputToChat(inputFile: string | null, input: string, chat: Chat, ui: import("../cli/Ui.js").default): Promise<void>;
+export function copyInputToChat(inputFile: string | null, input: string, chat: Chat, ui: import("../cli/Ui.js").default, step?: number): Promise<void>;
 /**
  * Pack the input into the LLM prompt, store it and return statistics.
  *
@@ -69,12 +70,12 @@ export function packPrompt(packMarkdown: Function, input: string, chat: Chat, ui
  * to iterate over it.
  *
  * @param {AI} ai
- * @param {string} model
+ * @param {ModelInfo} model
  * @param {Chat} chat
  * @param {object} options Stream options
  * @returns {{stream: AsyncIterable<any>, result: any}}
  */
-export function startStreaming(ai: AI, model: string, chat: Chat, options: object): {
+export function startStreaming(ai: AI, model: ModelInfo, chat: Chat, options: object): {
     stream: AsyncIterable<any>;
     result: any;
 };
@@ -95,7 +96,7 @@ export function startStreaming(ai: AI, model: string, chat: Chat, options: objec
  * @property {TestOutputLogEntry[]} duration
  * @property {TestOutputLogEntry[]} types
  *
- * @typedef {Object} TestOutput
+ * @typedef {Object} TestOutputCounts
  * @property {number} fail
  * @property {number} cancelled
  * @property {number} pass
@@ -106,27 +107,65 @@ export function startStreaming(ai: AI, model: string, chat: Chat, options: objec
  * @property {number} duration
  * @property {number} types
  *
+ * @typedef {{ logs: TestOutputLogs, counts: TestOutputCounts, types: Set<number> }} TestOutput
+ *
  * @param {string} stdout
  * @param {string} stderr
- * @param {object} context - Returns context.logs for more detailed info.
  * @returns {TestOutput}
  */
-export function parseOutput(stdout: string, stderr: string, context?: object): TestOutput;
+export function parseOutput(stdout: string, stderr: string): TestOutput;
 /**
- * Decode the answer markdown, unpack if confirmed, run tests, parse results, and ask user for continuation.
- *
- * @typedef {(cmd: string, args: string[], opts: object) => Promise<{ stdout: string, stderr: string }>} runCommandFn
+ * Decodes the answer and return the next prompt
+ * @param {Object} param0
+ * @param {Ui} param0.ui
+ * @param {Chat} param0.chat
+ * @param {ChatOptions} param0.options
+ * @param {string[]} [param0.logs=[]]
+ * @returns {Promise<{ answer: string, shouldContinue: boolean, logs: string[], prompt: string }>}
+ */
+export function decodeAnswer({ ui, chat, options, logs }: {
+    ui: Ui;
+    chat: Chat;
+    options: ChatOptions;
+    logs?: string[] | undefined;
+}): Promise<{
+    answer: string;
+    shouldContinue: boolean;
+    logs: string[];
+    prompt: string;
+}>;
+/**
+ * @param {Object} param0
+ * @param {Ui} param0.ui
+ * @param {Chat} param0.chat
+ * @param {Function} param0.runCommand
+ * @param {number} [param0.step=1]
+ * @returns {Promise<import('../cli/runCommand.js').runCommandResult & { parsed: TestOutput }>}
+ */
+export function runTests({ ui, chat, runCommand, step }: {
+    ui: Ui;
+    chat: Chat;
+    runCommand: Function;
+    step?: number | undefined;
+}): Promise<import("../cli/runCommand.js").runCommandResult & {
+    parsed: TestOutput;
+}>;
+/**
+ * Decode the answer markdown, unpack if confirmed, run tests, parse results,
+ * and ask user for continuation to continue fixing failed, cancelled, skipped, todo
+ * tests, if they are.
  *
  * @param {import("../cli/Ui.js").default} ui User interface instance
  * @param {Chat} chat Chat instance (used for paths)
- * @param {runCommandFn} runCommand Function to execute shell commands
- * @param {boolean} [isYes] Always yes to user prompts
+ * @param {import('../cli/runCommand.js').runCommandFn} runCommand Function to execute shell commands
+ * @param {ChatOptions} options Always yes to user prompts
  * @param {number} [step] Optional step number for per-step files
- * @returns {Promise<{testsCode: boolean | string, shouldContinue: boolean}>}
+ * @returns {Promise<{testsCode: boolean, shouldContinue: boolean, test: TestOutput}>}
  */
-export function decodeAnswerAndRunTests(ui: import("../cli/Ui.js").default, chat: Chat, runCommand: runCommandFn, isYes?: boolean, step?: number): Promise<{
-    testsCode: boolean | string;
+export function decodeAnswerAndRunTests(ui: import("../cli/Ui.js").default, chat: Chat, runCommand: import("../cli/runCommand.js").runCommandFn, options: ChatOptions, step?: number): Promise<{
+    testsCode: boolean;
     shouldContinue: boolean;
+    test: TestOutput;
 }>;
 export type TestOutputLogEntry = {
     i: number;
@@ -144,7 +183,7 @@ export type TestOutputLogs = {
     duration: TestOutputLogEntry[];
     types: TestOutputLogEntry[];
 };
-export type TestOutput = {
+export type TestOutputCounts = {
     fail: number;
     cancelled: number;
     pass: number;
@@ -155,15 +194,15 @@ export type TestOutput = {
     duration: number;
     types: number;
 };
-/**
- * Decode the answer markdown, unpack if confirmed, run tests, parse results, and ask user for continuation.
- */
-export type runCommandFn = (cmd: string, args: string[], opts: object) => Promise<{
-    stdout: string;
-    stderr: string;
-}>;
+export type TestOutput = {
+    logs: TestOutputLogs;
+    counts: TestOutputCounts;
+    types: Set<number>;
+};
 import FileSystem from "../utils/FileSystem.js";
 import Ui from "../cli/Ui.js";
 import Chat from "./Chat.js";
 import { Stats } from 'node:fs';
 import AI from "./AI.js";
+import ModelInfo from './ModelInfo.js';
+import ChatOptions from '../Chat/Options.js';

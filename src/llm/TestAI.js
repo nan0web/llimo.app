@@ -31,7 +31,7 @@ export default class TestAI extends AI {
 	 * @param {object} input
 	 * @param {Array<readonly [string, Partial<ModelInfo>]> | Map<string, Partial<ModelInfo>>} input.models
 	 */
-	constructor(input = {}) {
+	constructor(input) {
 		super(input)
 		this.addModel("test-model", new ModelInfo({
 			id: "test-model",
@@ -48,14 +48,10 @@ export default class TestAI extends AI {
 	 * Loads chat state from files if available. Handles all specified chat files.
 	 * Updated to load me.md, split into blocks by ---, trim, filter new blocks not in previous user messages,
 	 * but since it's test, use the full content as original (but simulate filtering if needed).
-	 * @param {string} modelId - Must be "test-model"
-	 * @param {import('ai').ModelMessage[]} messages - Current chat messages
-	 * @param {object} [options={}] - Streaming options
-	 * @param {string} [options.cwd] - Chat directory for test files
-	 * @param {number} [options.step] - Step number for per-step files (e.g., step/001/chunks.jsonl)
-	 * @param {number} [options.delay=10] - Delay in ms between chunks for simulation
-	 * @param {Function} [options.onChunk] - On chunk callback function.
-	 * @returns {Promise<{ textStream: AsyncIterable<any>, fullResponse: string, reasoning: string, usage: LanguageModelUsage, chunks: any[] }>}
+	 * @param {ModelInfo} model
+	 * @param {import('ai').ModelMessage[]} messages
+	 * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage>} [options={}]
+	 * @returns {Promise<import('ai').StreamTextResult<import('ai').ToolSet>>}
 	 */
 	async streamText(modelId, messages, options = {}) {
 		if (modelId !== "test-model") {

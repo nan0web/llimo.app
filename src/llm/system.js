@@ -1,4 +1,4 @@
-import { FileSystem } from "../utils/index.js"
+import FileSystem from "../utils/FileSystem.js"
 import commands from "./commands/index.js"
 import loadSystemInstructions from "../templates/system.js"
 

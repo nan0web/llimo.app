@@ -6,6 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
+		"clean:modules": "rm -rf node_modules/",
 		"test": "node --test --test-timeout=3333 'src/**/*.test.js'",
 		"test:all": "npm run test && npm run build",
 		"test:chat": "node bin/llimo-chat.js --test=chat-dir",
@@ -24,7 +25,7 @@
 	"dependencies": {
 		"@ai-sdk/cerebras": "^1.0.32",
 		"@ai-sdk/huggingface": "^0.0.10",
-		"@ai-sdk/openai": "^2.0.77",
+		"@ai-sdk/openai": "^2.0.86",
 		"@openrouter/ai-sdk-provider": "^1.4.0",
 		"ai": "^5.0.107",
 		"micromatch": "^4.0.8"

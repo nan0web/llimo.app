@@ -1,0 +1,2 @@
+src/cli/Ui.test.js
+src/llm/chatProgress.test.js

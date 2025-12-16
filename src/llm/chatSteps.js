@@ -15,6 +15,8 @@ import { BOLD, GREEN, ITALIC, RED, RESET, YELLOW } from "../cli/ANSI.js"
 import FileSystem from "../utils/FileSystem.js"
 import Markdown from "../utils/Markdown.js"
 import Ui from "../cli/Ui.js"
+import ModelInfo from './ModelInfo.js'
+import ChatOptions from '../Chat/Options.js'
 
 /**
  * Read the input either from STDIN or from the first CLI argument.
@@ -174,10 +176,12 @@ export async function packPrompt(packMarkdown, input, chat, ui) {
 	const { text: packedPrompt, injected } = await packMarkdown({ input: inputText })
 	await chat.save("prompt", packedPrompt)
 
-	const stats = await fs.stat(chat.db.path.resolve(chat.dir, "prompt.md"))
-	const totalSize = stats.size + chat.messages.map(m => JSON.stringify(m)).join("\n\n").length
-	ui.console.info(`Prompt size: ${ITALIC}${ui.formats.weight("b", stats.size)}${RESET} — ${ui.formats.count(injected.length)} file(s).`)
-	ui.console.info(`Messages size: ${BOLD}${ui.formats.weight("b", totalSize)}${RESET}`)
+	const prompt = await chat.load("prompt.md") ?? ""
+	const all = chat.messages.map(m => JSON.stringify(m)).join("\n\n")
+	const totalSize = prompt.length + all.length
+	const totalTokens = await chat.calcTokens(prompt + all)
+	ui.console.info(`Prompt size: ${ITALIC}${ui.formats.weight("b", prompt.length)}${RESET} — ${ui.formats.count(injected.length)} file(s).`)
+	ui.console.info(`Messages size: ${BOLD}${ui.formats.weight("b", totalSize)}${RESET} ~ ${ui.formats.weight("T", totalTokens)}`)
 
 	// Log all user blocks (including new ones) to inputs.jsonl
 	const allUserBlocks = input.split(/---/).map(s => s.trim()).filter(block => block.length > 0)
@@ -186,7 +190,7 @@ export async function packPrompt(packMarkdown, input, chat, ui) {
 	// Log injected files to files.jsonl
 	await chat.save('files', injected)
 
-	return { packedPrompt, injected, promptPath: existingPromptPath, stats }
+	return { packedPrompt, injected, promptPath: existingPromptPath }
 }
 
 /**
@@ -196,7 +200,7 @@ export async function packPrompt(packMarkdown, input, chat, ui) {
  * to iterate over it.
  *
  * @param {AI} ai
- * @param {string} model
+ * @param {ModelInfo} model
  * @param {Chat} chat
  * @param {object} options Stream options
  * @returns {{stream: AsyncIterable<any>, result: any}}
@@ -224,7 +228,7 @@ export function startStreaming(ai, model, chat, options) {
  * @property {TestOutputLogEntry[]} duration
  * @property {TestOutputLogEntry[]} types
  *
- * @typedef {Object} TestOutput
+ * @typedef {Object} TestOutputCounts
  * @property {number} fail
  * @property {number} cancelled
  * @property {number} pass
@@ -235,15 +239,13 @@ export function startStreaming(ai, model, chat, options) {
  * @property {number} duration
  * @property {number} types
  *
+ * @typedef {{ logs: TestOutputLogs, counts: TestOutputCounts, types: Set<number> }} TestOutput
+ *
  * @param {string} stdout
  * @param {string} stderr
- * @param {object} context - Returns context.logs for more detailed info.
  * @returns {TestOutput}
  */
-export function parseOutput(stdout, stderr, context = {}) {
-	const out = stdout.split("\n")
-	const err = stderr.split("\n")
-	const all = [...out, ...err]
+export function parseOutput(stdout, stderr) {
 	const logs = {
 		fail: [],
 		cancelled: [],
@@ -266,9 +268,11 @@ export function parseOutput(stdout, stderr, context = {}) {
 		duration: 0,
 		types: 0,
 	}
-
 	/** Unique TS error codes for `types` */
-	const typeCodes = new Set()
+	const types = new Set()
+	const out = stdout.split("\n")
+	const err = stderr.split("\n")
+	const all = [...out, ...err]
 
 	const parser = {
 		fail: ["# fail ", "ℹ fail "],
@@ -297,7 +301,7 @@ export function parseOutput(stdout, stderr, context = {}) {
 					const matches = str.match(v)
 					if (matches) {
 						const no = Number(matches[1])
-						typeCodes.add(no)
+						types.add(no)
 						logs[field].push({ i, str, no })
 						++counts[field]
 						break
@@ -308,28 +312,21 @@ export function parseOutput(stdout, stderr, context = {}) {
 	}
 
 	// Round duration to three decimal places for consistency
-	counts.duration = Math.round(counts.duration * 1000) / 1000
+	counts.duration = Math.round(counts.duration * 1e3) / 1e3
 
-	context.logs = logs
-	context.types = typeCodes
-
-	return counts
+	return { logs, counts, types }
 }
 
 /**
- * Decode the answer markdown, unpack if confirmed, run tests, parse results, and ask user for continuation.
- *
- * @typedef {(cmd: string, args: string[], opts: object) => Promise<{ stdout: string, stderr: string }>} runCommandFn
- *
- * @param {import("../cli/Ui.js").default} ui User interface instance
- * @param {Chat} chat Chat instance (used for paths)
- * @param {runCommandFn} runCommand Function to execute shell commands
- * @param {boolean} [isYes] Always yes to user prompts
- * @param {number} [step] Optional step number for per-step files
- * @returns {Promise<{testsCode: boolean | string, shouldContinue: boolean}>}
+ * Decodes the answer and return the next prompt
+ * @param {Object} param0
+ * @param {Ui} param0.ui
+ * @param {Chat} param0.chat
+ * @param {ChatOptions} param0.options
+ * @param {string[]} [param0.logs=[]]
+ * @returns {Promise<{ answer: string, shouldContinue: boolean, logs: string[], prompt: string }>}
  */
-export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = false, step) {
-	const logs = []
+export async function decodeAnswer({ ui, chat, options, logs = [] }) {
 	const answer = chat.messages.slice().pop()
 	if ("assistant" !== answer?.role) {
 		throw new Error(`Recent message is not an assistant's but "${answer?.role}"`)
@@ -342,7 +339,7 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = fals
 	logs.push("#### llimo-unpack")
 	logs.push("```bash")
 
-	if (!isYes) {
+	if (!options.isYes) {
 		// Dry‑run unpack to show what would be written
 		const stream = unpackAnswer(parsed, true)
 		for await (const str of stream) {
@@ -353,12 +350,16 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = fals
 		// Ask user whether to apply
 		const answerUser = await ui.askYesNo("Unpack current package? (Y)es, No, ., <message>: ")
 		if (answerUser === "no") {
-			return { testsCode: "no", shouldContinue: false }
+			logs.push("```")
+			return { answer: "no", shouldContinue: false, logs, prompt: logs.join("\n") }
 		} else if (answerUser === ".") {
-			return { testsCode: ".", shouldContinue: false }
+			// @todo should read the current input file for the updated information and use it as next prompt
+			logs.push("```")
+			return { answer: ".", shouldContinue: true, logs, prompt: logs.join("\n") }
 		} else if (answerUser !== "yes") {
-			chat.add({ role: "user", content: answerUser })
-			return { testsCode: answerUser, shouldContinue: true }
+			// @todo should use answerUser as next prompt
+			logs.push("```")
+			return { answer: answerUser, shouldContinue: true, logs, prompt: logs.join("\n") }
 		}
 	}
 
@@ -369,30 +370,65 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = fals
 		logs.push(str)
 	}
 	logs.push("```")
-	await chat.db.save("prompt.md", logs.join("\n"))
+	const prompt = logs.join("\n")
+	await chat.db.save("prompt.md", prompt)
+	return { answer: "", shouldContinue: true, logs, prompt }
+}
 
+/**
+ * @param {Object} param0
+ * @param {Ui} param0.ui
+ * @param {Chat} param0.chat
+ * @param {Function} param0.runCommand
+ * @param {number} [param0.step=1]
+ * @returns {Promise<import('../cli/runCommand.js').runCommandResult & { parsed: TestOutput }>}
+ */
+export async function runTests({ ui, chat, runCommand, step = 1 }) {
 	// Run `pnpm test:all` with live output
 	ui.console.info("! Running tests...")
 	const onDataLive = (d) => ui.write(d)
 	ui.console.debug("pnpm test:all")
-	const { stdout: testStdout, stderr: testStderr } = await runCommand("pnpm", ["test:all"], { onData: onDataLive })
+	const result = await runCommand("pnpm", ["test:all"], { onData: onDataLive })
+	result.parsed = parseOutput(result.testStdout ?? "", result.testStderr ?? "")
 
 	// Save per‑step test output
 	if (step) {
-		const testOutput = `${testStdout}\n${testStderr}`
+		const testOutput = `${result.testStdout}\n${result.testStderr}`
 		await chat.db.save(`test-step${step}.txt`, testOutput)
 	}
+	return result
+}
+
+/**
+ * Decode the answer markdown, unpack if confirmed, run tests, parse results,
+ * and ask user for continuation to continue fixing failed, cancelled, skipped, todo
+ * tests, if they are.
+ *
+ * @param {import("../cli/Ui.js").default} ui User interface instance
+ * @param {Chat} chat Chat instance (used for paths)
+ * @param {import('../cli/runCommand.js').runCommandFn} runCommand Function to execute shell commands
+ * @param {ChatOptions} options Always yes to user prompts
+ * @param {number} [step] Optional step number for per-step files
+ * @returns {Promise<{testsCode: boolean, shouldContinue: boolean, test: TestOutput}>}
+ */
+export async function decodeAnswerAndRunTests(ui, chat, runCommand, options, step = 1) {
+	const logs = []
+	await decodeAnswer({ ui, chat, options, logs })
+	const { stdout: testStdout, stderr: testStderr, exitCode } = await runTests({ ui, chat, runCommand, step })
 
 	// Append test output to log
 	logs.push("#### pnpm test:all")
-	logs.push("```bash")
+	logs.push("```stdeerr")
 	logs.push(testStderr)
+	logs.push("```")
+	logs.push("```stdout")
 	logs.push(testStdout)
 	logs.push("```")
 	await chat.db.append("prompt.md", logs.join("\n"))
 
 	// Parse test results
-	const { fail, cancelled, pass, todo, skip, types } = parseOutput(testStdout, testStderr)
+	const parsed = parseOutput(testStdout, testStderr)
+	const { fail, cancelled, pass, todo, skip, types } = parsed.counts
 
 	// Build coloured summary
 	let summary = "Tests: "
@@ -412,7 +448,7 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = fals
 
 	let shouldContinue = true
 
-	if (!isYes) {
+	if (!options.isYes) {
 		let continuing = false
 		if (fail > 0 || cancelled > 0 || types > 0) {
 			const ans = await ui.askYesNo("Do you want to continue fixing fail tests? (Y)es, No, ., <message> % ")
@@ -421,7 +457,7 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = fals
 				if (ans !== "no" && ans !== ".") {
 					chat.add({ role: "user", content: ans })
 				}
-				return { testsCode: ans === "yes" ? true : false, shouldContinue: false }
+				return { testsCode: ans === "yes" ? true : false, shouldContinue: false, test: parsed }
 			}
 			continuing = true
 		}
@@ -432,7 +468,7 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = fals
 				if (ans !== "no" && ans !== ".") {
 					chat.add({ role: "user", content: ans })
 				}
-				return { testsCode: false, shouldContinue: false }
+				return { testsCode: false, shouldContinue: false, test: parsed }
 			}
 			continuing = true
 		}
@@ -443,22 +479,27 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, isYes = fals
 				if (ans !== "no" && ans !== ".") {
 					chat.add({ role: "user", content: ans })
 				}
-				return { testsCode: false, shouldContinue: false }
+				return { testsCode: false, shouldContinue: false, test: parsed }
 			}
 			continuing = true
 		}
 		if (shouldContinue && fail === 0 && cancelled === 0 && types === 0 && todo === 0 && skip === 0) {
 			ui.console.success("All tests passed.")
-			return { testsCode: true, shouldContinue: false }
+			return { testsCode: true, shouldContinue: false, test: parsed }
 		}
 	}
 
 	const testFailed = fail > 0 || cancelled > 0 || types > 0
-	const testsCode = !testFailed
+	let testsCode = !testFailed
+
+	if (0 === exitCode) {
+		shouldContinue = false
+		testsCode = true
+	}
 
 	if (!testFailed) {
 		ui.console.info("All tests passed, no typed mistakes.")
 	}
 
-	return { testsCode, shouldContinue }
+	return { testsCode, shouldContinue, test: parsed }
 }

@@ -1,10 +1,11 @@
-import { Ui } from "../cli/index.js"
+import { Ui } from "../cli/Ui.js"
 import ModelInfo from "../llm/ModelInfo.js"
 import ModelProvider from "../llm/ModelProvider.js"
 
 /**
  * @param {Ui} ui
- * @returns {Promise<Map<string, ModelInfo>>}
+ * @returns {Promise<
+ * Map<string, ModelInfo[]>>}
  */
 export async function loadModels(ui) {
 	const provider = new ModelProvider()
@@ -26,11 +27,12 @@ export async function loadModels(ui) {
 			models.push(...m)
 		}
 	})
-	map.forEach((info) => pros.add(info.provider))
+	map.forEach((infos) => infos.forEach(info => pros.add(info.provider)))
 
 	ui.overwriteLine("")
 	ui.cursorUp(1)
-	ui.overwriteLine(`Loaded ${map.size} models from ${pros.size} providers`)
+	const arr = Array.from(pros).sort()
+	ui.overwriteLine(`Loaded ${map.size} inference models from ${pros.size} providers: ${arr.join(", ")}`)
 	ui.console.info("")
 	clearInterval(loading)
 	return map

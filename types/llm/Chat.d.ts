@@ -1,4 +1,9 @@
 /** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
+export class ChatConfig {
+    constructor(input?: {});
+    model: string;
+    provider: string;
+}
 /**
  * Manages chat history and files
  */
@@ -13,10 +18,11 @@ export default class Chat {
     cwd: string;
     /** @type {string} */
     root: string;
-    /** @type {string} */
-    dir: string;
     /** @type {import("ai").ModelMessage[]} */
     messages: import("ai").ModelMessage[];
+    /** @type {ChatConfig} */
+    config: ChatConfig;
+    get dir(): string;
     /** @returns {FileSystem} */
     get fs(): FileSystem;
     /** @returns {FileSystem} */
@@ -32,7 +38,7 @@ export default class Chat {
     /** @returns {Record<string, string | null>} Allowed files and directories */
     get allowed(): Record<string, string | null>;
     /**
-     * Initialize chat directory
+     * Initialize chat directory, load ID from the file storage if undefined.
      */
     init(): Promise<void>;
     /**
@@ -71,12 +77,12 @@ export default class Chat {
      *
      * Saves the whole chat if target is not provided.
      * If provided saves the specific target and step.
-     * @param {string | ComplexTarget} [target]
+     * @param {string | Partial<ComplexTarget>} [target]
      * @param {any} [data]
      * @param {number} [step]
      * @returns {Promise<void>}
      */
-    save(target?: string | {
+    save(target?: string | Partial<{
         input: string;
         prompt: string;
         model: ModelInfo;
@@ -95,7 +101,7 @@ export default class Chat {
          * If provided saves the specific target and step.
          */
         messages: import("ai").ModelMessage[];
-    }, data?: any, step?: number): Promise<void>;
+    }>, data?: any, step?: number): Promise<void>;
     /**
      * @param {string} path
      * @returns {Promise<Stats>}
@@ -108,18 +114,25 @@ export default class Chat {
      */
     savePrompt(prompt: string): Promise<string>;
     /**
-     * Save the AI response
-     * @param {string} answer
-     * @param {number} [step] - Optional step number for per-step files
-     */
-    saveAnswer(answer: string, step?: number): Promise<void>;
-    /**
      * Append to a file
      * @param {string} path
      * @param {string} data
      * @param {number} [step]
      */
     append(path: string, data: string, step?: number): Promise<void>;
+    /**
+     * @param {string} path
+     * @param {number} [step]
+     * @returns {string}
+     */
+    path(path: string, step?: number): string;
+    /**
+     * Calculates the amount of tokens in the text.
+     * @todo make it work with real tokenizers
+     * @param {string} text The text to measure.
+     * @returns {Promise<number>}
+     */
+    calcTokens(text: string): Promise<number>;
     #private;
 }
 export type ChatMessage = {

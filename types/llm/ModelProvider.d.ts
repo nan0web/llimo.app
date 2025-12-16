@@ -7,14 +7,15 @@ export default class ModelProvider {
      * merged data.
      * @param {object} options
      * @param {(name: string, providers: string[]) => void} [options.onBefore]
-     * @param {(name: string, raw: any, models: Partial<import("./AI.js").ModelInfo>[]) => void} [options.onData]
+     * @param {(name: string, raw: any, models: Partial<ModelInfo>[]) => void} [options.onData]
      *
-     * @returns {Promise<Map<string, import("./AI.js").ModelInfo>>}
+     * @returns {Promise<Map<string, ModelInfo[]>>}
      */
     getAll(options?: {
         onBefore?: ((name: string, providers: string[]) => void) | undefined;
-        onData?: ((name: string, raw: any, models: Partial<import("./AI.js").ModelInfo>[]) => void) | undefined;
-    }): Promise<Map<string, import("./AI.js").ModelInfo>>;
+        onData?: ((name: string, raw: any, models: Partial<ModelInfo>[]) => void) | undefined;
+    }): Promise<Map<string, ModelInfo[]>>;
     #private;
 }
 export type AvailableProvider = "cerebras" | "openrouter" | "huggingface";
+import ModelInfo from "./ModelInfo.js";

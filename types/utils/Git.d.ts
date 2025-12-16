@@ -1,7 +1,7 @@
 /**
  * Simple wrapper for git commands
  */
-export default class Git {
+export class Git {
     /**
      * @param {Partial<Git>} [input={}]
      */
@@ -57,3 +57,4 @@ export default class Git {
      */
     getCurrentBranch(): Promise<string>;
 }
+export default Git;

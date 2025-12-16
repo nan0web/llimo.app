@@ -10,6 +10,7 @@ import {
 	ITALIC,
 } from "../cli/ANSI.js"
 import commands from "./commands/index.js"
+import UiOutput from "../cli/UiOutput.js"
 
 /**
  *
@@ -17,7 +18,7 @@ import commands from "./commands/index.js"
  * @param {boolean} [isDry=false] If true yields messages without saving files
  * @param {string} [cwd] Current working directory
  * @param {(n: number) => string} [format] Formatting numbers function
- * @returns {AsyncGenerator<string>}
+ * @returns {AsyncGenerator<string | UiOutput>}
  */
 export async function* unpackAnswer(
 	parsed,
@@ -41,6 +42,7 @@ export async function* unpackAnswer(
 	 * Header – always emitted, tests rely on the “dry mode” wording.
 	 * ----------------------------------------------------------------- */
 	yield `Extracting files ${isDry ? `${YELLOW}(dry mode, no real saving)` : ""}`
+
 
 	/* -----------------------------------------------------------------
 	 * Process regular files.
@@ -130,3 +132,4 @@ export async function* unpackAnswer(
 		}
 	}
 }
+

@@ -4,10 +4,10 @@ import process from "node:process"
 import { dirname } from "node:path"
 
 import { YELLOW, RED, RESET, GREEN, overwriteLine, cursorUp, DIM, stripANSI, ITALIC } from "./ANSI.js"
+import Alert from "./components/Alert.js"
+import Table from "./components/Table.js"
 
-/**
- * @typedef {'debug'|'info'|'log'|'warn'|'error'|'success'} LogTarget
- */
+/** @typedef {import("./components/Alert.js").AlertVariant | 'log'} LogTarget */
 
 export class UiFormats {
 	/**
@@ -21,7 +21,10 @@ export class UiFormats {
 	 */
 	weight(type, value, format = new Intl.NumberFormat("en-US").format) {
 		if ("b" === type) {
-			return `${ITALIC}${format(value)} bytes${RESET}`
+			return `${ITALIC}${format(value)}b${RESET}`
+		}
+		if ("T" === type) {
+			return `${ITALIC}${format(Math.floor(value))}T${RESET}`
 		}
 		return String(value)
 	}
@@ -186,6 +189,39 @@ export class UiConsole {
 		return lines
 	}
 }
+
+export class UiCommand {
+	/**
+	 * Creates Alert instance for the Ui output.
+	 * @param {Partial<Alert>} input
+	 * @returns {Alert}
+	 */
+	createAlert(input) {
+		return new Alert(input)
+	}
+	/**
+	 * @param {import("./components/Alert.js").AlertVariant} [variant='info']
+	 * @returns {(input: Partial<Alert>) => Alert}
+	 */
+	createAlerter(variant = "info") {
+		return (input) => {
+			if ("string" === typeof input) {
+				input = { text: input }
+			}
+			return this.createAlert({ variant, ...input })
+		}
+	}
+	/**
+	 * Creates Table instance for the Ui output.
+	 * @param {Partial<Table>} input
+	 * @returns {Table}
+	 */
+	createTable(input) {
+		return new Table(input)
+	}
+}
+
+
 
 /**
  * UI helper for CLI interactions.

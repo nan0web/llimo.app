@@ -1,0 +1,5 @@
+src/llm/Chat.test.js
+src/llm/ChatArchive.test.js
+bin/llimo-ls.test.js
+bin/llimo-delete.test.js
+bin/llimo-info.test.js

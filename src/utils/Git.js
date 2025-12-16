@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 /**
  * Simple wrapper for git commands
  */
-export default class Git {
+export class Git {
 	/** @type {string} */
 	cwd
 	/** @type {boolean} */
@@ -99,3 +99,5 @@ export default class Git {
 		return stdout
 	}
 }
+
+export default Git

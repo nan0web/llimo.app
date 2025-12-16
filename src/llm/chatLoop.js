@@ -1,7 +1,7 @@
 import LanguageModelUsage from "./LanguageModelUsage.js"
 import { formatChatProgress } from "./chatProgress.js"
 import { startStreaming, decodeAnswerAndRunTests } from "./chatSteps.js"
-import { Git, FileSystem, Path } from "../utils/index.js"
+import { Git } from "../utils/Git.js"
 import { GREEN, RESET, RED, YELLOW } from "../cli/ANSI.js"
 import AI from "./AI.js"
 import Chat from "./Chat.js"
@@ -108,7 +108,7 @@ export async function sendAndStream(options) {
 
 		usage.inputTokens = chat.getTokensCount()
 
-		const { stream, result } = startStreaming(ai, model.id, chat, streamOptions)
+		const { stream, result } = startStreaming(ai, model, chat, streamOptions)
 
 		await chat.append("stream", "", step)
 		/** @type {object[]} */
@@ -166,7 +166,23 @@ export async function sendAndStream(options) {
 		clearInterval(chatting)
 		// Graceful API error handling
 		let shortMsg = "Unknowns API error"
-		if (["AI_APICallError", "APICallError", "RetryError"].includes(err.name)) {
+		if (["AI_RetryError"].includes(err.name)) {
+			const errors = Array.from(err.errors ?? [])
+			let retryAfter = 0
+			for (const e of errors) {
+				if (429 === e.statusCode) {
+					const date = new Date(e.responseHeaders?.date)
+					ui.console.error(`${date.toISOString()}: ${e.message}`)
+					if (e.responseHeaders?.['retry-after']) {
+						const after = parseInt(e.responseHeaders['retry-after'])
+						retryAfter = Math.max(date.getTime() + after * 1e3, retryAfter)
+					}
+					ui.console.debug(e.stack)
+				}
+			}
+			ui.console.warn(`  Retry after ${new Date(retryAfter).toISOString()}`)
+		}
+		else if (["AI_APICallError", "APICallError", "RetryError"].includes(err.name)) {
 			shortMsg = err.message.split("\n")[0] || shortMsg
 			ui.console.error(`${RED}API Error: ${shortMsg}${RESET}`)
 			if (isWindowLimit(err)) {

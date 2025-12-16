@@ -1,0 +1,9 @@
+src/llm/commands/Title.test.js
+src/llm/commands/Info.test.js
+src/llm/commands/Bash.test.js
+src/llm/commands/Get.test.js
+src/llm/commands/Ls.test.js
+src/llm/commands/Rm.test.js
+src/llm/commands/Summary.test.js
+src/llm/commands/Validate.test.js
+src/templates/system.test.js  # For @title in prompt

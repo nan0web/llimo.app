@@ -134,14 +134,13 @@ describe("chatSteps – packPrompt (integration with mock)", () => {
 			injected: ["a.js", "b.js"],
 		})
 		const {
-			packedPrompt, injected, promptPath, stats
+			packedPrompt, injected, promptPath
 		} = await chatSteps.packPrompt(fakePack, "sample", chatInstance, mockUi)
 
 		assert.equal(packedPrompt, "<<sample>>")
 		assert.deepEqual(injected, ["a.js", "b.js"])
 		// prompt should be stored under the chat directory
 		assert.ok(promptPath.startsWith(chatInstance.dir))
-		assert.equal(stats.size, (await fs.stat(promptPath)).size)
 	})
 })
 
@@ -230,19 +229,19 @@ describe("chatSteps - parseOutput", () => {
 			" ELIFECYCLE  Command failed with exit code 2.",
 		].join("\n")
 		const obj = {}
-		const parsed = chatSteps.parseOutput(stdout, stderr, obj)
-		assert.deepStrictEqual(parsed, {
+		const parsed = chatSteps.parseOutput(stdout, stderr)
+		assert.deepStrictEqual(parsed.counts, {
 			fail: 2, pass: 7, cancelled: 1, skip: 1, todo: 1, duration: 366.333, types: 2,
 			tests: 12, suites: 2,
 		})
-		assert.equal(obj.logs.fail.length, 2)
-		assert.equal(obj.logs.pass.length, 2)
-		assert.equal(obj.logs.cancelled.length, 2)
-		assert.equal(obj.logs.skip.length, 2)
-		assert.equal(obj.logs.todo.length, 2)
-		assert.equal(obj.logs.duration.length, 2)
-		assert.equal(obj.logs.types.length, 2)
-		assert.equal(obj.logs.tests.length, 2)
-		assert.equal(obj.logs.suites.length, 2)
+		assert.equal(parsed.logs.fail.length, 2)
+		assert.equal(parsed.logs.pass.length, 2)
+		assert.equal(parsed.logs.cancelled.length, 2)
+		assert.equal(parsed.logs.skip.length, 2)
+		assert.equal(parsed.logs.todo.length, 2)
+		assert.equal(parsed.logs.duration.length, 2)
+		assert.equal(parsed.logs.types.length, 2)
+		assert.equal(parsed.logs.tests.length, 2)
+		assert.equal(parsed.logs.suites.length, 2)
 	})
 })

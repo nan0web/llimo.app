@@ -241,3 +241,60 @@ Write a number of the recent chat
 - [](package.json)
 - [](README.md)
 
+
+---
+
+```bash
+╭╴yaro::src/purejs/llimo.app
+╰╴23:29 √ok % node bin/llimo-chat.js info
+
++ loaded 3 messages from existing chat a45aa0ca-9dd9-4529-a446-d5d87d372d14
+Chat ID: a45aa0ca-9dd9-4529-a446-d5d87d372d14
+No |  i | Role      | Files |     Size |  Tokens
+-- | -- | ---       |   --- |      --- |     ---
+ 1 |  1 | system    |     6 |   5,757b |  1,352T
+ 2 |  1 | user      |    52 | 188,746b | 52,312T
+ 3 |  1 | assistant |     2 |   7,623b |  2,106T
+   |    | TOTAL     |    60 | 202,126b | 55,770T
+
+```
+
+This is the info command.
+
+1. I need to add an ability to read all the steps and show them here.
+2. I need to add a column Cost with the proper calculation for every step and total calculations.
+3. In release mode (llimo-release) we need to make test before first call and have a bit different calculation and storage in `chat/ID/steps/*/tests.json`, the view should be:
+4. Update releases info if needed. We need to run v1.0.0 now and prepare v1.1.0 with release functionality.
+
+	```bash
+	No |  i | Role      | Files |     Size |  Tokens | Fail | Pass | Skip | Todo
+	-- | -- | ---       |   --- |      --- |     --- |  --- |  --- |  --- |  ---
+	 1 |  1 | system    |     6 |   5,757b |  1,352T |    0 |   22 |    0 |   12
+	 2 |  1 | user      |    52 | 188,746b | 52,312T |      |      |      |
+	 3 |  1 | assistant |     2 |   7,623b |  2,106T |    3 |   24 |    0 |    7
+	   |    | TOTAL     |    60 | 202,126b | 55,770T |      |      |      |     
+	```
+
+- [](bin/llimo-chat.js)
+- [](bin/llimo-release.js)
+- [](src/**)
+- [](releases/**)
+
+---
+
+Define the sequence of models/providers to use in different conditions, for instance until chat is reached 50KT use `gpt-oss-120b@cerebras`, until chat is reached 100KT use `gpt-oss-120b@huggingface/cerebras`, over 100KT use `grok-4-fast@openrouter`.
+
+```bash
+╭╴yaro::nan.web/apps/llimo.app
+╰╴22:15 √ok % LLIMO_MODEL=gpt-oss-120b LLIMO_PROVIDER=cerebras node bin/llimo-chat.js me.md --debug --new
+Debugger attached.
+
++ eaf74928-78eb-4da1-9496-60c32d33726c new chat created
++ system.md loaded 876b
+  system instructions 5,801b
+Loaded 464 inference models from 18 providers: cerebras, huggingface/cerebras, huggingface/cohere, huggingface/featherless-ai, huggingface/fireworks-ai, huggingface/groq, huggingface/hf-inference, huggingface/hyperbolic, huggingface/nebius, huggingface/novita, huggingface/nscale, huggingface/ovhcloud, huggingface/publicai, huggingface/sambanova, huggingface/scaleway, huggingface/together, huggingface/zai-org, openrouter
+
+Multiple models match your criteria [model = gpt-oss-120b, provider = cerebras]:
+  1) gpt-oss-120b (provider: cerebras)
+  2) openai/gpt-oss-120b (provider: huggingface/cerebras)
+```

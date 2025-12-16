@@ -6,6 +6,19 @@ import LanguageModelUsage from "./LanguageModelUsage.js"
 
 /** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
 
+export class ChatConfig {
+	model = ""
+	provider = ""
+	constructor(input = {}) {
+		const {
+			model = this.model,
+			provider = this.provider,
+		} = input
+		this.model = String(model)
+		this.provider = String(provider)
+	}
+}
+
 /**
  * Manages chat history and files
  */
@@ -18,6 +31,8 @@ export default class Chat {
 	root
 	/** @type {import("ai").ModelMessage[]} */
 	messages = []
+	/** @type {ChatConfig} */
+	config
 	/** @type {string} */
 	#dir
 	/** @type {FileSystem} Access to the current working directory file system */
@@ -30,14 +45,17 @@ export default class Chat {
 	 */
 	constructor(input = {}) {
 		const {
-			id = randomUUID(), cwd = process.cwd(), root = "chat", messages = []
+			id = randomUUID(), cwd = process.cwd(), root = "chat", messages = [],
+			config = new ChatConfig({}),
 		} = input
 		this.id = String(id)
 		this.cwd = String(cwd)
 		this.root = String(root)
 		this.messages = messages
+		this.config = config
 		this.#fs = new FileSystem({ cwd })
-		this.#dir = this.#fs.path.resolve(root, id)
+		// Fixed: Respect 'dir' input if provided, else construct as before
+		this.#dir = input.dir ? input.dir : this.#fs.path.resolve(root, id)
 		this.#db = new FileSystem({ cwd: this.dir })
 	}
 
@@ -95,15 +113,22 @@ export default class Chat {
 			answer: "answer.md",
 			reason: "reason.md",
 			usage: "usage.json",
+			fail: "fail.json",
 			messages: null,
 		}
 	}
 
 	/**
-	 * Initialize chat directory
+	 * Initialize chat directory, load ID from the file storage if undefined.
 	 */
 	async init() {
-		await this.#fs.mkdir(this.dir, { recursive: true })
+		await this.fs.mkdir(this.dir, { recursive: true })
+		const data = await this.fs.load(this.root + "/llimo.json") ?? {}
+		this.config = new ChatConfig(data)
+
+		if (!this.id) {
+			this.id = await this.db.load("current")
+		}
 	}
 
 	/**
@@ -177,7 +202,7 @@ export default class Chat {
 	 *
 	 * Saves the whole chat if target is not provided.
 	 * If provided saves the specific target and step.
-	 * @param {string | ComplexTarget} [target]
+	 * @param {string | Partial<ComplexTarget>} [target]
 	 * @param {any} [data]
 	 * @param {number} [step]
 	 * @returns {Promise<void>}
@@ -253,5 +278,16 @@ export default class Chat {
 		if (rel) path = this.fs.path.relative(this.fs.path.resolve("."), path)
 		return path
 	}
+
+	/**
+	 * Calculates the amount of tokens in the text.
+	 * @todo make it work with real tokenizers
+	 * @param {string} text The text to measure.
+	 * @returns {Promise<number>}
+	 */
+	async calcTokens(text) {
+		return Math.ceil(String(text).length / 3.6)
+	}
 }
+
 

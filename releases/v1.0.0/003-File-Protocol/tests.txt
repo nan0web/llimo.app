@@ -1,0 +1,2 @@
+src/utils/Markdown.test.js
+src/FileProtocol.test.js  # Add if exists

@@ -22,4 +22,9 @@ export default class Pricing {
     request: number;
     /** @type {number} - Web search cost */
     web_search: number;
+    /**
+     * Returns the Batch discount in %.
+     * @returns {[inputDicount: number, outputDiscount: number]}
+     */
+    getBatchDiscount(): [inputDicount: number, outputDiscount: number];
 }

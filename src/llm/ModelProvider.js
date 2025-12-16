@@ -6,15 +6,16 @@
  * subsequent calls within the cache TTL do not hit the network.
  *
  * The public API:
- *   - `getAll()` – returns a `Map<string, import("./AI.js").ModelInfo>`
+ *   - `getAll()` – returns a `Map<string, ModelInfo>`
  *     with the union of all provider models (local + remote).
  *
  * @module llm/ModelProvider
  */
 import { FileSystem } from "../utils/index.js"
-import path from "node:path"
 
 import getCerebrasInfo from "./providers/cerebras.info.js"
+import getHuggingFaceInfo from "./providers/huggingface.info.js"
+import ModelInfo from "./ModelInfo.js"
 
 /** @typedef {"cerebras" | "openrouter" | "huggingface"} AvailableProvider */
 
@@ -22,8 +23,7 @@ import getCerebrasInfo from "./providers/cerebras.info.js"
 const CACHE_TTL = 60 * 60 * 1000
 
 /** Default cache location – inside the project root */
-const CACHE_DIR = ".cache"
-const CACHE_FILE = "models.json"
+const CACHE_FILE = "chat/models.jsonl"
 
 export default class ModelProvider {
 	/** @type {FileSystem} */
@@ -34,25 +34,20 @@ export default class ModelProvider {
 	constructor() {
 		this.#fs = new FileSystem()
 		// Resolve the cache file relative to the current working directory.
-		this.#cachePath = path.resolve(CACHE_DIR, CACHE_FILE)
+		this.#cachePath = this.#fs.path.resolve(CACHE_FILE)
 	}
 
 	/**
 	 * Load the cache file if it exists and is fresh.
-	 * @returns {Promise<{ timestamp:number, data:any } | null>}
+	 * @returns {Promise<any | null>}
 	 */
 	async #loadCache() {
 		if (await this.#fs.access(this.#cachePath)) {
-			const raw = await this.#fs.readFile(this.#cachePath, "utf-8")
-			try {
-				const parsed = JSON.parse(raw)
-				if (
-					typeof parsed.timestamp === "number" &&
-					(Date.now() - parsed.timestamp) < CACHE_TTL
-				) {
-					return parsed
-				}
-			} catch {/* ignore malformed cache */ }
+			const rows = await this.#fs.load(this.#cachePath) ?? []
+			const stats = await this.#fs.info(this.#cachePath)
+			if ((Date.now() - stats.mtimeMs) < CACHE_TTL) {
+				return rows.map(m => new ModelInfo(m))
+			}
 		}
 		return null
 	}
@@ -62,7 +57,7 @@ export default class ModelProvider {
 	 * @param {any} data
 	 */
 	async #writeCache(data) {
-		await this.#fs.save(this.#cachePath, { timestamp: Date.now(), data })
+		await this.#fs.save(this.#cachePath, data)
 	}
 
 	/**
@@ -71,7 +66,7 @@ export default class ModelProvider {
 	 * The function knows how to call each supported provider.
 	 *
 	 * @param {AvailableProvider} provider
-	 * @returns {Promise<Array<import("./AI.js").ModelInfo>>}
+	 * @returns {Promise<Array<ModelInfo>>}
 	 */
 	async #fetchFromProvider(provider) {
 		switch (provider) {
@@ -84,9 +79,15 @@ export default class ModelProvider {
 				// OpenRouter model list endpoint – public for most models.
 				return await this.#jsonFetch(`https://openrouter.ai/api/v1/models`)
 			case "huggingface":
-				// HuggingFace inference endpoint – placeholder (public list not provided).
-				// Returning empty array is safe; callers will rely on static fallback models.
-				return []
+				// HuggingFace inference providers – model list via router API
+				// This returns both the base HF models and partner models.
+				// See: https://huggingface.co/docs/api-inference/models
+				return await this.#jsonFetch(
+					"https://router.huggingface.co/v1/models",
+					{
+						Authorization: `Bearer ${process.env.HF_TOKEN}`
+					}
+				)
 			default:
 				throw new Error(`Unsupported provider "${provider}"`)
 		}
@@ -117,18 +118,18 @@ export default class ModelProvider {
 	/**
 	 * Normalise raw provider payload into the common ModelInfo shape.
 	 *
-	 * @param {Partial<import("./AI.js").ModelInfo>} item Raw model object from provider.
+	 * @param {Partial<ModelInfo> & {model_id: string} | ModelInfo} item Raw model object from provider.
 	 * @param {AvailableProvider} provider Provider name.
-	 * @param {Array<readonly [string, Partial<import("./AI.js").ModelInfo>]>} [models=[]]
-	 * @returns {Partial<import("./AI.js").ModelInfo>}
+	 * @param {Array<readonly [string, Partial<ModelInfo>]>} [models=[]]
+	 * @returns {Partial<ModelInfo>}
 	*/
 	#normalise(item, provider, models = []) {
-		/** @type {Map<string, Partial<import("./AI.js").ModelInfo>>} */
+		/** @type {Map<string, Partial<ModelInfo>>} */
 		const map = new Map(models)
-		const name = String(item.id ?? "")
-		/** @type {Partial<import("./AI.js").ModelInfo>} */
+		const name = String(item.id ?? item['model_id'] ?? "")
+		/** @type {Partial<ModelInfo>} */
 		const base = map.get(name) ?? {}
-		/** @type {Partial<import("./AI.js").ModelInfo>} */
+		/** @type {Partial<ModelInfo>} */
 		const norm = { ...base, ...item }
 		switch (provider) {
 			case "cerebras":
@@ -139,9 +140,14 @@ export default class ModelProvider {
 				norm.provider = "openrouter"
 				break
 			case "huggingface":
-				// HuggingFace payload format (if ever used) – fallback to generic names.
+				// HuggingFace inference API uses unique format – ensure correct provider tag.
 				norm.provider = "huggingface"
 				break
+		}
+		// Map HuggingFace's provider-suffixed models like "openai/gpt-oss-120b:groq"
+		if (provider === "huggingface" && typeof norm.id === "string") {
+			// Remove provider suffix like ":groq"
+			norm.id = norm.id.split(":")[0]
 		}
 		return norm
 	}
@@ -154,18 +160,34 @@ export default class ModelProvider {
 	 * merged data.
 	 * @param {object} options
 	 * @param {(name: string, providers: string[]) => void} [options.onBefore]
-	 * @param {(name: string, raw: any, models: Partial<import("./AI.js").ModelInfo>[]) => void} [options.onData]
+	 * @param {(name: string, raw: any, models: Partial<ModelInfo>[]) => void} [options.onData]
 	 *
-	 * @returns {Promise<Map<string, import("./AI.js").ModelInfo>>}
+	 * @returns {Promise<Map<string, ModelInfo[]>>}
 	 */
 	async getAll(options = {}) {
+		/**
+		 * @param {ModelInfo[]} all
+		 * @returns {Map<string, ModelInfo[]>}
+		 */
+		const convertMap = (all) => {
+			const map = new Map()
+			all
+				.filter((m) => typeof m.id === "string" && m.id.length > 0)
+				.forEach((m) => {
+					const arr = map.get(m.id) ?? []
+					arr.push(m)
+					map.set(m.id, arr)
+				})
+			return map
+		}
 		const {
 			onBefore = () => { },
 			onData = () => { },
 		} = options
+		/** @type {ModelInfo[]} */
 		const cached = await this.#loadCache()
 		if (cached) {
-			return new Map(cached.data.map((m) => [m.id, m]))
+			return convertMap(cached)
 		}
 
 		/** @type {AvailableProvider[]} */
@@ -175,19 +197,24 @@ export default class ModelProvider {
 		for (const name of providerNames) {
 			try {
 				onBefore(name, providerNames)
-				const raw = await this.#fetchFromProvider(name)
+				let raw = []
 				let predefined = {}
-				if ("cerebras" === name) {
+				if (name === "cerebras") {
 					predefined = getCerebrasInfo()
+				} else if (name === "huggingface") {
+					// Use static fallback models as a base, then merge remote results.
+					predefined = getHuggingFaceInfo()
 				}
+				raw = await this.#fetchFromProvider(name)
 
 				const normalized = raw.map((item) => this.#normalise(item, name, predefined.models ?? []))
-				onData(name, raw, normalized)
-				all.push(...normalized)
-			} catch (e) {
+				const flat = this.#makeFlat(normalized)
+				onData(name, raw, flat)
+				all.push(...flat)
+			} catch (/** @type {any} */ err) {
 				// Swallow network errors – the cache will be empty and callers can
 				// continue to use statically known models.
-				console.warn(`⚠️  Failed to fetch models from ${name}: ${e.message}`)
+				console.warn(`⚠️  Failed to fetch models from ${name}: ${err.message}`)
 			}
 		}
 
@@ -195,14 +222,28 @@ export default class ModelProvider {
 			await this.#writeCache(all)
 		}
 
-		/** @todo fix: Type 'Map<string | undefined, Partial<ModelInfo>>' is not assignable to type 'Map<string, ModelInfo>'.
-				Type 'string | undefined' is not assignable to type 'string'.
-					Type 'undefined' is not assigned to type 'string'.ts(2322) */
 		// Ensure we only include entries with a defined string id.
-		const cleanEntries = all
-			.filter((m) => typeof m.id === "string" && m.id.length > 0)
-			.map((m) => [m.id, m])
+		return convertMap(all)
+	}
 
-		return new Map(cleanEntries)
+	#makeFlat(arr) {
+		const result = []
+		for (const model of arr) {
+			if (model.providers) {
+				for (const opts of model.providers) {
+					const provider = model.provider + "/" + (opts.provider ?? "")
+					if (provider.endsWith("/")) {
+						console.warn("Incorrect model's provider: " + provider)
+					}
+					const { providers, ...rest } = model
+					const flat = new ModelInfo({ ...rest, ...opts, provider })
+					result.push(flat)
+				}
+			} else {
+				result.push(model)
+			}
+		}
+		return result
 	}
 }
+

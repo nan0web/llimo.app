@@ -28,7 +28,13 @@ export default class ChatOptions {
     };
     static provider: {
         alias: string;
+        help: string;
         default: string;
+    };
+    static maxFails: {
+        alias: string;
+        help: string;
+        default: number;
     };
     /** @param {Partial<ChatOptions>} [input] */
     constructor(input?: Partial<ChatOptions>);
@@ -38,12 +44,14 @@ export default class ChatOptions {
     isNew: boolean;
     /** @type {boolean} */
     isYes: boolean;
-    /** @type {boolean} */
+    /** @type {boolean} @deprecated Changed with the command test */
     isTest: boolean;
-    /** @type {string} */
+    /** @type {string} @deprecated Moved to the command test */
     testDir: string;
     /** @type {string} */
     model: string;
     /** @type {string} */
     provider: string;
+    /** @type {number} */
+    maxFails: number;
 }

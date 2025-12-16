@@ -1,0 +1,5 @@
+src/cli/Ui.test.js
+src/cli/ANSI.test.js
+src/llm/chatProgress.test.js
+src/utils/ReadLine.test.js
+src/cli/selectModel.test.js  # Interactive parts

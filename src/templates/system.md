@@ -43,6 +43,7 @@ For each file output the following markdown snippet **exactly** as shown in next
 
 Do NOT wrap the whole answer in a JSON object or in an outer code fence.
 Do NOT escape new‑lines – keep them as real line‑break characters.
+Provide full files content in the response.
 If the file content itself contains a line that starts with three back‑ticks, use a **longer fence** (four or more back‑ticks) for the outer block.
 
 In every response provide file with list of provided, named "@validate" with type "markdown": `- [<label>](<filename>)`

@@ -16,14 +16,13 @@
  * `.cache/llimo.config.json` inside the current working directory,
  * making subsequent runs of the CLI default to the same selection.
  *
- * @param {Map<string, ModelInfo>} models
- * @param {string|undefined} modelPartial   Partial model identifier (e.g. "oss")
+ * @param {Map<string, ModelInfo[]>} models
+ * @param {string} modelPartial   Partial model identifier (e.g. "oss")
  * @param {string|undefined} providerPartial   Partial provider name (e.g. "cere")
  * @param {Ui} ui   UI helper for interactive prompts
- * @param {FileSystem} fs   Filesystem with working directory (used for config persistence)
+ * @param {(chosen: ModelInfo) => void} [onSelect]   Current chat instance
  * @returns {Promise<ModelInfo>}
  */
-export function selectModel(models: Map<string, ModelInfo>, modelPartial: string | undefined, providerPartial: string | undefined, ui: Ui, fs: FileSystem): Promise<ModelInfo>;
+export function selectModel(models: Map<string, ModelInfo[]>, modelPartial: string, providerPartial: string | undefined, ui: Ui, onSelect?: (chosen: ModelInfo) => void): Promise<ModelInfo>;
 import ModelInfo from "./ModelInfo.js";
 import Ui from "../cli/Ui.js";
-import FileSystem from "../utils/FileSystem.js";

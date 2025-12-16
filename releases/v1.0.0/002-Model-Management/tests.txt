@@ -1,0 +1,2 @@
+src/llm/ModelProvider.test.js
+src/llm/AI.test.js  # Add if exists

@@ -1,6 +1,7 @@
 import Ui from "../cli/Ui.js"
 import ModelInfo from "./ModelInfo.js"
 import FileSystem from "../utils/FileSystem.js"
+import Chat from "./Chat.js"
 
 /**
  * Helper to select a model (and optionally its provider) from a list of
@@ -20,55 +21,68 @@ import FileSystem from "../utils/FileSystem.js"
  * `.cache/llimo.config.json` inside the current working directory,
  * making subsequent runs of the CLI default to the same selection.
  *
- * @param {Map<string, ModelInfo>} models
- * @param {string|undefined} modelPartial   Partial model identifier (e.g. "oss")
+ * @param {Map<string, ModelInfo[]>} models
+ * @param {string} modelPartial   Partial model identifier (e.g. "oss")
  * @param {string|undefined} providerPartial   Partial provider name (e.g. "cere")
  * @param {Ui} ui   UI helper for interactive prompts
- * @param {FileSystem} fs   Filesystem with working directory (used for config persistence)
+ * @param {(chosen: ModelInfo) => void} [onSelect]   Current chat instance
  * @returns {Promise<ModelInfo>}
  */
-export async function selectModel(models, modelPartial, providerPartial, ui, fs) {
+export async function selectModel(models, modelPartial, providerPartial, ui, onSelect = () => { }) {
 	const lower = s => String(s ?? "").toLowerCase()
 
+	/**
+	 * @param {string} model
+	 * @param {string | undefined} [provider]
+	 * @returns {ModelInfo[]}
+	 */
+	const findCandidates = (model, provider = "") => {
+		const result = []
+		Array.from(models.values()).forEach(arr => {
+			arr.forEach(m => {
+				const modelOk = !model || lower(m.id).includes(lower(model))
+				const provOk = !provider || lower(m.provider).includes(lower(provider))
+				if (modelOk && provOk) result.push(m)
+			})
+		})
+		return result
+	}
+
 	/** @type {Array<ModelInfo>} */
-	let candidates = Array.from(models.values()).filter(m => {
-		const modelOk = !modelPartial || lower(m.id).includes(lower(modelPartial))
-		const provOk = !providerPartial || lower(m.provider).includes(lower(providerPartial))
-		return modelOk && provOk
-	})
+	let candidates = findCandidates(modelPartial, providerPartial)
 
 	if (candidates.length === 0) {
-		throw new Error(
-			`❌ No models match the criteria – model:${modelPartial ?? "*"} provider:${providerPartial ?? "*"}`
-		)
+		ui.console.warn(`❌ No models match the criteria – model:${modelPartial ?? "*"} provider:${providerPartial ?? "*"}`)
+		ui.console.warn(`  Looking for the same model pattern in all providers`)
+		candidates = findCandidates(modelPartial)
 	}
 
 	if (candidates.length === 1) {
 		const chosen = candidates[0]
-		await persistChoice(chosen, fs)
+		await onSelect(chosen)
 		return chosen
 	}
 
 	// Multiple candidates – ask the user
-	ui.console.info("\nMultiple models match your criteria:")
+	ui.console.info(`\nMultiple models match your criteria [model = ${modelPartial}, provider = ${providerPartial}]:`)
 	candidates.forEach((m, i) => {
 		ui.console.info(`  ${i + 1}) ${m.id} (provider: ${m.provider})`)
 	})
 
-	const answer = await ui.ask("Select a model by number (or type a full id): ")
+	const answer = await ui.ask("Select a model by number (or type its full id): ")
 	const trimmed = answer.trim()
 
 	// Direct id entry?
 	const direct = candidates.find(m => m.id === trimmed)
 	if (direct) {
-		await persistChoice(direct, fs)
+		await onSelect(direct)
 		return direct
 	}
 
 	const idx = parseInt(trimmed, 10) - 1
 	if (!Number.isNaN(idx) && idx >= 0 && idx < candidates.length) {
 		const chosen = candidates[idx]
-		await persistChoice(chosen, fs)
+		await onSelect(chosen)
 		return chosen
 	}
 

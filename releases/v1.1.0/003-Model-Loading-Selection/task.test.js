@@ -34,7 +34,7 @@ describe("003-Model-Loading-Selection – src/Chat/models.js & src/llm/*", () =>
 			const mockUi = { console: { info: () => {} }, createProgress: () => setInterval(() => {}, 1000) }
 			const models1 = await loadModels(mockUi)
 			// Mock time: Assume cache written
-			const cachePath = ".cache/models.json"
+			const cachePath = "chat/models.jsonl"
 			const cacheContent = { timestamp: Date.now(), data: Array.from(models1) }
 			await fs.save(cachePath, cacheContent)
 			// Second call: should use cache (no fetch)

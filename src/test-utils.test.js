@@ -5,6 +5,8 @@ import { writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { createTempWorkspace, runNodeScript, cleanupTempDir } from "./test-utils.js"
 
+const filterDebugger = str => str.split("\n").filter(s => !/debugger/i.test(s)).join("\n")
+
 describe("test-utils – workspace and script execution", () => {
 	let tempDir
 
@@ -44,7 +46,7 @@ console.info("Echo:", ...args);
 			})
 
 			assert.strictEqual(exitCode, 0)
-			assert.strictEqual(stderr, "")
+			assert.strictEqual(filterDebugger(stderr), "")
 			assert.ok(stdout.includes("Echo: Hello from test"))
 		})
 	})

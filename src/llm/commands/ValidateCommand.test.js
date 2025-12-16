@@ -5,6 +5,7 @@ import { dirname } from 'node:path'
 import FileSystem from "../../utils/FileSystem.js"
 import Markdown from "../../utils/Markdown.js"
 import ValidateCommand from "./ValidateCommand.js"
+import Alert from "../../cli/components/Alert.js"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 describe("ValidateCommand", () => {
@@ -16,7 +17,7 @@ describe("ValidateCommand", () => {
 		const cmd = new ValidateCommand({ cwd: __dirname, file, parsed })
 		const output = []
 		for await (const str of cmd.run()) {
-			output.push(str)
+			output.push(str instanceof Alert ? str.text : String(str))
 		}
 		assert.deepStrictEqual(output, [
 			'! LLiMo following format errors ------------------------------',

@@ -1,13 +1,9 @@
 /**
- * @param {AI} ai
- * @param {Ui} ui
- * @param {FileSystem} fs
+ * @param {import("../llm/AI.js").default} ai
+ * @param {import("./Ui.js").Ui} ui
  * @param {string} modelStr
  * @param {string} providerStr
- * @returns {Promise<ModelInfo>}
+ * @param {(chosen: import("../llm/ModelInfo.js").default) => void} [onSelect]   Current chat instance
+ * @returns {Promise<import("../llm/ModelInfo.js").default>}
  */
-export function selectAndShowModel(ai: AI, ui: Ui, fs: FileSystem, modelStr: string, providerStr: string, DEFAULT_MODEL?: string): Promise<ModelInfo>;
-import { AI } from "../llm/index.js";
-import Ui from "./Ui.js";
-import { FileSystem } from "../utils/index.js";
-import { ModelInfo } from "../llm/index.js";
+export function selectAndShowModel(ai: import("../llm/AI.js").default, ui: import("./Ui.js").Ui, modelStr: string, providerStr: string, onSelect?: (chosen: import("../llm/ModelInfo.js").default) => void, options?: {}): Promise<import("../llm/ModelInfo.js").default>;

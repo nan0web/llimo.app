@@ -1,4 +1,4 @@
-export default class Command {
+export default class Command extends UiCommand {
     static help: string;
     static label: string;
     static example: string;
@@ -17,9 +17,12 @@ export default class Command {
     /** @type {import("../../FileProtocol.js").ParsedFile} */
     parsed: import("../../FileProtocol.js").ParsedFile;
     /**
-     * @returns {AsyncGenerator<string>}
+     * @returns {AsyncGenerator<string | Alert | Table>}
      */
-    run(): AsyncGenerator<string>;
+    run(): AsyncGenerator<string | Alert | Table>;
 }
+import { UiCommand } from "../../cli/Ui.js";
 import FileSystem from "../../utils/FileSystem.js";
 import { FileEntry } from "../../FileProtocol.js";
+import { Alert } from "../../cli/components/index.js";
+import { Table } from "../../cli/components/index.js";

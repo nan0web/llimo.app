@@ -42,4 +42,19 @@ export default class Pricing {
 		this.request = Number(request)
 		this.web_search = Number(web_search)
 	}
+
+	/**
+	 * Returns the Batch discount in %.
+	 * @returns {[inputDicount: number, outputDiscount: number]}
+	 */
+	getBatchDiscount() {
+		// @todo implement for those where it works, it is not working with openrouter,
+		// but should work with openai.
+		return [0, 0]
+		if (!this.input_cache_read && this.input_cache_write) return [0, 0]
+		return [
+			Math.round((1 - this.input_cache_read / this.prompt) * 100),
+			Math.round((1 - this.input_cache_write / this.completion) * 100),
+		]
+	}
 }

@@ -19,7 +19,7 @@
 export default class AI {
     /**
      * @param {object} input
-     * @param {Array<readonly [string, Partial<ModelInfo>]> | Map<string, Partial<ModelInfo>>} input
+     * @param {Array<readonly [string, Partial<ModelInfo>[]]> | Map<string, Partial<ModelInfo>[]>} input
      */
     constructor(input?: object);
     /** @type {ModelInfo?} */
@@ -41,16 +41,16 @@ export default class AI {
     getModels(): ModelInfo[];
     /**
      *
-     * @returns {Map<string, ModelInfo>}
+     * @returns {Map<string, ModelInfo[]>}
      */
-    getModelsMap(): Map<string, ModelInfo>;
+    getModelsMap(): Map<string, ModelInfo[]>;
     /**
      * Get model info by ID.
      *
      * @param {string} modelId
-     * @returns {ModelInfo | undefined}
+     * @returns {ModelInfo[]}
      */
-    getModel(modelId: string): ModelInfo | undefined;
+    getModel(modelId: string): ModelInfo[];
     /**
      * Find a model from all of the models by partial comparasion.
      * @param {string} modelId The full or partial model id.
@@ -84,12 +84,12 @@ export default class AI {
      * optional hooks that can be used by callers to monitor or control the
      * streaming lifecycle.
      *
-     * @param {string} modelId
+     * @param {ModelInfo} model
      * @param {import('ai').ModelMessage[]} messages
      * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage>} [options={}]
      * @returns {import('ai').StreamTextResult<import('ai').ToolSet>}
      */
-    streamText(modelId: string, messages: import("ai").ModelMessage[], options?: import("ai").UIMessageStreamOptions<import("ai").UIMessage>): import("ai").StreamTextResult<import("ai").ToolSet, any>;
+    streamText(model: ModelInfo, messages: import("ai").ModelMessage[], options?: import("ai").UIMessageStreamOptions<import("ai").UIMessage>): import("ai").StreamTextResult<import("ai").ToolSet, any>;
     /**
      * Generate text from a model (non‑streaming).
      *

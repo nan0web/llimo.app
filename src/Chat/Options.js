@@ -19,14 +19,14 @@ export default class ChatOptions {
 		alias: "yes",
 		default: false
 	}
-	/** @type {boolean} */
+	/** @type {boolean} @deprecated Changed with the command test */
 	isTest
 	static isTest = {
 		help: "Run in test mode",
 		alias: "test",
 		default: false
 	}
-	/** @type {string} */
+	/** @type {string} @deprecated Moved to the command test */
 	testDir
 	static testDir = {
 		alias: "test-dir",
@@ -42,7 +42,15 @@ export default class ChatOptions {
 	provider
 	static provider = {
 		alias: "provider",
+		help: "Ai provider, use / for subproviders such as huggingface/cerebras",
 		default: ""
+	}
+	/** @type {number} */
+	maxFails
+	static maxFails = {
+		alias: "max-fails",
+		help: "Maximum number of failed iterations in a row",
+		default: 3,
 	}
 	/** @param {Partial<ChatOptions>} [input] */
 	constructor(input = {}) {
@@ -55,6 +63,7 @@ export default class ChatOptions {
 			model = ChatOptions.model.default,
 			provider = ChatOptions.provider.default,
 			argv = ChatOptions.argv.default,
+			maxFails = ChatOptions.maxFails.default,
 		} = input
 		this.isNew = Boolean(isNew)
 		this.isYes = Boolean(isYes)
@@ -62,6 +71,7 @@ export default class ChatOptions {
 		this.testDir = String(testDir)
 		this.model = model
 		this.provider = String(provider)
+		this.maxFails = Number(maxFails)
 		this.argv = argv
 	}
 }

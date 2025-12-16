@@ -1,20 +1,34 @@
-import { AI, ModelInfo, selectModel } from "../llm/index.js"
-import { FileSystem } from "../utils/index.js"
-import Ui from "./Ui.js"
+import { selectModel } from "../llm/selectModel.js"
 
 /**
- * @param {AI} ai
- * @param {Ui} ui
- * @param {FileSystem} fs
+ * @param {import("../llm/AI.js").default} ai
+ * @param {import("./Ui.js").Ui} ui
  * @param {string} modelStr
  * @param {string} providerStr
- * @returns {Promise<ModelInfo>}
+ * @param {(chosen: import("../llm/ModelInfo.js").default) => void} [onSelect]   Current chat instance
+ * @returns {Promise<import("../llm/ModelInfo.js").default>}
  */
-export async function selectAndShowModel(ai, ui, fs, modelStr, providerStr, DEFAULT_MODEL = "gpt-oss-120b:free") {
-	/** @type {ModelInfo} */
+export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect = () => { }, options = {}) {
+	const {
+		fast = false,
+		quickModel = "qwen-3-235b-a22b-instruct-2507"
+	} = options
+	const DEFAULT_MODEL = "gpt-oss-120b:free"
+	/** @type {import("../llm/ModelInfo.js").default} */
 	let model
+	if (fast) {
+		// Force quickModel with fastest provider (cerebras or huggingface)
+		model = ai.getModel(quickModel + ":cerebras") || ai.getModel(quickModel + ":huggingface")
+		if (model) {
+			onSelect(model)
+			ui.console.info(`> ${model.id} selected with fastest server`)
+			return model
+		} else {
+			ui.console.warn(`Fast model ${quickModel} not available with fast providers`)
+		}
+	}
 	if (modelStr || providerStr) {
-		model = await selectModel(ai.getModelsMap(), modelStr, providerStr, ui, fs)
+		model = await selectModel(ai.getModelsMap(), modelStr, providerStr, ui, onSelect)
 	} else {
 		const found = ai.findModel(DEFAULT_MODEL)
 		if (!found) {

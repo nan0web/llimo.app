@@ -28,7 +28,7 @@ import LanguageModelUsage from './LanguageModelUsage.js'
  */
 export default class AI {
 
-	/** @type {Map<string, ModelInfo>} */
+	/** @type {Map<string, ModelInfo[]>} */
 	#models = new Map()
 
 	/** @type {ModelProvider} */
@@ -39,7 +39,7 @@ export default class AI {
 
 	/**
 	 * @param {object} input
-	 * @param {Array<readonly [string, Partial<ModelInfo>]> | Map<string, Partial<ModelInfo>>} input
+	 * @param {Array<readonly [string, Partial<ModelInfo>[]]> | Map<string, Partial<ModelInfo>[]>} input
 	 */
 	constructor(input = {}) {
 		const {
@@ -72,12 +72,12 @@ export default class AI {
 	 * @returns {ModelInfo[]}
 	 */
 	getModels() {
-		return Array.from(this.#models.values())
+		return Array.from(this.#models.values()).flat()
 	}
 
 	/**
 	 *
-	 * @returns {Map<string, ModelInfo>}
+	 * @returns {Map<string, ModelInfo[]>}
 	 */
 	getModelsMap() {
 		return this.#models
@@ -87,10 +87,10 @@ export default class AI {
 	 * Get model info by ID.
 	 *
 	 * @param {string} modelId
-	 * @returns {ModelInfo | undefined}
+	 * @returns {ModelInfo[]}
 	 */
 	getModel(modelId) {
-		return this.#models.get(modelId)
+		return this.#models.get(modelId) ?? []
 	}
 
 	/**
@@ -115,13 +115,15 @@ export default class AI {
 		const result = []
 		const str = String(modelId).toLowerCase()
 		const parts = str.split(/[^\w]+/)
-		for (const [id, info] of this.#models.entries()) {
-			const lc = String(id).toLowerCase()
-			if (lc.includes(str)) {
-				result.push(info)
-			}
-			if (parts.some(p => lc.includes(p))) {
-				result.push(info)
+		for (const [id, arr] of this.#models.entries()) {
+			for (const info of arr) {
+				const lc = String(id).toLowerCase()
+				if (lc.includes(str)) {
+					result.push(info)
+				}
+				if (parts.some(p => lc.includes(p))) {
+					result.push(info)
+				}
 			}
 		}
 		result.sort((a, b) => a.id.localeCompare(b.id))
@@ -135,7 +137,9 @@ export default class AI {
 	 * @param {Partial<ModelInfo>} info
 	 */
 	addModel(id, info) {
-		this.#models.set(id, new ModelInfo(info))
+		const arr = this.#models.get(id) ?? []
+		arr.push(new ModelInfo(info))
+		this.#models.set(id, arr)
 	}
 
 	/**
@@ -145,7 +149,8 @@ export default class AI {
 	 * @returns {any}
 	 */
 	getProvider(provider) {
-		switch (provider) {
+		const [pro] = provider.split("/")
+		switch (pro) {
 			case 'openai':
 				if (!process.env.OPENAI_API_KEY) {
 					throw new Error(`OpenAI API key is missing. Set the OPENAI_API_KEY environment variable.`)
@@ -185,15 +190,12 @@ export default class AI {
 	 * optional hooks that can be used by callers to monitor or control the
 	 * streaming lifecycle.
 	 *
-	 * @param {string} modelId
+	 * @param {ModelInfo} model
 	 * @param {import('ai').ModelMessage[]} messages
 	 * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage>} [options={}]
 	 * @returns {import('ai').StreamTextResult<import('ai').ToolSet>}
 	 */
-	streamText(modelId, messages, options = {}) {
-		const model = this.getModel(modelId)
-		if (!model) throw new Error(`Model not found: ${modelId}`)
-
+	streamText(model, messages, options = {}) {
 		const {
 			abortSignal,
 			onChunk,

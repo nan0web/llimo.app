@@ -2,7 +2,7 @@
  * Packs files into a single markdown string based on a checklist.
  */
 import micromatch from "micromatch"
-import { RED, GREEN, RESET, YELLOW, ITALIC, MAGENTA } from "../cli/index.js"
+import { RED, GREEN, RESET, YELLOW, ITALIC, MAGENTA } from "../cli/ANSI.js"
 import { FileSystem, Path } from "../utils/index.js"
 import Markdown from "../utils/Markdown.js"
 

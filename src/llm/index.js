@@ -1,6 +1,8 @@
 import AI from "./AI.js"
 import TestAI from "./TestAI.js"
 import Chat from "./Chat.js"
+import Architecture from "./Architecture.js"
+import Pricing from "./Pricing.js"
 import ModelInfo from "./ModelInfo.js"
 import ModelProvider from "./ModelProvider.js"
 import LanguageModelUsage from "./LanguageModelUsage.js"
@@ -16,6 +18,7 @@ export {
 	AI, TestAI,
 	Chat,
 	LanguageModelUsage,
+	Architecture, Pricing,
 	ModelInfo,
 	ModelProvider,
 }

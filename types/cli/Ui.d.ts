@@ -1,6 +1,4 @@
-/**
- * @typedef {'debug'|'info'|'log'|'warn'|'error'|'success'} LogTarget
- */
+/** @typedef {import("./components/Alert.js").AlertVariant | 'log'} LogTarget */
 export class UiFormats {
     /**
      * Formats weight (size) of the value, available types:
@@ -83,6 +81,25 @@ export class UiConsole {
         divider?: string | number;
         aligns?: string[];
     }): string[];
+}
+export class UiCommand {
+    /**
+     * Creates Alert instance for the Ui output.
+     * @param {Partial<Alert>} input
+     * @returns {Alert}
+     */
+    createAlert(input: Partial<Alert>): Alert;
+    /**
+     * @param {import("./components/Alert.js").AlertVariant} [variant='info']
+     * @returns {(input: Partial<Alert>) => Alert}
+     */
+    createAlerter(variant?: import("./components/Alert.js").AlertVariant): (input: Partial<Alert>) => Alert;
+    /**
+     * Creates Table instance for the Ui output.
+     * @param {Partial<Table>} input
+     * @returns {Table}
+     */
+    createTable(input: Partial<Table>): Table;
 }
 /**
  * UI helper for CLI interactions.
@@ -169,4 +186,6 @@ export class Ui {
     }) => void, startTime?: number, fps?: number): NodeJS.Timeout;
 }
 export default Ui;
-export type LogTarget = "debug" | "info" | "log" | "warn" | "error" | "success";
+export type LogTarget = import("./components/Alert.js").AlertVariant | "log";
+import Alert from "./components/Alert.js";
+import Table from "./components/Table.js";
