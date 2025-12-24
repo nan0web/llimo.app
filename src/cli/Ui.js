@@ -71,7 +71,7 @@ export class UiFormats {
 		if (elapsed > 3600) elapsed = 3600
 		const mins = Math.floor(elapsed / 60)
 		const secs = Math.round((elapsed % 60) * 10) / 10
-		return `${mins}:${secs.toString().padStart(5, "0")}`
+		return `${mins}:${secs.toString().padStart(2, "0")}`
 	}
 }
 
@@ -176,11 +176,11 @@ export class UiConsole {
 	/**
 	 * @todo cover with tests.
 	 * @param {any[][]} rows
-	 * @param {{divider?: string | number, aligns?: string[]}} [options={}]
+	 * @param {{divider?: string | number, aligns?: string[], silent?: boolean}} [options={}]
 	 * @returns {string[]}
 	 */
 	table(rows = [], options = {}) {
-		const { divider = " | ", aligns = [] } = options
+		const { divider = " | ", aligns = [], silent = false } = options
 		const div = "number" === typeof divider ? " ".repeat(divider) : divider
 
 		// Determine column widths based on visible (ANSI‑stripped) length
@@ -208,7 +208,7 @@ export class UiConsole {
 		)
 
 		// Emit to the wrapped console and return the lines
-		lines.forEach(l => this.console.info(l))
+		if (!silent) lines.forEach(l => this.console.info(l))
 		return lines
 	}
 }

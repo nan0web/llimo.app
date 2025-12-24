@@ -106,35 +106,46 @@ describe("ModelProvider", () => {
 
 	it("initializes with resolved cache path", () => {
 		const p = new ModelProvider()
-		assert.strictEqual(p.cachePath, new FileSystem().path.resolve("chat/models.jsonl"))
+		assert.strictEqual(p.cachePath, new FileSystem().path.resolve("chat/cache/{provider}.jsonl"))
 	})
 
 	describe("cache handling", () => {
 		it("loads fresh cache if within TTL", async () => {
-			const fs = new TestFileSystem({ data: [
-				["chat/models.jsonl", [
-					{ id: "gpt-oss-120b", provider: "cerebras" },
-					{ id: "qwen-3-480b", provider: "openrouter" },
-				]]
-			] })
+			const fs = new TestFileSystem({
+				data: [
+					["chat/cache/cerebras.jsonl", [
+						{ id: "gpt-oss-120b", provider: "cerebras" },
+					]],
+					["chat/cache/openrouter.jsonl", [
+						{ id: "qwen-3-480b", provider: "openrouter" },
+					]],
+				]
+			})
 			const provider = new ModelProvider({ fs })
 
-			const result = await provider.loadCache()
-			assert.strictEqual(result.length, 2)
-			assert.ok(result[0] instanceof ModelInfo)
-			assert.deepStrictEqual(result.map(m => [m.id, m.provider, m.context_length]), [
+			const cerebras = await provider.loadCache('cerebras')
+			assert.strictEqual(cerebras.length, 1)
+			assert.ok(cerebras[0] instanceof ModelInfo)
+			assert.deepStrictEqual(cerebras.map(m => [m.id, m.provider, m.context_length]), [
 				["gpt-oss-120b", "cerebras", 0],
+			])
+			const openrouter = await provider.loadCache('openrouter')
+			assert.strictEqual(openrouter.length, 1)
+			assert.ok(openrouter[0] instanceof ModelInfo)
+			assert.deepStrictEqual(openrouter.map(m => [m.id, m.provider, m.context_length]), [
 				["qwen-3-480b", "openrouter", 0],
 			])
 		})
 
 		it("ignores stale cache beyond TTL", async () => {
-			const fs = new TestFileSystem({ data: [
-				["chat/models.jsonl", [
-					{ id: "gpt-oss-120b", provider: "cerebras" },
-					{ id: "qwen-3-480b", provider: "openrouter" },
-				]]
-			] })
+			const fs = new TestFileSystem({
+				data: [
+					["chat/models.jsonl", [
+						{ id: "gpt-oss-120b", provider: "cerebras" },
+						{ id: "qwen-3-480b", provider: "openrouter" },
+					]]
+				]
+			})
 			fs.info = async () => ({
 				isFile: () => true,
 				mtimeMs: 0,

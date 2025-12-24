@@ -10,14 +10,6 @@ import { Git, FileSystem } from "../src/utils/index.js"
 import { RESET, parseArgv, Ui, ChatCLiApp } from "../src/cli/index.js"
 import { ChatOptions } from "../src/Chat/index.js"
 
-// const DEFAULT_MODEL = "gpt-oss-120b"
-// const DEFAULT_MODEL = "zai-glm-4.6"
-// const DEFAULT_MODEL = "qwen-3-235b-a22b-instruct-2507"
-// const DEFAULT_MODEL = "qwen-3-32b"
-// const DEFAULT_MODEL = "x-ai/grok-code-fast-1"
-// const DEFAULT_MODEL = "x-ai/grok-4-fast"
-const DEFAULT_MODEL = "openai/gpt-oss-20b:free"
-
 /**
  * Main chat loop
  * @param {string[]} [argv]

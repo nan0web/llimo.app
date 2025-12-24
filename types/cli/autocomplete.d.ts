@@ -8,15 +8,23 @@
  */
 /**
  * @typedef {Object} ModelRow
- * @property {string} id
+ * @property {string} id - Model ID (info.id, not full key)
  * @property {number} context
  * @property {string} provider
  * @property {string} modality
  * @property {number} inputPrice
  * @property {number} outputPrice
+ * @property {number} speed
  * @property {boolean} tools
  * @property {boolean} json
  */
+/**
+ *
+ * @param {ModelInfo} info
+ * @param {string} [id]
+ * @returns {ModelRow}
+ */
+export function model2row(info: ModelInfo, id?: string): ModelRow;
 /**
  * Flatten models map into ModelRow[] for filtering/sorting.
  * @param {Map<string, import("../llm/ModelInfo").default[]>} modelMap
@@ -47,7 +55,7 @@ export function parseFieldFilter(filterStr: string): {
     value: string;
 };
 /**
- * Filter models based on search string
+ * Filter models based on ID substring (plain search) or field filters (@field=val).
  * @param {ModelRow[]} models
  * @param {string} search
  * @returns {ModelRow[]}
@@ -78,8 +86,9 @@ export function interactive(modelMap: Map<string, import("../llm/ModelInfo").def
 /**
  * Output all models in pipe format for non-interactive use
  * @param {ModelRow[]} allModels
+ * @param {Ui} ui
  */
-export function pipeOutput(allModels: ModelRow[]): void;
+export function pipeOutput(allModels: ModelRow[], ui: Ui): void;
 export namespace autocompleteModels {
     export { modelRows };
     export { filterModels };
@@ -92,13 +101,18 @@ export namespace autocompleteModels {
     export { pipeOutput };
 }
 export type ModelRow = {
+    /**
+     * - Model ID (info.id, not full key)
+     */
     id: string;
     context: number;
     provider: string;
     modality: string;
     inputPrice: number;
     outputPrice: number;
+    speed: number;
     tools: boolean;
     json: boolean;
 };
+import ModelInfo from "../llm/ModelInfo.js";
 import Ui from "./Ui.js";

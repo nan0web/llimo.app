@@ -11,16 +11,8 @@ export class InfoOptions {
     id: string;
 }
 /**
- * `info` command – shows a table with per‑message statistics and a total line.
- *
- * Columns:
- *   - **Role** – system / user / assistant / tool
- *   - **Files** – number of attached files (detected via markdown checklist)
- *   - **Bytes** – raw byte size of the message content
- *   - **Tokens** – estimated token count (≈ 1 token per 4 bytes)
- *
- * After printing the table, the command yields `false` so the CLI code knows it can
- * continue with the normal chat loop.
+ * `info` command – shows a table with per‑message statistics,
+ * cost and model/provider columns.
  */
 export class InfoCommand extends UiCommand {
     static name: string;
@@ -35,10 +27,14 @@ export class InfoCommand extends UiCommand {
         argv?: string[] | undefined;
         chat?: Partial<Chat> | undefined;
     }): InfoCommand;
-    constructor(input?: {});
+    /**
+     * @param {Partial<InfoCommand>} input
+     */
+    constructor(input?: Partial<InfoCommand>);
     options: InfoOptions;
     chat: Chat;
     ui: Ui;
+    fs: FileSystem;
     /**
      * @throws
      * @returns {AsyncGenerator<UiOutput | boolean>}

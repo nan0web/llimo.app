@@ -1,3 +1,5 @@
+import Usage from "./Usage.js"
+
 /**
  * Represents pricing information for a model.
  */
@@ -60,5 +62,20 @@ export default class Pricing {
 			Math.round((1 - this.input_cache_read / this.prompt) * 100),
 			Math.round((1 - this.input_cache_write / this.completion) * 100),
 		]
+	}
+
+	/**
+	 * Calculates the usage cost (total price).
+	 * @param {Usage} usage
+	 * @returns {number}
+	 */
+	calc(usage) {
+		const {
+			inputTokens = 0,
+			reasoningTokens = 0,
+			outputTokens = 0,
+		} = usage
+		return (this.prompt + this.input_cache_read) * inputTokens / 1e6
+			+ (this.completion + this.input_cache_write) * (reasoningTokens + outputTokens) / 1e6
 	}
 }

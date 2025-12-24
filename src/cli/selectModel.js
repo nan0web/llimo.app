@@ -9,30 +9,12 @@ import { selectModel } from "../llm/selectModel.js"
  * @param {string} modelStr
  * @param {string} providerStr
  * @param {(chosen: import("../llm/ModelInfo.js").default) => void} [onSelect]   Current chat instance
- * @param {object} [options={}] Additional options
- * @param {boolean} [options.fast=false] Force quick model selection
- * @param {string} [options.quickModel] Model to prefer for fast mode
  * @returns {Promise<import("../llm/ModelInfo.js").default>}
  */
-export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect = () => { }, options = {}) {
-	const {
-		fast = false,
-		quickModel = "qwen-3-235b-a22b-instruct-2507"
-	} = options
+export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect = () => { }) {
 	const DEFAULT_MODEL = "gpt-oss-120b:free"
-	/** @type {import("../llm/ModelInfo.js").default} */
+	/** @type {import("../llm/ModelInfo.js").default | undefined} */
 	let model
-	if (fast) {
-		// Force quickModel with fastest provider (cerebras or huggingface)
-		model = ai.getModel(`${quickModel}:cerebras`) || ai.getModel(`${quickModel}:huggingface`)
-		if (model) {
-			onSelect(model)
-			ui.console.info(`> ${model.id} selected with fastest server`)
-			return model
-		} else {
-			ui.console.warn(`Fast model ${quickModel} not available with fast providers`)
-		}
-	}
 	if (modelStr || providerStr) {
 		model = await selectModel(ai.getModelsMap(), modelStr, providerStr, ui, onSelect)
 	} else {
@@ -47,6 +29,10 @@ export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect
 			process.exit(1)
 		}
 		model = found
+	}
+
+	if (!model) {
+		throw new Error("No model matching your criteria")
 	}
 
 	// Validate API key before proceeding
@@ -75,7 +61,7 @@ export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect
 
 	ui.console.info(`> ${model.id} selected with modality ${model.architecture?.modality ?? "?"}`)
 	ui.console.info(`  context: ${contextLen} (max output → ${maxOutput})`)
-	ui.console.info(`  pricing: → ${ui.formats.pricing(inputPricePerM)} / 1M ← ${ui.formats.pricing(outputPricePerM)} / 1M${cacheStr}`)
+	ui.console.info(`  pricing: → ${ui.formats.money(inputPricePerM, 2)} / 1M ← ${ui.formats.money(outputPricePerM, 2)} / 1M${cacheStr}`)
 	ui.console.info(`  provider: ${model.provider}`)
 	return model
 }

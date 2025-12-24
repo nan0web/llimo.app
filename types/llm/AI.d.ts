@@ -19,11 +19,11 @@
 export default class AI {
     /**
      * @param {Object} input
-     * @param {readonly[string, ModelInfo[]] | readonly [string, ModelInfo] | Map<string, ModelInfo[] | ModelInfo>} [input.models=[]]
+     * @param {readonly[string, ModelInfo] | readonly [string, ModelInfo] | Map<string, ModelInfo | ModelInfo>} [input.models=[]]
      * @param {ModelInfo} [input.selectedModel]
      */
     constructor(input?: {
-        models?: readonly [string, ModelInfo[]] | readonly [string, ModelInfo] | Map<string, ModelInfo | ModelInfo[]> | undefined;
+        models?: Map<string, ModelInfo> | readonly [string, ModelInfo] | undefined;
         selectedModel?: ModelInfo | undefined;
     });
     /** @type {ModelInfo?} */
@@ -34,9 +34,9 @@ export default class AI {
      * - Array<[string, ModelInfo[]]>: Direct set.
      * - Array<[string, ModelInfo]>: Wrap singles in arrays.
      * - Nested providers (e.g., {providers: [{provider:'a'}]}): Expand to prefixed IDs (e.g., 'model:a').
-     * @param {readonly[string, ModelInfo[]] | readonly [string, ModelInfo] | Map<string, ModelInfo[] | ModelInfo> | readonly[string, Partial<ModelInfo> & {providers?: {provider: string}[]}] } models
+     * @param {readonly[string, ModelInfo] | readonly [string, ModelInfo] | Map<string, ModelInfo | ModelInfo> | readonly[string, Partial<ModelInfo> & {providers?: {provider: string}[]}] } models
      */
-    setModels(models: readonly [string, ModelInfo[]] | readonly [string, ModelInfo] | Map<string, ModelInfo[] | ModelInfo> | readonly [string, Partial<ModelInfo> & {
+    setModels(models: readonly [string, ModelInfo] | readonly [string, ModelInfo] | Map<string, ModelInfo | ModelInfo> | readonly [string, Partial<ModelInfo> & {
         providers?: {
             provider: string;
         }[];
@@ -58,9 +58,9 @@ export default class AI {
     getModels(): ModelInfo[];
     /**
      *
-     * @returns {Map<string, ModelInfo[]>}
+     * @returns {Map<string, ModelInfo>}
      */
-    getModelsMap(): Map<string, ModelInfo[]>;
+    getModelsMap(): Map<string, ModelInfo>;
     /**
      * Get model info by ID.
      *

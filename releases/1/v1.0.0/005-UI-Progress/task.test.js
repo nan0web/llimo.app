@@ -70,7 +70,7 @@ describe("005-UI-Progress – end-to-end CLI simulation", () => {
 			script, mdFile, "--yes", "--one"
 		], { cwd: resolve(rootDir, "one"), encoding: "utf8", timeout: 10000 })
 
-		assert.deepStrictEqual(String(result.output).split("\n"), [
+		assert.deepStrictEqual(result.output.filter(Boolean).join("\n").split("\n"), [
 			// @todo fix the pre-select
 		])
 	})

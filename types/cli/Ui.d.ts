@@ -24,6 +24,14 @@ export class UiFormats {
      */
     pricing(value: number, digits?: number): string;
     /**
+     * Formats money in USD with currency symbol and six decimals by default.
+     * Delegates to pricing to keep consistent formatting.
+     * @param {number} value
+     * @param {number} [digits=6]
+     * @returns {string}
+     */
+    money(value: number, digits?: number): string;
+    /**
      * Formats timer elapsed in mm:ss.s format, caps at 3600s+.
      * @param {number} elapsed - Seconds elapsed.
      * @returns {string}
@@ -75,12 +83,13 @@ export class UiConsole {
     /**
      * @todo cover with tests.
      * @param {any[][]} rows
-     * @param {{divider?: string | number, aligns?: string[]}} [options={}]
+     * @param {{divider?: string | number, aligns?: string[], silent?: boolean}} [options={}]
      * @returns {string[]}
      */
     table(rows?: any[][], options?: {
         divider?: string | number;
         aligns?: string[];
+        silent?: boolean;
     }): string[];
 }
 export class UiCommand {

@@ -3,6 +3,7 @@ import { Stats } from "node:fs"
 import ModelInfo from "./ModelInfo.js"
 import LanguageModelUsage from "./LanguageModelUsage.js"
 import FileSystem from "../utils/FileSystem.js"
+import Usage from "./Usage.js"
 
 /** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
 
@@ -31,6 +32,8 @@ export default class Chat {
 	root
 	/** @type {import("ai").ModelMessage[]} */
 	messages = []
+	/** @type {Array<{ model: ModelInfo, usage: Usage }>} */
+	steps = []
 	/** @type {ChatConfig} */
 	config
 	/** @type {string} */
@@ -46,6 +49,7 @@ export default class Chat {
 	constructor(input = {}) {
 		const {
 			id = randomUUID(), cwd = process.cwd(), root = "chat", messages = [],
+			steps = [],
 			dir = "",
 			config = new ChatConfig({}),
 		} = input
@@ -53,6 +57,7 @@ export default class Chat {
 		this.cwd = String(cwd)
 		this.root = String(root)
 		this.messages = messages
+		this.steps = steps
 		this.config = config
 		this.#fs = new FileSystem({ cwd })
 		this.dir = dir ? dir : this.#fs.path.resolve(root, id)
@@ -129,6 +134,18 @@ export default class Chat {
 	}
 
 	/**
+	 * Returns the total cost of the chat.
+	 * @returns {Promise<number>}
+	 */
+	async cost() {
+		let total = 0
+		for (const { model, usage } of this.steps) {
+			total += model.pricing.calc(usage)
+		}
+		return total
+	}
+
+	/**
 	 * Add a message to the history
 	 * @param {import("ai").ModelMessage} message
 	 */
@@ -157,7 +174,8 @@ export default class Chat {
 		if (target) {
 			// load specific chat file in the step or root directory
 			if (target.startsWith("/")) target = target.slice(1)
-			if (step) target = "steps/" + String(step).padStart(3, "0") + "/" + target
+			const file = this.allowed[target]
+			if (step) target = "steps/" + String(step).padStart(3, "0") + "/" + file
 			if (await this.db.exists(target)) {
 				return await this.db.load(target)
 			}
@@ -173,6 +191,14 @@ export default class Chat {
 					} else {
 						this.add(row)
 					}
+				}
+				const answers = this.assistantMessages
+				this.steps = []
+				for (let i = 0; i < answers.length; i++) {
+					const step = i + 1
+					const model = new ModelInfo(await this.load("model", step) ?? {})
+					const usage = new Usage(await this.load("usage", step) ?? {})
+					this.steps.push({ model, usage })
 				}
 				return true
 			}

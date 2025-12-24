@@ -1,4 +1,3 @@
-import LanguageModelUsage from "./LanguageModelUsage.js"
 import { formatChatProgress } from "./chatProgress.js"
 import { startStreaming, decodeAnswerAndRunTests } from "./chatSteps.js"
 import { Git } from "../utils/Git.js"
@@ -8,6 +7,7 @@ import Chat from "./Chat.js"
 import Ui from "../cli/Ui.js"
 import ModelInfo from "./ModelInfo.js"
 import { runCommand } from "../cli/runCommand.js"
+import Usage from "./Usage.js"
 
 function isWindowLimit(err) {
 	return [err?.status, err?.statusCode].includes(400) && err?.data?.code === "context_length_exceeded"
@@ -29,7 +29,7 @@ function isRateLimit(err) {
  * @typedef {Object} sendAndStreamOptions
  * @property {string} answer
  * @property {string} reason
- * @property {LanguageModelUsage} usage
+ * @property {Usage} usage
  * @property {any[]} unknowns
  * @property {any} [error]
  */
@@ -37,7 +37,7 @@ function isRateLimit(err) {
 /**
  * Executes the send and stream part of the chat loop.
  * @param {Object} options
- * @param {AI} [options.ai]
+ * @param {AI} options.ai
  * @param {Chat} options.chat
  * @param {Ui} options.ui
  * @param {string} options.prompt
@@ -56,26 +56,40 @@ export async function sendAndStream(options) {
 		ui,
 		step,
 		prompt,
-		format, valuta, model, fps = 30, isTiny = false
+		format, model, fps = 30, isTiny = false
 	} = options
 	const startTime = Date.now()
 	/** @type {Array<[string, any]>} */
 	const unknowns = []
 	let answer = ""
 	let reason = ""
-	let prev = 0
-	let usage = new LanguageModelUsage()
-	let timeInfo
+	let prevLines = 0 // Track previous number of lines printed
 	const clock = { startTime, reasonTime: 0, answerTime: 0 }
 
+	let usage = new Usage()
+	const recent = chat.steps[chat.steps.length - 1]
+	if (recent) {
+		usage.inputTokens += recent.usage.inputTokens
+	}
+
 	const chatting = ui.createProgress(({ elapsed }) => {
-		const lines = formatChatProgress({ elapsed, usage, clock, model, format, valuta, isTiny })
-		const prevLines = prev
-		if (prevLines) ui.cursorUp(prevLines)
-		prev = lines.length
-		lines.forEach((line, idx) => ui.overwriteLine(line + (idx < lines.length - 1 ? "\n" : "")))
+		const lines = formatChatProgress({
+			ui,
+			usage,
+			clock,
+			model,
+			isTiny
+		})
+		if (prevLines > 0) {
+			ui.cursorUp(prevLines)
+		}
+		for (let i = 0; i < lines.length; i++) {
+			ui.write(lines[i] + (i < lines.length - 1 ? '\n' : ''))
+		}
+		prevLines = lines.length
 	}, fps)
 
+	let timeInfo
 	let error
 	try {
 		const chunks = []
@@ -86,11 +100,9 @@ export async function sendAndStream(options) {
 				if ("reasoning-delta" === chunk.type) {
 					reason += chunk.text
 					usage.reasoningTokens += words.length
-					usage.totalTokens += words.length
 					if (!clock.reasonTime) clock.reasonTime = Date.now()
 				} else if ("text-delta" === chunk.type) {
 					usage.outputTokens += words.length
-					usage.totalTokens += words.length
 					if (!clock.answerTime) clock.answerTime = Date.now()
 				} else if ("raw" === chunk.type) {
 					timeInfo = chunk.rawValue?.time_info
@@ -119,7 +131,7 @@ export async function sendAndStream(options) {
 				answer += part.text ?? part
 				await chat.append("stream", part.text ?? part, step)
 			} else if ("usage" == part.type) {
-				usage = new LanguageModelUsage(part.usage)
+				usage = new Usage(part.usage)
 			}
 			parts.push(part)
 		}
@@ -127,14 +139,14 @@ export async function sendAndStream(options) {
 		if (error) throw error
 
 		if ("resolved" === result._totalUsage?.status?.type) {
-			usage = new LanguageModelUsage(result._totalUsage.status.value)
+			usage = new Usage(result._totalUsage.status.value)
 		} else {
 			unknowns.push(["Unknowns _totalUsage.status type", result._totalUsage?.status?.type])
 		}
 		await chat.save("usage", usage, step)
 		if (result._steps?.status?.type === "resolved") {
 			const step0 = result._steps.status.value?.[0]
-			if (step0?.usage) usage = new LanguageModelUsage(step0.usage)
+			if (step0?.usage) usage = new Usage(step0.usage)
 			// keep header‑rate‑limit information for future use
 			if (step0?.response?.headers) {
 				const limits = Object.entries(step0.response.headers).filter(([k]) =>
@@ -155,11 +167,10 @@ export async function sendAndStream(options) {
 		clearInterval(chatting)
 
 		formatChatProgress({
-			elapsed: (Date.now() - startTime) / 1e3,
+			ui,
 			usage,
 			clock,
 			model,
-			format,
 			isTiny
 		})
 		if (timeInfo) {

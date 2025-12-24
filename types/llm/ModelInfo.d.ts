@@ -3,7 +3,8 @@
  */
 export default class ModelInfo {
     /**
-     * @param {Partial<ModelInfo>} input
+     * Constructs a ModelInfo instance.
+     * @param {Partial<ModelInfo>} input - Partial object with model properties.
      */
     constructor(input?: Partial<ModelInfo>);
     /** @type {string} - Model ID */
@@ -12,8 +13,12 @@ export default class ModelInfo {
     architecture: Architecture;
     /** @type {string} */
     canonical_slug: string;
-    /** @type {number} */
+    /** @type {number} - Maximum context length in tokens */
     context_length: number;
+    /** @type {number} - Maximum output in tokens */
+    maximum_output: number;
+    /** @type {Limits} - limits of requests and tokens per time */
+    limits: Limits;
     /** @type {number} */
     created: number;
     /** @type {object} */
@@ -30,11 +35,12 @@ export default class ModelInfo {
     pricing: Pricing;
     /** @type {string[]} - Supported parameters */
     supported_parameters: string[];
-    /** @type {string} - Provider name (openai, cerebras, …) */
+    /** @type {string} - Provider name (openai, cerebras, huggingface/cerebras) */
     provider: string;
     /** @type {TopProvider} */
     top_provider: TopProvider;
 }
 import Architecture from "./Architecture.js";
+import Limits from "./Limits.js";
 import Pricing from "./Pricing.js";
 import TopProvider from "./TopProvider.js";

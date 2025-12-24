@@ -26,10 +26,10 @@ describe("formatChatProgress – baseline", () => {
 
 			const lines = formatChatProgress({ usage, clock, model, now })
 			assert.deepStrictEqual(lines, [
-				"    read | 01:17.0s | $42.000000 | 120,000T | 1,558T/s",
-				"  reason |     1.0s |  $0.225000 |     300T |   300T/s",
-				"  answer |     2.0s |  $0.375000 |     500T |   250T/s",
-				"    chat | 01:20.0s | $42.600000 | 120,800T | 2,416T/s | 10,200T",
+				"  read | 1:17 | $42.0000 | 120,000T | 1,558T/s",
+				"reason | 0:01 |  $0.2250 |     300T |   300T/s",
+				"answer | 0:02 |  $0.3750 |     500T |   250T/s",
+				"  chat | 1:20 | $42.6000 | 120,800T | 1,510T/s | 10,200T",
 			])
 		})
 
@@ -40,7 +40,7 @@ describe("formatChatProgress – baseline", () => {
 
 			const lines = formatChatProgress({ usage, clock, model })
 			assert.deepStrictEqual(lines, [
-				"chat | 00:00.0s | $0.000000 | 0T | 0T/s | 128,000T"
+				"chat | 0:00 | $0.000000 | 0T | 0T/s | 128,000T"
 			])
 		})
 	})
@@ -59,7 +59,7 @@ describe("formatChatProgress – baseline", () => {
 				isTiny: true,
 			})
 			assert.deepStrictEqual(lines, [
-				"step 1 | 1.0s | $0.000120 | answer | 0.0s | 100T | 100T/s | 1,100T | 126,900T"
+				"step 1 | 1.0s | $0.0001 | answer | 0:00 | 100T | 100T/s | 1,100T | 126,900T"
 			])
 		})
 
@@ -76,7 +76,7 @@ describe("formatChatProgress – baseline", () => {
 				isTiny: true,
 			})
 			assert.deepStrictEqual(lines, [
-				"step 1 | 0.0s | $0.000000 | answer | 0.0s | 0T | ∞T/s | 0T | 128,000T"
+				"step 1 | 0.0s | $0.0000 | answer | 0.0s | 0T | ∞T/s | 0T | 128,000T"
 			])
 		})
 	})

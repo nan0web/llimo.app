@@ -181,7 +181,8 @@ export async function packPrompt(packMarkdown, input, chat, ui) {
 	const totalTokens = await chat.calcTokens(prompt + all)
 	ui.console.info(`Prompt size: ${ITALIC}${ui.formats.weight("b", prompt.length)}${RESET} — ${ui.formats.count(injected.length)} file(s).`)
 	injected.forEach(file => ui.console.debug(`+ ${file}`))
-	ui.console.info(`Messages size: ${BOLD}${ui.formats.weight("b", totalSize)}${RESET} ~ ${ui.formats.weight("T", totalTokens)}`)
+	const cost = await chat.cost()
+	ui.console.info(`Messages size: ${BOLD}${ui.formats.weight("b", totalSize)}${RESET} ~ ${ui.formats.weight("T", totalTokens)} ${ui.formats.money(cost)}`)
 
 	// Log all user blocks (including new ones) to inputs.jsonl
 	const allUserBlocks = input.split(/---/).map(s => s.trim()).filter(block => block.length > 0)

@@ -20,6 +20,11 @@ export default class Chat {
     root: string;
     /** @type {import("ai").ModelMessage[]} */
     messages: import("ai").ModelMessage[];
+    /** @type {Array<{ model: ModelInfo, usage: Usage }>} */
+    steps: Array<{
+        model: ModelInfo;
+        usage: Usage;
+    }>;
     /** @type {ChatConfig} */
     config: ChatConfig;
     /** @type {string} */
@@ -42,6 +47,11 @@ export default class Chat {
      * Initialize chat directory, load ID from the file storage if undefined.
      */
     init(): Promise<void>;
+    /**
+     * Returns the total cost of the chat.
+     * @returns {Promise<number>}
+     */
+    cost(): Promise<number>;
     /**
      * Add a message to the history
      * @param {import("ai").ModelMessage} message
@@ -143,7 +153,8 @@ export type ChatMessage = {
         type: string;
     };
 };
-import FileSystem from "../utils/FileSystem.js";
 import ModelInfo from "./ModelInfo.js";
+import Usage from "./Usage.js";
+import FileSystem from "../utils/FileSystem.js";
 import LanguageModelUsage from "./LanguageModelUsage.js";
 import { Stats } from "node:fs";

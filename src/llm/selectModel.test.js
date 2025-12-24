@@ -29,14 +29,11 @@ describe("selectModel – model/provider selection logic", () => {
 	}
 
 	describe("basic selection", () => {
-		it("throws when no model matches", async () => {
+		it("returns undefined when no model matches", async () => {
 			const map = makeMap([{ id: "other-model", provider: "other" }])
 			const testUi = { ...new Ui(), ask: mock.fn(async () => "invalid") } // wrong to trigger throw from multiple=0, but for no match, no prompt
-
-			await assert.rejects(
-				() => selectModel(map, "nonexistent", undefined, testUi),
-				/Invalid selection "invalid"/
-			)
+			const result = await selectModel(map, "nonexistent", undefined, testUi)
+			assert.equal(result, undefined)
 		})
 
 		it("returns the sole match without prompting", async () => {

@@ -25,7 +25,7 @@ import { model2row } from "../cli/autocomplete.js"
  * @param {string|undefined} providerPartial   Partial provider name (e.g. "cere")
  * @param {Ui} ui   UI helper for interactive prompts
  * @param {(chosen: ModelInfo) => void} [onSelect]   Current chat instance
- * @returns {Promise<ModelInfo>}
+ * @returns {Promise<ModelInfo | undefined>}
  */
 export async function selectModel(models, modelPartial, providerPartial, ui, onSelect = () => { }) {
 	const lower = s => String(s ?? "").toLowerCase()
@@ -59,6 +59,7 @@ export async function selectModel(models, modelPartial, providerPartial, ui, onS
 		await onSelect(chosen)
 		return chosen
 	}
+	candidates.sort((a, b) => a.id.localeCompare(b.id))
 
 	// Multiple candidates – ask the user
 	ui.console.info(`\nMultiple models match your criteria [model = ${modelPartial}, provider = ${providerPartial}]:`)
@@ -67,10 +68,13 @@ export async function selectModel(models, modelPartial, providerPartial, ui, onS
 		["No", "Model id", "Provider", "Context", "Input", "Output"],
 		["---", "---", "---", "---", "---", "---"],
 	]
+	if (!candidates.length) {
+		return
+	}
 	candidates.forEach((m, i) => {
 		const row = model2row(m)
 		rows.push([
-			i + 1,
+			String(i + 1),
 			row.id,
 			row.provider,
 			ui.formats.weight("T", row.context),

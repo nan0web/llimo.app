@@ -25,7 +25,9 @@ import { TestCommand } from "../Chat/commands/test.js"
 // const DEFAULT_MODEL = "qwen-3-32b"
 // const DEFAULT_MODEL = "x-ai/grok-code-fast-1"
 // const DEFAULT_MODEL = "x-ai/grok-4-fast"
+// const DEFAULT_MODEL = "openai/gpt-oss-20b:free"
 const DEFAULT_MODEL = "gpt-oss-120b"
+const DEFAULT_PROVIDER = "cerebras"
 
 export class ChatCLiApp {
 	/** @type {FileSystem} */
@@ -131,13 +133,12 @@ export class ChatCLiApp {
 		const models = await loadModels(this.ui)
 		this.ai.setModels(models)
 		// Fixed pre-select: prioritize chat.config.model if available from loaded chat
-		const ids = Array.from(models.keys()).map((m, i) => m.startsWith("openai/gpt-oss-120b") ? i : 0).filter(Boolean)
 		const savedModel = await this.chat.load("model.json") ?? {}
 		const modelStr = this.options.model ||
-			process.env.LLIMO_MODEL ||
 			(this.chat.config?.model || savedModel.id) || // Load from saved model
+			process.env.LLIMO_MODEL ||
 			DEFAULT_MODEL
-		const providerStr = this.options.provider || process.env.LLIMO_PROVIDER || this.chat.config?.provider || ""
+		const providerStr = this.options.provider || this.chat.config?.provider || process.env.LLIMO_PROVIDER || DEFAULT_PROVIDER
 		const onSelect = (model) => {
 			this.chat.config.model = model.id
 			this.chat.config.provider = model.provider

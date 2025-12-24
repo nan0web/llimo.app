@@ -46,6 +46,11 @@ export default class ChatOptions {
         help: string;
         default: number;
     };
+    static isHelp: {
+        alias: string;
+        help: string;
+        default: boolean;
+    };
     /** @param {Partial<ChatOptions>} [input] */
     constructor(input?: Partial<ChatOptions>);
     /** @type {string[]} */
@@ -68,4 +73,5 @@ export default class ChatOptions {
     provider: string;
     /** @type {number} */
     maxFails: number;
+    isHelp: any;
 }

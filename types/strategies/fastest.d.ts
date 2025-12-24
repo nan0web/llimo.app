@@ -6,19 +6,18 @@
  * @property {number} refreshAt
  */
 /**
- *
- * @param {ModelInfo} model
- * @param {Chat} chat
- * @param {APIError | null} error
+ * Pick next model strategy on error.
+ * @param {import("../llm/ModelInfo.js").default} model
+ * @param {import("../llm/Chat.js").default} chat
+ * @param {APIError|null} error
  * @param {Map<string, number>} prev
- * @returns
+ * @param {number} [now]
+ * @returns {[string, string]|undefined}
  */
-export default function fastestStrategy(model: ModelInfo, chat: Chat, error: APIError | null, prev: Map<string, number>): string[];
+export default function fastestStrategy(model: import("../llm/ModelInfo.js").default, chat: import("../llm/Chat.js").default, error: APIError | null, prev: Map<string, number>, now?: number): [string, string] | undefined;
 export type APIError = {
     message: string;
     stack: string;
     status: number;
     refreshAt: number;
 };
-import { ModelInfo } from "../llm/index.js";
-import { Chat } from "../llm/index.js";

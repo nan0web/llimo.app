@@ -11,7 +11,6 @@ export default class MarkdownProtocol extends FileProtocol {
      * @param {string | null} innerType - Current inner code block type
      * @param {number} started - Line number where current file started
      * @returns {{ nextCurrent: FileEntry | null, nextInnerType: string | null, nextStarted: number, entry: FileEntry | null }}
-     * @throws {FileError}
      */
     static _processLine(rawLine: string, i: number, current: FileEntry | null, innerType: string | null, started: number): {
         nextCurrent: FileEntry | null;

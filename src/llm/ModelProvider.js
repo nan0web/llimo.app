@@ -24,7 +24,7 @@ import Pricing from "./Pricing.js"
 const CACHE_TTL = 60 * 60 * 1000
 
 /** Default cache location – inside the project root */
-const CACHE_FILE = "chat/models.jsonl"
+const CACHE_FILE = "chat/cache/{provider}.jsonl"
 
 export default class ModelProvider {
 	/** @type {FileSystem} */
@@ -47,13 +47,17 @@ export default class ModelProvider {
 
 	/**
 	 * Load the cache file if it exists and is fresh.
+	 * @param {string} provider
 	 * @returns {Promise<ModelInfo[] | null>}
 	 */
-	async loadCache() {
+	async loadCache(provider) {
+		const file = this.#cachePath.replaceAll("{provider}", provider)
+		// const rel = this.#fs.path.relative(this.#fs.cwd, file)
 		try {
-			if (await this.#fs.access(this.#cachePath)) {
-				const rows = await this.#fs.load(this.#cachePath) ?? []
-				const stats = await this.#fs.info(this.#cachePath)
+			if (await this.#fs.access(file)) {
+				const rows = await this.#fs.load(file) ?? []
+				if (!rows.length) return null
+				const stats = await this.#fs.info(file)
 				if ((Date.now() - stats.mtimeMs) < CACHE_TTL) {
 					return rows.map(row => new ModelInfo(row))
 				}
@@ -67,10 +71,12 @@ export default class ModelProvider {
 
 	/**
 	 * Write fresh data to the cache as JSONL (one model per line).
-	 * @param {ModelInfo[]} data
+	 * @param {any} data
+	 * @param {string} provider
 	 */
-	async writeCache(data) {
-		await this.#fs.save(this.#cachePath, data)
+	async writeCache(data, provider) {
+		const file = this.#cachePath.replaceAll("{provider}", provider)
+		await this.#fs.save(file, data)
 	}
 
 	/**
@@ -243,12 +249,6 @@ export default class ModelProvider {
 			noCache = false,
 		} = options
 
-		// Try cache first.
-		const cached = noCache ? null : await this.loadCache()
-		if (cached && cached.length > 0) {
-			return convertMap(cached)
-		}
-
 		/** @type {AvailableProvider[]} */
 		const providerNames = ["cerebras", "openrouter", "huggingface"]
 		const all = []
@@ -259,7 +259,10 @@ export default class ModelProvider {
 				let raw = []
 				// Fetch if possible, else use static only.
 				try {
-					raw = await this.fetchFromProvider(name)
+					// Try cache first.
+					const cached = noCache ? null : await this.loadCache(name)
+					raw = cached ?? await this.fetchFromProvider(name)
+					if (!noCache) await this.writeCache(raw, name)
 				} catch (/** @type {any} */ err) {
 					console.warn(`Fetch failed for ${name}, using static: ${err.message}`)
 					raw = [] // Rely on predefined.
@@ -271,10 +274,6 @@ export default class ModelProvider {
 			} catch (/** @type {any} */ err) {
 				console.warn(`Failed to process ${name}: ${err.message}`)
 			}
-		}
-
-		if (all.length > 0) {
-			await this.writeCache(all)
 		}
 
 		return convertMap(all)

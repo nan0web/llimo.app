@@ -22,9 +22,18 @@ export default class Pricing {
     request: number;
     /** @type {number} - Web search cost */
     web_search: number;
+    /** @type {number} - average speed T/s */
+    speed: number;
     /**
      * Returns the Batch discount in %.
      * @returns {[inputDicount: number, outputDiscount: number]}
      */
     getBatchDiscount(): [inputDicount: number, outputDiscount: number];
+    /**
+     * Calculates the usage cost (total price).
+     * @param {Usage} usage
+     * @returns {number}
+     */
+    calc(usage: Usage): number;
 }
+import Usage from "./Usage.js";

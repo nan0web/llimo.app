@@ -9,7 +9,7 @@
 /**
  * Executes the send and stream part of the chat loop.
  * @param {Object} options
- * @param {AI} [options.ai]
+ * @param {AI} options.ai
  * @param {Chat} options.chat
  * @param {Ui} options.ui
  * @param {string} options.prompt
@@ -22,7 +22,7 @@
  * @returns {Promise<sendAndStreamOptions>}
  */
 export function sendAndStream(options: {
-    ai?: AI | undefined;
+    ai: AI;
     chat: Chat;
     ui: Ui;
     prompt: string;

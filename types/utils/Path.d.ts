@@ -42,4 +42,10 @@ export default class Path {
      * @returns {string}
      */
     basename(path: string): string;
+    /**
+     * Returns normalized (relative to cwd) path.
+     * @param {string} path
+     * @returns {string}
+     */
+    normalize(path: string): string;
 }
