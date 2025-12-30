@@ -291,11 +291,6 @@ Waiting for the debugger to disconnect...
 > tsc
 
 Debugger attached.
-src/Chat/commands/info.js(167,37): error TS2739: Type 'Partial<Chat>' is missing the following properties from type 'Chat': #fs, #db, #path
-src/Chat/commands/test.js(7,10): error TS2305: Module '"../../llm/chatSteps.js"' has no exported member 'parseOutput'.
-src/Chat/commands/test.js(216,37): error TS2739: Type 'Partial<Chat>' is missing the following properties from type 'Chat': #fs, #db, #path
-src/cli/App.js(291,86): error TS2694: Namespace '"/Users/i/src/nan.web/apps/llimo.app/src/llm/chatSteps"' has no exported member 'TestOutput'.
-src/cli/App.js(323,43): error TS2694: Namespace '"/Users/i/src/nan.web/apps/llimo.app/src/llm/chatSteps"' has no exported member 'TestOutput'.
 src/cli/Ui.js(57,41): error TS2769: No overload matches this call.
   Overload 1 of 2, '(locales?: LocalesArgument, options?: NumberFormatOptions | undefined): NumberFormat', gave the following error.
     Argument of type '{ style: string; currency: string; minimumFractionDigits: number; maximumFractionDigits: number; }' is not assignable to parameter of type 'NumberFormatOptions'.

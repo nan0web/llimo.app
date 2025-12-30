@@ -1,4 +1,9 @@
 /**
+ * @param {import("../llm/ModelInfo.js").default} model
+ * @param {import("./Ui.js").Ui} ui
+ */
+export function showModel(model: import("../llm/ModelInfo.js").default, ui: import("./Ui.js").Ui): void;
+/**
  * Pre-selects a model (loads from cache or defaults). If multiple matches,
  * shows the table and prompts. Persists selection to chat.config.model.
  *

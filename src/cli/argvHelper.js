@@ -142,3 +142,15 @@ export function parseArgv(argv, Model) {
 	}
 	return result
 }
+
+/**
+ * @param {typeof Object} Model
+ * @returns {string}
+ */
+export function renderHelp(Model) {
+	const result = []
+	for (const [name, meta] of Object.entries(Model)) {
+		result.push(`--${name} ${meta?.help ?? ""}`)
+	}
+	return result.join("\n")
+}

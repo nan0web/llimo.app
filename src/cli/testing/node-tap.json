@@ -1,0 +1,391 @@
+{
+  "version": "13",
+  "tests": [
+    {
+      "type": "fail",
+      "no": 1,
+      "text": "should parse TAP version 13",
+      "indent": 4,
+      "position": [
+        15,
+        2
+      ],
+      "doc": {
+        "duration_ms": 1.766417,
+        "type": "test",
+        "location": "/Users/i/src/nan.web/apps/llimo.app/src/cli/testing/node.test.js:15:2",
+        "failureType": "testCodeFailure",
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ {\n+   counts: {\n+     cancelled: 0,\n+     duration: 0,\n+     fail: 0,\n+     pass: 0,\n+     skip: 0,\n+     suites: 0,\n+     tests: 0,\n+     todo: 0,\n+     types: 0\n+   },\n+   guess: {\n+     cancelled: 0,\n+     duration: 0,\n+     fail: 0,\n+     pass: 0,\n+     skip: 0,\n+     suites: 0,\n+     tests: 0,\n+     todo: 0,\n+     types: 0\n+   },\n+   logs: {\n+     cancelled: [],\n+     duration: [],\n+     fail: [],\n+     pass: [],\n+     skip: [],\n+     suites: [],\n+     tests: [],\n+     todo: [],\n+     types: []\n+   },\n+   types: Set(0) {}\n+ }\n- {}",
+        "code": "ERR_ASSERTION",
+        "name": "AssertionError",
+        "expected": null,
+        "actual": {
+          "logs": {
+            "fail": null,
+            "cancelled": null,
+            "pass": null,
+            "tests": null,
+            "suites": null,
+            "skip": null,
+            "todo": null,
+            "duration": null,
+            "types": null
+          },
+          "counts": {
+            "fail": 0,
+            "cancelled": 0,
+            "pass": 0,
+            "tests": 0,
+            "suites": 0,
+            "skip": 0,
+            "todo": 0,
+            "duration": 0,
+            "types": 0
+          },
+          "types": null,
+          "guess": {
+            "fail": 0,
+            "cancelled": 0,
+            "pass": 0,
+            "tests": 0,
+            "suites": 0,
+            "skip": 0,
+            "todo": 0,
+            "duration": 0,
+            "types": 0
+          }
+        },
+        "operator": "deepStrictEqual",
+        "stack": "TestContext.<anonymous> (file:///Users/i/src/nan.web/apps/llimo.app/src/cli/testing/node.test.js:17:10)\nTest.runInAsyncScope (node:async_hooks:214:14)\nTest.run (node:internal/test_runner/test:1047:25)\nasync Promise.all (index 0)\nasync Suite.run (node:internal/test_runner/test:1442:7)\nasync startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)"
+      },
+      "file": "node.test.js",
+      "parent": 1
+    },
+    {
+      "type": "pass",
+      "no": 2,
+      "text": "should produce OK",
+      "indent": 4,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.099833,
+        "type": "test"
+      }
+    },
+    {
+      "type": "todo",
+      "no": 3,
+      "text": "should produce FAIL",
+      "indent": 4,
+      "position": [
+        22,
+        5
+      ],
+      "doc": {
+        "duration_ms": 0.103417,
+        "type": "test",
+        "location": "/Users/i/src/nan.web/apps/llimo.app/src/cli/testing/node.test.js:22:5",
+        "failureType": "testCodeFailure",
+        "error": "Failed",
+        "code": "ERR_ASSERTION",
+        "name": "AssertionError",
+        "operator": "fail",
+        "stack": "TestContext.<anonymous> (file:///Users/i/src/nan.web/apps/llimo.app/src/cli/testing/node.test.js:23:10)\nTest.runInAsyncScope (node:async_hooks:214:14)\nTest.run (node:internal/test_runner/test:1047:25)\nasync Suite.processPendingSubtests (node:internal/test_runner/test:744:7)"
+      },
+      "file": "node.test.js"
+    },
+    {
+      "type": "skip",
+      "no": 4,
+      "text": "should produce FAIL",
+      "indent": 4,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.049833,
+        "type": "test"
+      }
+    },
+    {
+      "type": "cancelled",
+      "no": 1,
+      "text": "src/cli/testing/node.test.js",
+      "indent": 0,
+      "position": [
+        1,
+        1
+      ],
+      "doc": {
+        "duration_ms": 335.209542,
+        "type": "test",
+        "location": "/Users/i/src/nan.web/apps/llimo.app/src/cli/testing/node.test.js:1:1",
+        "failureType": "testTimeoutFailure",
+        "error": "test timed out after 333ms",
+        "code": "ERR_TEST_FAILURE"
+      },
+      "file": "node.test.js"
+    },
+    {
+      "type": "pass",
+      "no": 1,
+      "text": "should parse me.md --new",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 2.693125,
+        "type": "test"
+      },
+      "parent": 150
+    },
+    {
+      "type": "pass",
+      "no": 2,
+      "text": "should parse me.md --new --yes",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.176917,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 3,
+      "text": "should parse me.md --new --yes new",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.269084,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 4,
+      "text": "should parse me.md --new --some new",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.081042,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 5,
+      "text": "should parse --test=1.md",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.163,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 6,
+      "text": "should parse --test 1.md",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.070209,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 7,
+      "text": "should parse --test-dir=1.md",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.243958,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 8,
+      "text": "should parse --test-dir 1.md",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.054167,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 9,
+      "text": "should parse --some thing",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 3.261291,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 10,
+      "text": "should parse --some=thing",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.536083,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 11,
+      "text": "should parse --new",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.27275,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 12,
+      "text": "should parse --yes",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.050917,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 13,
+      "text": "should throw error for missing value",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.281375,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 1,
+      "text": "should parse stdin data with output path",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.622459,
+        "type": "test"
+      },
+      "parent": 235
+    },
+    {
+      "type": "pass",
+      "no": 2,
+      "text": "should parse file input with output path",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.334334,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 3,
+      "text": "should parse only output path, use stdin",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.179708,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 4,
+      "text": "should handle no argv, no stdin",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.115916,
+        "type": "test"
+      }
+    },
+    {
+      "type": "pass",
+      "no": 5,
+      "text": "should reject non-existing file",
+      "indent": 8,
+      "position": [
+        0,
+        0
+      ],
+      "doc": {
+        "duration_ms": 0.2055,
+        "type": "test"
+      }
+    }
+  ],
+  "errors": {},
+  "unknowns": {},
+  "counts": {}
+}

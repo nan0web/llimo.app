@@ -8,6 +8,7 @@ import Ui from "../cli/Ui.js"
 import ModelInfo from "./ModelInfo.js"
 import { runCommand } from "../cli/runCommand.js"
 import Usage from "./Usage.js"
+import ChatOptions from "../Chat/Options.js"
 
 function isWindowLimit(err) {
 	return [err?.status, err?.statusCode].includes(400) && err?.data?.code === "context_length_exceeded"
@@ -233,68 +234,4 @@ export async function sendAndStream(options) {
 		// Ensure cleanup even on errors
 		clearInterval(chatting)
 	}
-}
-
-/**
- * Handles post-stream processing: add to chat, save, unpack and test.
- * @param {Object} input
- * @param {Chat} input.chat
- * @param {Ui} input.ui
- * @param {string} input.answer
- * @param {string} input.reason
- * @param {number} input.step
- * @param {boolean} [input.isYes=false]
- * @returns {Promise<{shouldContinue: boolean, testsCode: string | boolean}>}
- */
-export async function postStreamProcess(input) {
-	const {
-		chat, ui, answer, reason, step, isYes = false,
-	} = input
-	chat.add({ role: "assistant", content: answer })
-	await chat.save()
-	ui.console.info("")
-	const git = new Git({ dry: true })
-	if (reason) {
-		ui.console.info(`+ reason (${chat.path("reason.md", step)})`)
-	}
-	ui.console.info(`+ answer (${chat.path("answer.md", step)})`)
-	ui.console.info("") // Extra newline to avoid overlap
-
-	// 6. decode answer & run tests
-	const onData = (d) => ui.write(String(d))
-	const { testsCode, shouldContinue } = await decodeAnswerAndRunTests(
-		ui,
-		chat,
-		async (cmd, args, opts = {}) => runCommand(cmd, args, { ...opts, onData }),
-		isYes,
-		step
-	)
-	if (!shouldContinue) {
-		return { shouldContinue: false, testsCode }
-	}
-
-	// 7. check if tests passed – same logic as original script
-	if (true === testsCode) {
-		// Task is complete, let's commit and exit
-		ui.console.info(`  ${GREEN}+ Task is complete${RESET}`)
-		const DONE_BRANCH = ""
-		if (DONE_BRANCH) {
-			await git.renameBranch(DONE_BRANCH)
-			await git.push(DONE_BRANCH)
-		}
-		return { shouldContinue: false, testsCode: true }
-	} else {
-		let consecutiveErrors = 0 // Assume tracked in caller
-		const MAX_ERRORS = 9
-		consecutiveErrors++
-		if (consecutiveErrors >= MAX_ERRORS) {
-			ui.console.error(`LLiMo stuck after ${MAX_ERRORS} consecutive errors.`)
-			// @todo write fail log
-			return { shouldContinue: false, testsCode }
-		}
-	}
-
-	// 8. commit step and continue
-	// await git.commitAll(`step ${step}: response and test results`)
-	return { shouldContinue: true, testsCode }
 }

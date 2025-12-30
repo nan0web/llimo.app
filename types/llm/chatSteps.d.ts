@@ -102,32 +102,65 @@ export function decodeAnswer({ ui, chat, options, logs }: {
  * @param {Chat} param0.chat
  * @param {Function} param0.runCommand
  * @param {number} [param0.step=1]
+ * @param {(chunk) => void} [param0.onData]
  * @returns {Promise<import('../cli/runCommand.js').runCommandResult & { parsed: TestOutput }>}
  */
-export function runTests({ ui, chat, runCommand, step }: {
+export function runTests({ ui, chat, runCommand, step, onData }: {
     ui: Ui;
     chat: Chat;
     runCommand: Function;
     step?: number | undefined;
+    onData?: ((chunk: any) => void) | undefined;
 }): Promise<import("../cli/runCommand.js").runCommandResult & {
     parsed: TestOutput;
 }>;
+/**
+ *
+ * @param {import('../cli/testing/node.js').TestInfo[]} tests
+ * @param {Ui} ui
+ * @returns {any[][]}
+ */
+export function renderTests(tests: import("../cli/testing/node.js").TestInfo[], ui?: Ui): any[][];
+/**
+ *
+ * @param {Object} input
+ * @param {Ui} input.ui
+ * @param {"fail" | "skip" | "todo"} [input.type]
+ * @param {import('../cli/testing/node.js').TestInfo[]} [input.tests=[]]
+ * @param {string[]} [input.content=[]]
+ * @returns {Promise<boolean>}
+ */
+export function printAnswer(input: {
+    ui: Ui;
+    type?: "fail" | "skip" | "todo" | undefined;
+    tests?: import("../cli/testing/node.js").TestInfo[] | undefined;
+    content?: string[] | undefined;
+}): Promise<boolean>;
 /**
  * Decode the answer markdown, unpack if confirmed, run tests, parse results,
  * and ask user for continuation to continue fixing failed, cancelled, skipped, todo
  * tests, if they are.
  *
- * @param {import("../cli/Ui.js").default} ui User interface instance
- * @param {Chat} chat Chat instance (used for paths)
- * @param {import('../cli/runCommand.js').runCommandFn} runCommand Function to execute shell commands
- * @param {ChatOptions} options Always yes to user prompts
- * @param {number} [step] Optional step number for per-step files
- * @returns {Promise<{testsCode: boolean, shouldContinue: boolean, test: TestOutput}>}
+ * @param {Object} input
+ * @param {import("../cli/Ui.js").default} input.ui User interface instance
+ * @param {FileSystem} [input.fs]
+ * @param {Chat} input.chat Chat instance (used for paths)
+ * @param {import('../cli/runCommand.js').runCommandFn} input.runCommand Function to execute shell commands
+ * @param {ChatOptions} input.options Always yes to user prompts
+ * @param {number} [input.step] Optional step number for per-step files
+ * @returns {Promise<{testsCode?: boolean, shouldContinue: boolean, test?: import('../cli/testing/node.js').TapParseResult}>}
  */
-export function decodeAnswerAndRunTests(ui: import("../cli/Ui.js").default, chat: Chat, runCommand: import("../cli/runCommand.js").runCommandFn, options: ChatOptions, step?: number): Promise<{
-    testsCode: boolean;
+export function decodeAnswerAndRunTests(input: {
+    ui: import("../cli/Ui.js").default;
+    fs?: FileSystem | undefined;
+    chat: Chat;
+    runCommand: import("../cli/runCommand.js").runCommandFn;
+    options: ChatOptions;
+    step?: number | undefined;
+}): Promise<{
+    testsCode?: boolean;
     shouldContinue: boolean;
-    test: TestOutput;
+    test?: import("../cli/testing/node.js").TapParseResult;
 }>;
 import FileSystem from "../utils/FileSystem.js";
 import Ui from "../cli/Ui.js";

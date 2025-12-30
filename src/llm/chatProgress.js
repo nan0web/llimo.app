@@ -48,7 +48,7 @@ export function formatChatProgress(input) {
 
 	/* READ */
 	if (usage.inputTokens) {
-		const endAt = clock.reasonTime ?? clock.answerTime ?? now
+		const endAt = clock.reasonTime || clock.answerTime || now
 		const elapsed = safe((endAt - clock.startTime) / 1e3)
 		const speed = elapsed > 0 ? Math.round(usage.inputTokens / elapsed) : 0
 		map.set("read", { endAt, elapsed, speed, price: costs.input, tokens: usage.inputTokens })
@@ -56,7 +56,7 @@ export function formatChatProgress(input) {
 
 	/* REASON */
 	if (usage.reasoningTokens && clock.reasonTime) {
-		const endAt = clock.answerTime ?? now
+		const endAt = clock.answerTime || now
 		const elapsed = safe((endAt - clock.reasonTime) / 1e3)
 		const speed = elapsed > 0 ? Math.round(usage.reasoningTokens / elapsed) : 0
 		map.set("reason", { endAt, elapsed, speed, price: costs.reason, tokens: usage.reasoningTokens })

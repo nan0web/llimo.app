@@ -48,7 +48,7 @@ export function model2row(info, id) {
 		|| "text"
 
 	const tools = !!(info.supports_tools ?? info.supportsTools ?? false)
-	const jsonMode = !!(info.supports_structured_output ?? info.supportsStructuredOutput ?? false)
+	const jsonMode = !!(info.supports_structured_output ?? info.supports_structured_output ?? false)
 
 	return {
 		id: info.id || id, // Use info.id instead of full key for display/search

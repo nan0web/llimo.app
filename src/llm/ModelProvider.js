@@ -13,53 +13,99 @@
  */
 import { FileSystem } from "../utils/index.js"
 
-import getCerebrasInfo from "./providers/cerebras.info.js"
-import getHuggingFaceInfo from "./providers/huggingface.info.js"
+import CerebrasInfo from "./providers/cerebras.info.js"
+import HFInfo from "./providers/huggingface.info.js"
+import Openrouter from "./providers/openrouter.info.js"
 import ModelInfo from "./ModelInfo.js"
 import Pricing from "./Pricing.js"
 
+const transformers = {
+	cerebras: CerebrasInfo.makeFlat,
+	huggingface: HFInfo.makeFlat,
+	openrouter: Openrouter.makeFlat,
+}
+
 /** @typedef {"cerebras" | "openrouter" | "huggingface"} AvailableProvider */
+/**
+ * @typedef {Object} HuggingFaceProviderInfo
+ * @property {string} provider
+ * @property {string} status
+ * @property {number} context_length
+ * @property {{ input: number, output: number }} pricing
+ * @property {boolean} supports_tools
+ * @property {boolean} supports_structured_output
+ * @property {boolean} is_model_author
+*/
 
-/** Cache duration – 1 hour (in milliseconds) */
-const CACHE_TTL = 60 * 60 * 1000
-
-/** Default cache location – inside the project root */
-const CACHE_FILE = "chat/cache/{provider}.jsonl"
+export class CacheConfig {
+	/** @type {number} Cache duration – 1 hour (in milliseconds) */
+	ttl = 60 * 60 * 1e3
+	file = "chat/cache/{provider}.jsonl"
+	/** @param {Partial<CacheConfig>} [input] */
+	constructor(input = {}) {
+		const {
+			ttl = this.ttl,
+			file = this.file,
+		} = input
+		this.ttl = Number(ttl)
+		this.file = String(file)
+	}
+	/**
+	 * @param {string} provider
+	 * @return {string}
+	 */
+	getFile(provider) {
+		return this.file.replaceAll("{provider}", provider)
+	}
+	/**
+	 * @param {number} time File change time in milliseconds
+	 * @param {number} [now] Now time in milliseconds
+	 * @returns {boolean}
+	 */
+	isAlive(time, now = Date.now()) {
+		return (now - time) < this.ttl
+	}
+}
 
 export default class ModelProvider {
+	/** @type {AvailableProvider[]} */
+	static AvailableProviders = ["cerebras", "huggingface", "openrouter"]
 	/** @type {FileSystem} */
 	#fs
-	/** @type {string} absolute path to the cache file */
-	#cachePath
+	/** @type {CacheConfig} */
+	#cache
 
 	constructor(input = {}) {
 		const {
 			fs = new FileSystem(),
+			cache = new CacheConfig(),
 		} = input
 		this.#fs = fs
-		// Resolve the cache file relative to the current working directory.
-		this.#cachePath = this.#fs.path.resolve(CACHE_FILE)
+		this.#cache = cache
 	}
 
 	get cachePath() {
-		return this.#cachePath
+		return this.#fs.path.resolve(this.#cache.file)
+	}
+
+	get cacheConfig() {
+		return this.#cache
 	}
 
 	/**
 	 * Load the cache file if it exists and is fresh.
 	 * @param {string} provider
-	 * @returns {Promise<ModelInfo[] | null>}
+	 * @returns {Promise<object[] | null>}
 	 */
 	async loadCache(provider) {
-		const file = this.#cachePath.replaceAll("{provider}", provider)
-		// const rel = this.#fs.path.relative(this.#fs.cwd, file)
+		const file = this.cacheConfig.getFile(provider)
 		try {
 			if (await this.#fs.access(file)) {
 				const rows = await this.#fs.load(file) ?? []
 				if (!rows.length) return null
 				const stats = await this.#fs.info(file)
-				if ((Date.now() - stats.mtimeMs) < CACHE_TTL) {
-					return rows.map(row => new ModelInfo(row))
+				if (this.cacheConfig.isAlive(stats.mtimeMs)) {
+					return rows
 				}
 			}
 		} catch (/** @type {any} */ err) {
@@ -75,8 +121,7 @@ export default class ModelProvider {
 	 * @param {string} provider
 	 */
 	async writeCache(data, provider) {
-		const file = this.#cachePath.replaceAll("{provider}", provider)
-		await this.#fs.save(file, data)
+		await this.#fs.save(this.cacheConfig.getFile(provider), data)
 	}
 
 	/**
@@ -158,7 +203,7 @@ export default class ModelProvider {
 
 	/**
 	 * Flatten multi-provider entries into separate ModelInfo instances.
-	 * @param {Array<ModelInfo & { providers?: Partial<ModelInfo> }>} arr
+	 * @param {Array<ModelInfo & { providers?: HuggingFaceProviderInfo[] }>} arr
 	 * @param {AvailableProvider} provider
 	 * @param {Array<[string, Partial<ModelInfo>]>} [predefined]
 	 * @returns {ModelInfo[]}
@@ -184,6 +229,7 @@ export default class ModelProvider {
 						continue
 					}
 					const { providers, ...rest } = model
+					// @todo transform platform-specific info into ModelInfo before pushing it
 					push(new ModelInfo({ ...pre, ...rest, ...opts, provider: pro }))
 				}
 			} else {
@@ -250,19 +296,18 @@ export default class ModelProvider {
 		} = options
 
 		/** @type {AvailableProvider[]} */
-		const providerNames = ["cerebras", "openrouter", "huggingface"]
 		const all = []
 
-		for (const name of providerNames) {
+		for (const name of ModelProvider.AvailableProviders) {
 			try {
-				onBefore(name, providerNames)
+				onBefore(name, ModelProvider.AvailableProviders)
 				let raw = []
 				// Fetch if possible, else use static only.
 				try {
 					// Try cache first.
 					const cached = noCache ? null : await this.loadCache(name)
 					raw = cached ?? await this.fetchFromProvider(name)
-					if (!noCache) await this.writeCache(raw, name)
+					if (!noCache && !cached) await this.writeCache(raw, name)
 				} catch (/** @type {any} */ err) {
 					console.warn(`Fetch failed for ${name}, using static: ${err.message}`)
 					raw = [] // Rely on predefined.
@@ -282,18 +327,11 @@ export default class ModelProvider {
 	/**
 	 * @param {Array} raw
 	 * @param {AvailableProvider} name
+	 * @returns {}
 	 */
 	flatten(raw, name) {
-		let predefined = []
-
-		// Load static info for providers with fallbacks.
-		if (name === "cerebras") {
-			predefined = getCerebrasInfo()?.models ?? [] // Assume returns Array<[string, Partial<ModelInfo>]>
-		} else if (name === "huggingface") {
-			predefined = getHuggingFaceInfo()?.models ?? [] // Array<[string, Partial<ModelInfo>]>
-		}
-
-		return this._makeFlat(raw, name, predefined)
+		const transformer = transformers[name] ?? (models => models)
+		return transformer(raw)
 	}
 }
 

@@ -10,8 +10,10 @@
 
 import process from "node:process"
 import { generateSystemPrompt } from "../src/llm/system.js"
-import { GREEN, RESET, ITALIC } from "../utils/ANSI.js"
+import { GREEN, RESET, ITALIC, Ui } from "../src/cli/index.js"
 import { FileSystem } from "../src/utils/index.js"
+
+const ui = new Ui({ debugMode: process.argv.includes("--debug") })
 
 /**
  * Main entry point.
@@ -29,18 +31,20 @@ async function main(argv = process.argv.slice(2)) {
 		if (outputPath) {
 			const stats = await fs.stat(outputPath)
 			const format = new Intl.NumberFormat("en-US").format
-			console.info(` ${GREEN}+${RESET} File has been saved (${ITALIC}${format(stats.size)} bytes${RESET})`)
-			console.info(` ${GREEN}+ ${outputPath}${RESET}`)
+			ui.console.info(` ${GREEN}+${RESET} File has been saved (${ITALIC}${format(stats.size)} bytes${RESET})`)
+			ui.console.info(` ${GREEN}+ ${outputPath}${RESET}`)
 		} else {
-			console.info(output)
+			ui.console.info(output)
 		}
 	} catch (error) {
-		console.error(`❌ Cannot generate system prompt: ${error.message}`)
+		ui.console.error(`! Cannot generate system prompt: ${error.message}`)
+		if (err.stack) ui.console.debug(err.stack)
 		process.exit(1)
 	}
 }
 
-main().catch(err => {
-	console.error("❌ Fatal error in llimo‑system:", err)
+main().catch((err) => {
+	ui.console.error(err.message)
+	if (err.stack) ui.console.debug(err.stack)
 	process.exit(1)
 })

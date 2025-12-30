@@ -5,7 +5,7 @@ import { InfoCommand } from "./info.js"
 import FileSystem from "../../utils/FileSystem.js"
 import { Progress, Alert } from "../../cli/components/index.js"
 import { parseOutput } from "../../cli/testing/node.js"
-import { GREEN, RED, RESET, YELLOW } from "../../cli/ANSI.js"
+import { testingProgress } from "../../cli/testing/progress.js"
 
 /**
  * @param {string} str
@@ -142,15 +142,7 @@ export class TestCommand extends InfoCommand {
 		yield warn(`+ Install complete: success`)
 
 		// Step 4: Run tests before chatting
-		const testing = this.ui.createProgress((input) => {
-			const parsed = parseOutput(output.join("\n"), "", this.fs)
-			const str = [
-				["tests"], ["pass", GREEN], ["fail", RED], ["cancelled", RED], ["types", RED],
-				["skip", YELLOW], ["todo", YELLOW]
-			].map(([f, color = RESET]) => `${color}${f}: ${parsed.counts[f] || parsed.guess[f]}${RESET}`).join(" | ")
-
-			this.ui.overwriteLine(`  ${input.elapsed.toFixed(2)}s ${str}`)
-		})
+		const testing = testingProgress({ ui: this.ui, fs: this.fs, output, rows: 3 })
 		yield warn(`  Running baseline tests in ${testDir}...`)
 		const { exitCode: testExitCode, stdout: testOut, stderr: testErr } = await runCommand(
 			"pnpm", ["test:all"], { cwd: testDir, onData }
@@ -159,7 +151,7 @@ export class TestCommand extends InfoCommand {
 		yield Alert.info("")
 		const parsed = parseOutput(testOut, testErr, this.fs)
 		const ok = testExitCode === 0
-		const failed = parsed.counts.fail + parsed.counts.cancelled + parsed.counts.types + parsed.counts.types
+		const failed = parsed.counts.fail + parsed.counts.cancelled + parsed.counts.types
 		yield warn(`${ok ? "+" : "-"} Baseline tests complete: ${ok ? "all passed" : `${failed} failed`}`)
 		if (failed > 0) {
 			if (parsed.counts.fail + parsed.counts.cancelled > 0) {

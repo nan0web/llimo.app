@@ -21,15 +21,25 @@ export class ModelsOptions {
 		].join("\n"),
 		default: "",
 	}
+	help
+	static help = {
+		alias: "h",
+		help: "Show help",
+		default: false,
+	}
 	constructor(input = {}) {
-		const { filter = ModelsOptions.filter.default } = input
+		const {
+			filter = ModelsOptions.filter.default,
+			help = ModelsOptions.help.default,
+		} = input
 		this.filter = String(filter)
+		this.help = Boolean(help)
 	}
 	/**
 	 * @returns {Array<(model: ModelInfo) => boolean>}
 	 */
 	getFilters() {
-		const regExp = /([^~><=]+)([~><=]{1})(.+)/i
+		const regExp = /(id|provider|context|price)([~><=]{1})(.+)/i
 		const available = new Map([
 			["id", ["=", "~"]],
 			["provider", ["=", "~"]],
@@ -56,9 +66,9 @@ export class ModelsOptions {
 				const valStr = rawValue.trim().toLowerCase()
 				let numVal
 				if (/^\d+[kK]$/.test(valStr)) {
-					numVal = Math.round(Number(valStr.slice(0, -1)) * 1000)
+					numVal = Math.round(Number(valStr.slice(0, -1)) * 1e3)
 				} else if (/^\d+[mM]$/.test(valStr)) {
-					numVal = Math.round(Number(valStr.slice(0, -1)) * 1000000)
+					numVal = Math.round(Number(valStr.slice(0, -1)) * 1e6)
 				} else {
 					numVal = Number(valStr)
 				}

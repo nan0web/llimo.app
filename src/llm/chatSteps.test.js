@@ -148,11 +148,14 @@ describe("chatSteps – decodeAnswerAndRunTests (mocked)", () => {
 			db: new FileSystem(),
 			messages: [{ role: "assistant", content: "test" }]
 		}
-		const mockUiMock = {
-			...mockUi,
-			askYesNo: async () => "yes"
-		}
-		const result = await chatSteps.decodeAnswerAndRunTests(mockUiMock, mockChat, mockRunCommand, true)
+		const mockUiMock = new Ui({ ...mockUi })
+		mockUiMock.askYesNo = async () => "yes"
+		const result = await chatSteps.decodeAnswerAndRunTests({
+			ui: mockUiMock,
+			chat: mockChat,
+			runCommand: mockRunCommand,
+			options: { isYes: true },
+		})
 		assert.ok(result.testsCode !== undefined)
 	})
 })

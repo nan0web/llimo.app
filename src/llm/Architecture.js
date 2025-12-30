@@ -1,12 +1,5 @@
 /**
  * Represents model architecture information.
- * @typedef {Object} Architecture
- * @property {string[]} input_modalities - Input modalities supported by the model
- * @property {string} instruct_type - Instruct type
- * @property {string} modality - Model modality
- * @property {string[]} output_modalities - Output modalities supported by the model
- * @property {string} tokenizer - Tokenizer type
- * @property {number} [context_length] - Context length (if not in main)
  */
 export default class Architecture {
 	/** @type {string[]} - Input modalities supported by the model */

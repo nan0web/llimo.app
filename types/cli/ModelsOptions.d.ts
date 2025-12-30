@@ -3,8 +3,14 @@ export class ModelsOptions {
         help: string;
         default: string;
     };
+    static help: {
+        alias: string;
+        help: string;
+        default: boolean;
+    };
     constructor(input?: {});
     filter: string;
+    help: boolean;
     /**
      * @returns {Array<(model: ModelInfo) => boolean>}
      */

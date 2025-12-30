@@ -87,58 +87,71 @@
 	```
 - Handle proper free token limits
 	```bash
-	╭╴yaro::nan.web/apps/llimo.app
-	╰╴18:29 √ok % llimo-chat dev.md                       
+	% node bin/llimo-chat.js dev.md --new
 
-	+ loaded 15 messages from existing chat da595208-098d-4c81-9742-2eaba468e3d8
-	Loaded 475 inference models from 18 providers: cerebras, huggingface/cerebras, huggingface/cohere, huggingface/featherless-ai, huggingface/fireworks-ai, huggingface/groq, huggingface/hf-inference, huggingface/hyperbolic, huggingface/nebius, huggingface/novita, huggingface/nscale, huggingface/ovhcloud, huggingface/publicai, huggingface/sambanova, huggingface/scaleway, huggingface/together, huggingface/zai-org, openrouter
+	+ b0416d7c-2e49-4408-9615-e32c41d08738 new chat created
+	+ system.md loaded 2,203b
+	@ system instructions 7,128b
+	@ Loaded 637 inference models from 3 providers
+	> cerebras
+	> huggingface
+	> openrouter
+	@ gpt-oss-120b @cerebras []
+	  context: 0T (max output → 0T)
+	  price: → $0.00 / 1M ← $0.00 / 1M
+	+ dev.md (chat/b0416d7c-2e49-4408-9615-e32c41d08738/input.md)
 
-	Multiple models match your criteria [model = gpt-oss-120b, provider = ]:
-		1) gpt-oss-120b (provider: cerebras)
-		2) openai/gpt-oss-120b:free (provider: openrouter)
-		3) openai/gpt-oss-120b (provider: openrouter)
-		4) openai/gpt-oss-120b (provider: huggingface/groq)
-		5) openai/gpt-oss-120b (provider: huggingface/novita)
-		6) openai/gpt-oss-120b (provider: huggingface/nebius)
-		7) openai/gpt-oss-120b (provider: huggingface/cerebras)
-		8) openai/gpt-oss-120b (provider: huggingface/sambanova)
-		9) openai/gpt-oss-120b (provider: huggingface/nscale)
-		10) openai/gpt-oss-120b (provider: huggingface/hyperbolic)
-		11) openai/gpt-oss-120b (provider: huggingface/together)
-		12) openai/gpt-oss-120b (provider: huggingface/fireworks-ai)
-		13) openai/gpt-oss-120b (provider: huggingface/scaleway)
-		14) openai/gpt-oss-120b (provider: huggingface/ovhcloud)
-		15) openai/gpt-oss-120b:exacto (provider: openrouter)
-	Select a model by number (or type its full id): 1
-	> gpt-oss-120b selected with modality 
-		pricing: → 0.00 ← 0.00 (cache: -1.00)
-		provider: cerebras
-	> preparing dev.md (/Users/i/src/nan.web/apps/llimo.app/dev.md)
-	+ dev.md (chat/da595208-098d-4c81-9742-2eaba468e3d8/dev.md)
-		copied to chat session
-	Prompt size: 16,524b — 2 file(s).
-	Messages size: 134,945b ~ 37,485T
+	@ Step 1. 12/30/2025, 6:03:27 PM
+	@ Model changed due to AiStrategy
+	@ qwen/qwen-turbo @openrouter [text->text]
+	  context: 1,000,000T (max output → 1,000,000T)
+	  price: → $0.05 / 1M ← $0.20 / 1M (cache: $0.0200 / 1M)
+	  Prompt: 707,074b | Chat: 713,310b ~ 198,142T ~ $0.0139 | Left: 801,858T of 1,000,000T | $0.00
 
-	step 8. 2025-12-19T16:29:46.705Z
+	? Send prompt to LLiMo? (Y)es, No: 
 
-	sending (streaming) [gpt-oss-120b](@cerebras) 0T
-	Send prompt to LLiMo? (Y)es, No: 
-	chat progress | 61.9s | 31,510T | 509T/s | 0.000000
-	      reading | 61.9s | 31,510T | 509T/s | 0.000000
-	2025-12-19T16:29:51.000Z: Tokens per minute limit exceeded - too many tokens processed.
-	2025-12-19T16:29:54.000Z: Tokens per minute limit exceeded - too many tokens processed.
-	2025-12-19T16:30:52.000Z: Tokens per minute limit exceeded - too many tokens processed.
-		Retry after 2025-12-19T16:31:52.000Z
+	read | 1:03 | $0.0000 | 178,270T | 2,829T/sss/s
+	chat | 1:03 | $0.0000 | 178,270T | 2,829T/s | 0T2025-12-30T16:04:09.000Z: Tokens per minute limit exceeded - too many tokens processed.
+	2025-12-30T16:04:11.000Z: Tokens per minute limit exceeded - too many tokens processed.
+	2025-12-30T16:05:10.000Z: Tokens per minute limit exceeded - too many tokens processed.
+	  Retry after 2025-12-30T16:06:10.000Z
 
-	+ answer (chat/da595208-098d-4c81-9742-2eaba468e3d8/steps/008/answer.md)
-	Extracting files (dry mode, no real saving)
-	! Error: Content beyond file
-		# 1 > 
+	+ answer (chat/b0416d7c-2e49-4408-9615-e32c41d08738/steps/001/answer.md)
+	@ Extracting files (dry mode, no real saving)
+	Unpack current package? (Y)es, No, ., <message>: 
 	```
 
 	> 2025-12-19T16:29:51.000Z: Tokens per minute limit exceeded - too many tokens processed.
 	It is not visible during the progress that limit is exceeded.
 	> 	Retry after 2025-12-19T16:31:52.000Z
 	Must also or instead show `Retry in 30s after 2025-12-19 18:31:52`
+- Handle non-free API limits error:
+	```bash
+	% node bin/llimo-chat.js dev.md --new --model gpt-oss-120b --provider huggingface/cerebras
+
+	+ b0416d7c-2e49-4408-9615-e32c41d08738 new chat created
+	+ system.md loaded 2,203b
+	@ system instructions 7,128b
+	@ Loaded 637 inference models from 3 providers
+	> cerebras
+	> huggingface
+	> openrouter
+	@ openai/gpt-oss-120b @huggingface/cerebras []
+	  context: 200,000T (max output → 200,000T)
+	  price: → $0.25 / 1M ← $0.69 / 1M
+	+ dev.md (chat/b0416d7c-2e49-4408-9615-e32c41d08738/input.md)
+
+	@ Step 1. 12/30/2025, 6:07:30 PM
+	  Prompt: 705,849b | Chat: 712,085b ~ 197,801T ~ $0.0495 | Left: 2,199T of 200,000T | $0.00
+
+	? Send prompt to LLiMo? (Y)es, No: 
+
+	read | 0:00 | $0.0445 | 177,963T | 213,385T/s/s
+	chat | 0:00 | $0.0445 | 177,963T | 213,385T/s | 22,037TAPI Error: Payload Too Large
+
+	+ answer (chat/b0416d7c-2e49-4408-9615-e32c41d08738/steps/001/answer.md)
+	@ Extracting files (dry mode, no real saving)
+	Unpack current package? (Y)es, No, ., <message>: %
+	```
 - For small (silly) models check the response and if there are no files at all, throw error or use another larger model (smarter) or try to continue with next message `Follow the output format.`.
 - If I use `- [@ls][src/**]` and then `- [](src/index.js)` prompt is not processing injections after listing.

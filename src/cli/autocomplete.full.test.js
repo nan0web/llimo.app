@@ -17,7 +17,7 @@ import {
 import ModelInfo from "../llm/ModelInfo.js"
 import Pricing from "../llm/Pricing.js"
 import Architecture from "../llm/Architecture.js"
-import Ui, { UiFormats } from "./Ui.js"
+import Ui, { UiConsole, UiFormats } from "./Ui.js"
 
 // -----------------------------------------------------
 // helpers
@@ -207,11 +207,9 @@ describe("autocomplete – core utilities", () => {
 
 	it("pipeOutput produces correct rows", () => {
 		const rows = modelRows(createTestModelMap())
-		const mockUi = new Ui({
-			console: {
-				table: mock.fn()
-			}
-		})
+		const console = new UiConsole()
+		console.table = mock.fn()
+		const mockUi = new Ui({ console })
 		pipeOutput(rows, mockUi)
 		const call = mockUi.console.table.mock.calls[0].arguments
 		assert.ok(Array.isArray(call[0]))

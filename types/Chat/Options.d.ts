@@ -28,6 +28,11 @@ export default class ChatOptions {
         help: string;
         default: boolean;
     };
+    static isFix: {
+        alias: string;
+        help: string;
+        default: boolean;
+    };
     static testDir: {
         alias: string;
         default: string;
@@ -65,6 +70,8 @@ export default class ChatOptions {
     isTest: boolean;
     /** @type {boolean} */
     isTiny: boolean;
+    /** @type {boolean} */
+    isFix: boolean;
     /** @type {string} @deprecated Moved to the command test */
     testDir: string;
     /** @type {string} */

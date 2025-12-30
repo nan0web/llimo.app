@@ -8,7 +8,7 @@ describe("003-File-Protocol – Markdown.js", () => {
 			const parsed = await Markdown.parse(`
 #### [test](file.js)
 \`\`\`js
-console.log(1)
+console.info(1)
 \`\`\`
 #### [1 file(s)](@validate)
 \`\`\`md

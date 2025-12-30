@@ -1,0 +1,1075 @@
+{
+  "version": "1",
+  "tests": [
+    {
+      "file": "src/cli/Ui.js",
+      "position": [
+        57,
+        41
+      ],
+      "no": 2769,
+      "text": "No overload matches this call.\n  Overload 1 of 2, '(locales?: LocalesArgument, options?: NumberFormatOptions | undefined): NumberFormat', gave the following error.\n    Argument of type '{ style: string; currency: string; minimumFractionDigits: number; maximumFractionDigits: number; }' is not assignable to parameter of type 'NumberFormatOptions'.\n      Types of property 'style' are incompatible.\n        Type 'string' is not assignable to type 'keyof NumberFormatOptionsStyleRegistry | undefined'.\n  Overload 2 of 2, '(locales?: string | string[] | undefined, options?: NumberFormatOptions | undefined): NumberFormat', gave the following error.\n    Argument of type '{ style: string; currency: string; minimumFractionDigits: number; maximumFractionDigits: number; }' is not assignable to parameter of type 'NumberFormatOptions'.\n      Types of property 'style' are incompatible.\n        Type 'string' is not assignable to type 'keyof NumberFormatOptionsStyleRegistry | undefined'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/cli/Ui.js",
+      "position": [
+        172,
+        19
+      ],
+      "no": 2345,
+      "text": "Argument of type '\"log\"' is not assignable to parameter of type 'LogTarget'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/FileProtocol.js",
+      "position": [
+        111,
+        33
+      ],
+      "no": 2345,
+      "text": "Argument of type 'Interface' is not assignable to parameter of type 'AsyncGenerator<string, any, any>'.\n  Type 'Interface' is missing the following properties from type 'AsyncGenerator<string, any, any>': next, return, throw, [Symbol.asyncDispose]",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        50,
+        18
+      ],
+      "no": 2345,
+      "text": "Argument of type '[] | Map<string, ModelInfo> | readonly [string, ModelInfo]' is not assignable to parameter of type 'Map<string, ModelInfo> | readonly [string, ModelInfo] | readonly [string, Partial<ModelInfo> & { providers?: { provider: string; }[] | undefined; }]'.\n  Type '[]' is not assignable to type 'Map<string, ModelInfo> | readonly [string, ModelInfo] | readonly [string, Partial<ModelInfo> & { providers?: { provider: string; }[] | undefined; }]'.\n    Type '[]' is not assignable to type 'readonly [string, Partial<ModelInfo> & { providers?: { provider: string; }[] | undefined; }]'.\n      Source has 0 element(s) but target requires 2.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        264,
+        4
+      ],
+      "no": 2339,
+      "text": "Property 'abortSignal' does not exist on type 'UIMessageStreamOptions<UIMessage<any, UIDataTypes, UITools>>'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        265,
+        4
+      ],
+      "no": 2339,
+      "text": "Property 'onChunk' does not exist on type 'UIMessageStreamOptions<UIMessage<any, UIDataTypes, UITools>>'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        266,
+        4
+      ],
+      "no": 2339,
+      "text": "Property 'onStepFinish' does not exist on type 'UIMessageStreamOptions<UIMessage<any, UIDataTypes, UITools>>'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        269,
+        4
+      ],
+      "no": 2339,
+      "text": "Property 'onAbort' does not exist on type 'UIMessageStreamOptions<UIMessage<any, UIDataTypes, UITools>>'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        288,
+        4
+      ],
+      "no": 2322,
+      "text": "Type '((error: unknown) => string) | undefined' is not assignable to type 'StreamTextOnErrorCallback | undefined'.\n  Type '(error: unknown) => string' is not assignable to type 'StreamTextOnErrorCallback'.\n    Type 'string' is not assignable to type 'void | PromiseLike<void>'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        289,
+        4
+      ],
+      "no": 2322,
+      "text": "Type 'UIMessageStreamOnFinishCallback<UIMessage<any, UIDataTypes, UITools>> | undefined' is not assignable to type 'StreamTextOnFinishCallback<ToolSet> | undefined'.\n  Type 'UIMessageStreamOnFinishCallback<UIMessage<any, UIDataTypes, UITools>>' is not assignable to type 'StreamTextOnFinishCallback<ToolSet>'.\n    Types of parameters 'event' and 'event' are incompatible.\n      Type 'StepResult<ToolSet> & { readonly steps: StepResult<ToolSet>[]; readonly totalUsage: LanguageModelV2Usage; }' is missing the following properties from type '{ messages: UIMessage<any, UIDataTypes, UITools>[]; isContinuation: boolean; isAborted: boolean; responseMessage: UIMessage<any, UIDataTypes, UITools>; finishReason?: LanguageModelV2FinishReason | undefined; }': messages, isContinuation, isAborted, responseMessage",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        306,
+        43
+      ],
+      "no": 2339,
+      "text": "Property 'provider' does not exist on type 'ModelInfo[]'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        308,
+        26
+      ],
+      "no": 2339,
+      "text": "Property 'id' does not exist on type 'ModelInfo[]'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/AI.js",
+      "position": [
+        311,
+        18
+      ],
+      "no": 2322,
+      "text": "Type 'LanguageModelV2Usage' is not assignable to type 'Usage'.\n  Types of property 'inputTokens' are incompatible.\n    Type 'number | undefined' is not assignable to type 'number'.\n      Type 'undefined' is not assignable to type 'number'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/Architecture.js",
+      "position": [
+        3,
+        22
+      ],
+      "no": 2652,
+      "text": "Merged declaration 'Architecture' cannot include a default export declaration. Consider adding a separate 'export default Architecture' declaration instead.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/Architecture.js",
+      "position": [
+        11,
+        22
+      ],
+      "no": 2652,
+      "text": "Merged declaration 'Architecture' cannot include a default export declaration. Consider adding a separate 'export default Architecture' declaration instead.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/chatLoop.js",
+      "position": [
+        173,
+        62
+      ],
+      "no": 2322,
+      "text": "Type 'any[][]' is not assignable to type '[string, any][]'.\n  Type 'any[]' is not assignable to type '[string, any]'.\n    Target requires 2 element(s) but source may have fewer.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/chatLoop.js",
+      "position": [
+        269,
+        3
+      ],
+      "no": 2345,
+      "text": "Argument of type 'boolean' is not assignable to parameter of type 'ChatOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/chatProgress.js",
+      "position": [
+        101,
+        23
+      ],
+      "no": 2345,
+      "text": "Argument of type 'string' is not assignable to parameter of type '\"answer\" | \"reason\" | \"read\"'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/chatSteps.js",
+      "position": [
+        252,
+        13
+      ],
+      "no": 2345,
+      "text": "Argument of type 'string | UiOutput' is not assignable to parameter of type 'string'.\n  Type 'UiOutput' is not assignable to type 'string'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/chatSteps.js",
+      "position": [
+        274,
+        18
+      ],
+      "no": 2304,
+      "text": "Cannot find name 'parseOutput'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/chatSteps.js",
+      "position": [
+        294,
+        74
+      ],
+      "no": 2304,
+      "text": "Cannot find name 'TestOutput'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/chatSteps.js",
+      "position": [
+        312,
+        17
+      ],
+      "no": 2304,
+      "text": "Cannot find name 'parseOutput'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/handleTestMode.js",
+      "position": [
+        45,
+        5
+      ],
+      "no": 2353,
+      "text": "Object literal may only specify known properties, and 'elapsed' does not exist in type 'ChatProgressInput'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/handleTestMode.js",
+      "position": [
+        71,
+        12
+      ],
+      "no": 2540,
+      "text": "Cannot assign to 'totalTokens' because it is a read-only property.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/handleTestMode.js",
+      "position": [
+        75,
+        12
+      ],
+      "no": 2540,
+      "text": "Cannot assign to 'totalTokens' because it is a read-only property.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/handleTestMode.js",
+      "position": [
+        92,
+        49
+      ],
+      "no": 2345,
+      "text": "Argument of type 'string' is not assignable to parameter of type 'ModelInfo'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/ModelProvider.js",
+      "position": [
+        119,
+        54
+      ],
+      "no": 18046,
+      "text": "'err' is of type 'unknown'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/cerebras.info.js",
+      "position": [
+        46,
+        5
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 4 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/cerebras.info.js",
+      "position": [
+        63,
+        5
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 4 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/cerebras.info.js",
+      "position": [
+        80,
+        5
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 4 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/cerebras.info.js",
+      "position": [
+        98,
+        5
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 4 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/cerebras.info.js",
+      "position": [
+        116,
+        5
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 4 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/cerebras.info.js",
+      "position": [
+        134,
+        5
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 4 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/cerebras.info.js",
+      "position": [
+        141,
+        69
+      ],
+      "no": 2694,
+      "text": "Namespace '\"/Users/i/src/nan.web/apps/llimo.app/src/llm/AI\"' has no exported member 'ModelInfo'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        28,
+        4
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        30,
+        4
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; instruct_type: string; }' is missing the following properties from type 'Architecture': input_modalities, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        39,
+        4
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        41,
+        4
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; instruct_type: string; }' is missing the following properties from type 'Architecture': input_modalities, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        50,
+        4
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        52,
+        4
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        63,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        65,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        71,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        73,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        79,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        81,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        87,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        89,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        95,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        97,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        103,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        105,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        111,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        113,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        119,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; speed: number; }' is missing the following properties from type 'Pricing': image, input_cache_write, internal_reasoning, request, and 3 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        121,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        131,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        133,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        139,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        141,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        147,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        149,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        155,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        157,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        163,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        165,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        171,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        173,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        179,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        181,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        187,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        189,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        195,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        197,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        203,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        205,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        211,
+        3
+      ],
+      "no": 2740,
+      "text": "Type '{ prompt: number; completion: number; input_cache_read: number; input_cache_write: number; speed: number; }' is missing the following properties from type 'Pricing': image, internal_reasoning, request, web_search, and 2 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        213,
+        3
+      ],
+      "no": 2739,
+      "text": "Type '{ modality: string; }' is missing the following properties from type 'Architecture': input_modalities, instruct_type, output_modalities, tokenizer, context_length",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/providers/huggingface.info.js",
+      "position": [
+        226,
+        3
+      ],
+      "no": 2322,
+      "text": "Type '(string | { provider: string; id?: string | undefined; architecture?: Architecture | undefined; canonical_slug?: string | undefined; context_length?: number | undefined; ... 14 more ...; supportsStructuredOutput?: boolean | undefined; })[][]' is not assignable to type '[string, Partial<ModelInfo>][]'.\n  Type '(string | { provider: string; id?: string | undefined; architecture?: Architecture | undefined; canonical_slug?: string | undefined; context_length?: number | undefined; ... 14 more ...; supportsStructuredOutput?: boolean | undefined; })[]' is not assignable to type '[string, Partial<ModelInfo>]'.\n    Target requires 2 element(s) but source may have fewer.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        47,
+        9
+      ],
+      "no": 2345,
+      "text": "Argument of type '{ models?: Map<string, ModelInfo[]> | readonly [string, Partial<ModelInfo>][] | undefined; }' is not assignable to parameter of type '{ models?: Map<string, ModelInfo> | readonly [string, ModelInfo] | undefined; selectedModel?: ModelInfo | undefined; }'.\n  Types of property 'models' are incompatible.\n    Type 'Map<string, ModelInfo[]> | readonly [string, Partial<ModelInfo>][] | undefined' is not assignable to type 'Map<string, ModelInfo> | readonly [string, ModelInfo] | undefined'.\n      Type 'Map<string, ModelInfo[]>' is not assignable to type 'Map<string, ModelInfo> | readonly [string, ModelInfo] | undefined'.\n        Type 'Map<string, ModelInfo[]>' is not assignable to type 'Map<string, ModelInfo>'.\n          Type 'ModelInfo[]' is missing the following properties from type 'ModelInfo': id, architecture, canonical_slug, context_length, and 16 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        68,
+        23
+      ],
+      "no": 2315,
+      "text": "Type 'StreamTextResult' is not generic.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        70,
+        8
+      ],
+      "no": 2416,
+      "text": "Property 'streamText' in type 'TestAI' is not assignable to the same property in base type 'AI'.\n  Type '(modelId: any, messages: ModelMessage[], options?: UIMessageStreamOptions | undefined) => Promise<any>' is not assignable to type '(model: ModelInfo, messages: ModelMessage[], options?: UIMessageStreamOptions<UIMessage<any, UIDataTypes, UITools>> | undefined) => StreamTextResult<...>'.\n    Type 'Promise<any>' is missing the following properties from type 'StreamTextResult<ToolSet, any>': content, text, reasoning, reasoningText, and 25 more.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        75,
+        11
+      ],
+      "no": 2339,
+      "text": "Property 'cwd' does not exist on type 'UIMessageStreamOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        75,
+        32
+      ],
+      "no": 2339,
+      "text": "Property 'step' does not exist on type 'UIMessageStreamOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        75,
+        42
+      ],
+      "no": 2339,
+      "text": "Property 'delay' does not exist on type 'UIMessageStreamOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        75,
+        54
+      ],
+      "no": 2339,
+      "text": "Property 'onChunk' does not exist on type 'UIMessageStreamOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        75,
+        82
+      ],
+      "no": 2339,
+      "text": "Property 'onAbort' does not exist on type 'UIMessageStreamOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        137,
+        10
+      ],
+      "no": 2540,
+      "text": "Cannot assign to 'totalTokens' because it is a read-only property.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        160,
+        29
+      ],
+      "no": 2353,
+      "text": "Object literal may only specify known properties, and 'usage' does not exist in type '{ messages: UIMessage<any, any, any>[]; isContinuation: boolean; isAborted: boolean; responseMessage: UIMessage<any, any, any>; finishReason?: LanguageModelV2FinishReason | undefined; }'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestAI.js",
+      "position": [
+        197,
+        65
+      ],
+      "no": 2559,
+      "text": "Type '{ cwd?: string | undefined; step?: number | undefined; }' has no properties in common with type 'UIMessageStreamOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestRunner.js",
+      "position": [
+        221,
+        8
+      ],
+      "no": 2358,
+      "text": "The left-hand side of an 'instanceof' expression must be of type 'any', an object type or a type parameter.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestRunner.js",
+      "position": [
+        261,
+        76
+      ],
+      "no": 2554,
+      "text": "Expected 3 arguments, but got 4.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/llm/TestRunner.js",
+      "position": [
+        266,
+        4
+      ],
+      "no": 2353,
+      "text": "Object literal may only specify known properties, and 'cwd' does not exist in type 'UIMessageStreamOptions'.",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/release/ReleaseProtocol.js",
+      "position": [
+        1,
+        10
+      ],
+      "no": 2614,
+      "text": "Module '\"../FileProtocol.js\"' has no exported member 'FileProtocol'. Did you mean to use 'import FileProtocol from \"../FileProtocol.js\"' instead?",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/strategies/fastest.js",
+      "position": [
+        21,
+        11
+      ],
+      "no": 2551,
+      "text": "Property 'tokensCount' does not exist on type 'Chat'. Did you mean 'getTokensCount'?",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/strategies/fastest.js",
+      "position": [
+        49,
+        11
+      ],
+      "no": 2551,
+      "text": "Property 'tokensCount' does not exist on type 'Chat'. Did you mean 'getTokensCount'?",
+      "type": "types",
+      "indent": 0
+    },
+    {
+      "file": "src/strategies/fastest.js",
+      "position": [
+        75,
+        11
+      ],
+      "no": 2551,
+      "text": "Property 'tokensCount' does not exist on type 'Chat'. Did you mean 'getTokensCount'?",
+      "type": "types",
+      "indent": 0
+    }
+  ],
+  "errors": {},
+  "unknowns": {},
+  "counts": {}
+}

@@ -23,7 +23,7 @@ describe("004-FileProtocol-Parsing – src/FileProtocol.js & src/utils/Markdown.
 			const sampleMd = `
 #### [script.js](src/script.js)
 \`\`\`js
-console.log('parsed content')
+console.info('parsed content')
 \`\`\`
 #### [Run](@bash)
 \`\`\`bash
@@ -36,7 +36,7 @@ pnpm test
 			strictEqual(fileEntry.filename, "src/script.js", "Correct filename")
 			strictEqual(fileEntry.label, "script.js", "Correct label")
 			strictEqual(fileEntry.type, "js", "Correct type")
-			ok(fileEntry.content.includes("console.log('parsed content')"), "Correct content")
+			ok(fileEntry.content.includes("console.info('parsed content')"), "Correct content")
 			const cmdEntry = parsed.correct[1]
 			strictEqual(cmdEntry.filename, "@bash", "Command filename")
 			strictEqual(parsed.failed.length, 0, "No parse errors")

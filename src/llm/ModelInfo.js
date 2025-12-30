@@ -4,6 +4,10 @@ import TopProvider from "./TopProvider.js"
 import Limits from "./Limits.js"
 
 /**
+ * @typedef {'live'|'staging'} ProviderStatus
+ */
+
+/**
  * Represents information about a model.
  */
 export default class ModelInfo {
@@ -19,6 +23,8 @@ export default class ModelInfo {
 	maximum_output = 0
 	/** @type {Limits} - limits of requests and tokens per time */
 	limits = new Limits()
+	/** @type {number} */
+	#volume = 0
 	/** @type {number} */
 	created = 0
 	/** @type {object} */
@@ -45,12 +51,12 @@ export default class ModelInfo {
 	supports_structured_output = false
 	/** @type {boolean} */
 	supportsTools = false
-	/** @type {boolean} */
-	supportsStructuredOutput = false
+	/** @type {ProviderStatus} */
+	status = "staging"
 
 	/**
 	 * Constructs a ModelInfo instance.
-	 * @param {Partial<ModelInfo>} input - Partial object with model properties.
+	 * @param {Partial<ModelInfo> & { volume?: number }} input - Partial object with model properties.
 	 */
 	constructor(input = {}) {
 		const {
@@ -73,7 +79,8 @@ export default class ModelInfo {
 			supports_tools = false,
 			supports_structured_output = false,
 			supportsTools = false,
-			supportsStructuredOutput = false,
+			volume = 0,
+			status = this.status,
 		} = input
 		this.id = String(id)
 		this.architecture = new Architecture(architecture)
@@ -94,6 +101,16 @@ export default class ModelInfo {
 		this.supports_tools = Boolean(supports_tools)
 		this.supports_structured_output = Boolean(supports_structured_output)
 		this.supportsTools = Boolean(supportsTools)
-		this.supportsStructuredOutput = Boolean(supportsStructuredOutput)
+		this.status = "live" === status ? "live" : "staging"
+		this.#volume = volume
+	}
+
+	/** @returns {number} The volume of parameters inside model */
+	get volume() {
+		if (this.#volume > 0) return this.#volume
+		const arr = this.id.split("-").filter(
+			w => w.toLowerCase().endsWith("b")
+		).map(w => w.slice(0, -1)).filter(w => !isNaN(parseInt(w)))
+		return 1e9 * Number(arr[0] || 0)
 	}
 }

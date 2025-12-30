@@ -5,6 +5,7 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { streamText, generateText } from 'ai'
 import ModelProvider from "./ModelProvider.js"
 import ModelInfo from './ModelInfo.js'
+import { validateApiKey } from './ProviderConfig.js'
 import Usage from './Usage.js'
 
 /**
@@ -16,6 +17,39 @@ import Usage from './Usage.js'
  * @property {()=>void} [onFinish] called when the stream ends successfully
  * @property {()=>void} [onAbort] called when the stream is aborted
  */
+
+export class AiStrategy {
+	/**
+	 * @param {ModelInfo} model
+	 * @param {number} tokens
+	 * @param {number} [safeAnswerTokens=1_000]
+	 * @returns {boolean}
+	 */
+	shouldChangeModel(model, tokens, safeAnswerTokens = 1e3) {
+		if (model.context_length < tokens + safeAnswerTokens) return true
+		if (model.per_request_limit > 0 && model.per_request_limit < tokens) return true
+		if (model.maximum_output > 0 && model.maximum_output < safeAnswerTokens) return true
+		if (model.pricing.prompt < 0 || model.pricing.completion < 0) return true
+		if (model.volume && model.volume < 100e9) return true
+		if (model.id.endsWith(":free")) return true
+		return false
+	}
+	/**
+	 * @param {Map<string, ModelInfo>} models
+	 * @param {number} tokens
+	 * @param {number} [safeAnswerTokens=1_000]
+	 * @returns {ModelInfo | undefined}
+	 */
+	findModel(models, tokens, safeAnswerTokens = 1e3) {
+		const arr = Array.from(models.values()).filter(
+			(info) => !this.shouldChangeModel(info, tokens, safeAnswerTokens)
+		)
+		if (!arr.length) return
+		arr.sort((a, b) => a.pricing.completion - b.pricing.completion)
+
+		return arr[0]
+	}
+}
 
 /**
  * Wrapper for AI providers.
@@ -41,14 +75,17 @@ export default class AI {
 	 * @param {Object} input
 	 * @param {readonly[string, ModelInfo] | readonly [string, ModelInfo] | Map<string, ModelInfo | ModelInfo>} [input.models=[]]
 	 * @param {ModelInfo} [input.selectedModel]
+	 * @param {AiStrategy} [input.strategy]
 	 */
 	constructor(input = {}) {
 		const {
 			models = [],
 			selectedModel = this.selectedModel,
+			strategy = new AiStrategy()
 		} = input
 		this.setModels(models)
 		this.selectedModel = selectedModel
+		this.strategy = strategy
 	}
 
 	/**
@@ -214,33 +251,20 @@ export default class AI {
 	 */
 	getProvider(provider) {
 		const [pro] = provider.split("/")
+		try {
+			validateApiKey(pro)
+		} catch (/** @type {any} */ err) {
+			throw new Error(err.message)
+		}
 		switch (pro) {
 			case 'openai':
-				if (!process.env.OPENAI_API_KEY) {
-					throw new Error(`OpenAI API key is missing. Set the OPENAI_API_KEY environment variable.`)
-				}
 				return createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
 			case 'cerebras':
-				if (!process.env.CEREBRAS_API_KEY) {
-					throw new Error(
-						`Cerebras API key is missing. Set the CEREBRAS_API_KEY environment variable.` +
-						`\n\n` +
-						`To get an API key:\n` +
-						`1. Visit https://inference-docs.cerebras.ai/\n` +
-						`2. Sign up and get your API key\n` +
-						`3. Export it: export CEREBRAS_API_KEY=your_key_here`
-					)
-				}
 				return createCerebras({ apiKey: process.env.CEREBRAS_API_KEY })
 			case 'huggingface':
-				if (!process.env.HUGGINGFACE_API_KEY) {
-					throw new Error(`HuggingFace API key is missing. Set the HUGGINGFACE_API_KEY environment variable.`)
-				}
-				return createHuggingFace({ apiKey: process.env.HUGGINGFACE_API_KEY })
+				const HF_TOKEN = process.env.HF_TOKEN || process.env.HUGGINGFACE_API_KEY
+				return createHuggingFace({ apiKey: HF_TOKEN })
 			case 'openrouter':
-				if (!process.env.OPENROUTER_API_KEY) {
-					throw new Error(`OpenRouter API key is missing. Set the OPENROUTER_API_KEY environment variable.`)
-				}
 				return createOpenRouter({ apiKey: process.env.OPENROUTER_API_KEY })
 			default:
 				throw new Error(`Unknown provider: ${provider}`)
@@ -251,8 +275,8 @@ export default class AI {
 	 * Stream text from a model.
 	 *
 	 * The method forwards the call to `ai.streamText` while providing a set of
-	 * optional hooks that can be used by callers to monitor or control the
-	 * streaming lifecycle.
+	 * optional hooks that can be used by monitor or control the streaming
+	 * lifecycle.
 	 *
 	 * @param {ModelInfo} model
 	 * @param {import('ai').ModelMessage[]} messages
@@ -310,4 +334,24 @@ export default class AI {
 		})
 		return { text, usage }
 	}
+
+	/**
+	 * @throws {Error} When no correspondent model found.
+	 * @param {ModelInfo} model
+	 * @param {number} tokens
+	 * @param {number} [safeAnswerTokens=1_000]
+	 * @returns {ModelInfo | undefined}
+	 */
+	ensureModel(model, tokens, safeAnswerTokens = 1e3) {
+		if (!this.strategy.shouldChangeModel(model, tokens, safeAnswerTokens)) {
+			return model
+		}
+		const found = this.strategy.findModel(this.#models, tokens, safeAnswerTokens)
+		if (!found) {
+			throw new Error("No such model found in " + this.strategy.constructor.name)
+		}
+		this.selectedModel = found
+		return found
+	}
 }
+

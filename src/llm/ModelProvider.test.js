@@ -1,8 +1,11 @@
-import { describe, it, beforeEach, mock, afterEach } from "node:test"
+import { before, describe, it, beforeEach, mock, afterEach } from "node:test"
 import assert from "node:assert/strict"
 import ModelProvider from "./ModelProvider.js"
 import { FileSystem } from "../utils/index.js"
 import ModelInfo from "./ModelInfo.js"
+import { fileURLToPath } from "node:url"
+import { dirname } from "node:path"
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 class TestFileSystem extends FileSystem {
 	#logs = []
@@ -73,18 +76,25 @@ class TestFileSystem extends FileSystem {
 	}
 }
 
-// Mock static info functions.
-const mockHFInfo = [["test-model", { context_length: 8192, pricing: { prompt: 0.1 } }]]
-const mockCerebrasInfo = [["cerebras-test", { context_length: 4096, provider: "cerebras" }]]
-
 describe("ModelProvider", () => {
 	/** @type {ModelProvider} */
 	let provider
 	let mockFS
 	let mockFetch
+	/** @type {Record<string, object[]>} */
+	let cache = {}
+
+	before(async () => {
+		const fs = new FileSystem({ cwd: __dirname })
+		for (const pro of ModelProvider.AvailableProviders) {
+			cache[pro] = await fs.load(`ModelProvider.test.${pro}.jsonl`) ?? []
+		}
+	})
 
 	beforeEach(() => {
-		mockFS = new FileSystem()
+		mockFS = new TestFileSystem({
+			data: Object.entries(cache).map(([pro, arr]) => [`chat/cache/${pro}.jsonl`, arr])
+		})
 		provider = new ModelProvider({ fs: mockFS })
 		// Mock fetch globally.
 		mockFetch = mock.fn(async () => ({ json: async () => [] }))
@@ -93,10 +103,10 @@ describe("ModelProvider", () => {
 		// mock.doMock("./providers/huggingface.info.js", () => ({ models: mockHFInfo }))
 		// mock.doMock("./providers/cerebras.info.js", () => ({ models: mockCerebrasInfo }))
 		// Mock FS for cache.
-		mock.method(mockFS, "access", async () => false)
-		mock.method(mockFS, "load", async () => null)
-		mock.method(mockFS, "save", async () => { })
-		mock.method(mockFS, "info", async () => ({ mtimeMs: 0 }))
+		// mock.method(mockFS, "access", async () => false)
+		// mock.method(mockFS, "load", async () => null)
+		// mock.method(mockFS, "save", async () => { })
+		// mock.method(mockFS, "info", async () => ({ mtimeMs: 0 }))
 	})
 
 	afterEach(() => {
@@ -110,39 +120,20 @@ describe("ModelProvider", () => {
 	})
 
 	describe("cache handling", () => {
-		it("loads fresh cache if within TTL", async () => {
-			const fs = new TestFileSystem({
-				data: [
-					["chat/cache/cerebras.jsonl", [
-						{ id: "gpt-oss-120b", provider: "cerebras" },
-					]],
-					["chat/cache/openrouter.jsonl", [
-						{ id: "qwen-3-480b", provider: "openrouter" },
-					]],
-				]
+		for (const pro of ModelProvider.AvailableProviders) {
+			it(`loads fresh ${pro} cache if within TTL`, async () => {
+				const provider = new ModelProvider({ fs: mockFS })
+				const cerebras = await provider.loadCache(pro)
+				assert.strictEqual(cerebras.length, 1)
+				assert.deepStrictEqual(cerebras[0], cache[pro][0])
 			})
-			const provider = new ModelProvider({ fs })
-
-			const cerebras = await provider.loadCache('cerebras')
-			assert.strictEqual(cerebras.length, 1)
-			assert.ok(cerebras[0] instanceof ModelInfo)
-			assert.deepStrictEqual(cerebras.map(m => [m.id, m.provider, m.context_length]), [
-				["gpt-oss-120b", "cerebras", 0],
-			])
-			const openrouter = await provider.loadCache('openrouter')
-			assert.strictEqual(openrouter.length, 1)
-			assert.ok(openrouter[0] instanceof ModelInfo)
-			assert.deepStrictEqual(openrouter.map(m => [m.id, m.provider, m.context_length]), [
-				["qwen-3-480b", "openrouter", 0],
-			])
-		})
+		}
 
 		it("ignores stale cache beyond TTL", async () => {
 			const fs = new TestFileSystem({
 				data: [
-					["chat/models.jsonl", [
+					["chat/cache/cerebras.jsonl", [
 						{ id: "gpt-oss-120b", provider: "cerebras" },
-						{ id: "qwen-3-480b", provider: "openrouter" },
 					]]
 				]
 			})
@@ -154,7 +145,7 @@ describe("ModelProvider", () => {
 			})
 			const provider = new ModelProvider({ fs })
 
-			const result = await provider.loadCache()
+			const result = await provider.loadCache("cerebras")
 			assert.strictEqual(result, null)
 		})
 
@@ -228,31 +219,6 @@ describe("ModelProvider", () => {
 			provider = new ModelProvider({ fs: mockFS })
 		})
 
-		it.todo("returns empty map from stale/no cache, uses static on fetch fail", async () => {
-			// Simulate all fetches failing.
-			provider.fetch = async () => { throw new Error("fetch fail") }
-
-			const result = await provider.getAll()
-			assert.ok(result instanceof Map)
-			assert.ok(result.size > 0, "Should include static models from HF/Cerebras") // From mocks.
-		})
-
-		it("merges fetched data with static fallbacks", async () => {
-			provider.loadCache = async () => null
-			provider.fetch = async (url, options) => {
-				if (url.includes("huggingface")) {
-					return { ok: true, json: async () => [{ id: "fetched-hf", context_length: 8192 }] }
-				}
-				return { ok: true, json: async () => [] }
-			}
-
-			const result = await provider.getAll()
-			const entry = [...result.values()][0]
-			assert.equal(entry.provider, "huggingface")
-			assert.equal(entry.id, "fetched-hf")
-			assert.equal(entry.context_length, 8192)
-		})
-
 		it("caches and loads on second call", async () => {
 			const fs = new TestFileSystem()
 			const provider = new ModelProvider({ fs })
@@ -276,6 +242,21 @@ describe("ModelProvider", () => {
 			await provider.getAll({ onBefore: mockBefore, onData: mockData })
 			assert.strictEqual(mockBefore.mock.calls.length, 3)
 			assert.strictEqual(mockData.mock.calls.length, 3)
+		})
+	})
+
+	describe("correct data", () => {
+		it("should properly load models info", async () => {
+			const models = await provider.getAll()
+			let model = models.get("gpt-oss-120b@cerebras")
+			assert.equal(model.pricing.prompt, 0)
+			assert.equal(model.pricing.completion, 0)
+			model = models.get("openai/gpt-oss-120b@huggingface/cerebras")
+			assert.equal(model.pricing.prompt, 0.25)
+			assert.equal(model.pricing.completion, 0.69)
+			model = models.get("openai/gpt-5.1-codex-max@openrouter")
+			assert.equal(model.pricing.prompt, 1.25)
+			assert.equal(model.pricing.completion, 10)
 		})
 	})
 })

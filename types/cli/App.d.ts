@@ -66,11 +66,11 @@ export class ChatCLiApp {
     /**
      *
      * @param {number} [step=1]
-     * @returns {Promise<{ shouldContinue: boolean, test: import("../llm/chatSteps.js").TestOutput }>}
+     * @returns {Promise<{ shouldContinue: boolean, test?: import("../cli/testing/node.js").TestOutput }>}
      */
     test(step?: number): Promise<{
         shouldContinue: boolean;
-        test: import("../llm/chatSteps.js").TestOutput;
+        test?: import("../cli/testing/node.js").TestOutput;
     }>;
     /**
      *

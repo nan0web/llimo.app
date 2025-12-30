@@ -102,11 +102,11 @@ describe("001-Core-Chat-Functionality – bin/llimo-chat.js as main CLI entry po
 			const tempDir = await mkdtemp(path.join(tmpdir(), "llimo-1.3-"))
 			const fs = new FileSystem({ cwd: tempDir })
 			await fs.save("me.md", "#### [script.js](src/script.js)\n```js\n// ref\n```")
-			await fs.save("src/script.js", "console.log('attached')")
+			await fs.save("src/script.js", "console.info('attached')")
 			const chat = new Chat({ cwd: tempDir })
 			await chat.init()
 			const packed = await packMarkdown({ input: await fs.load("me.md"), cwd: tempDir })
-			ok(packed.text.includes("console.log('attached')"), "Inlines attached file content")
+			ok(packed.text.includes("console.info('attached')"), "Inlines attached file content")
 			await rm(tempDir, { recursive: true })
 		})
 
@@ -133,7 +133,7 @@ describe("001-Core-Chat-Functionality – bin/llimo-chat.js as main CLI entry po
 			const mockResponse = `
 #### [updated.js](src/updated.js)
 \`\`\`js
-console.log('fixed')
+console.info('fixed')
 \`\`\`
 #### [1 file(s), 1 command(s)](@validate)
 \`\`\`markdown

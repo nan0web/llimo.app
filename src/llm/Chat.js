@@ -100,23 +100,26 @@ export default class Chat {
 
 	/** @returns {Record<string, string | null>} Allowed files and directories */
 	get allowed() {
-		return {
-			input: "input.md",
-			prompt: "prompt.md",
-			model: "model.json",
-			files: "files.jsonl",
-			inputs: "inputs.jsonl",
-			response: "response.json",
-			parts: "stream.jsonl",
-			stream: "stream.md",
-			chunks: "chunks.jsonl",
-			unknowns: "unknowns.jsonl",
-			answer: "answer.md",
-			reason: "reason.md",
-			usage: "usage.json",
-			fail: "fail.json",
-			messages: null,
-		}
+		return Chat.FILES
+	}
+
+	/** Constants for chat files – single source of truth */
+	static FILES = {
+		input: "input.md",
+		prompt: "prompt.md",
+		model: "model.json",
+		files: "files.jsonl",
+		inputs: "inputs.jsonl",
+		response: "response.json",
+		parts: "stream.jsonl",
+		stream: "stream.md",
+		chunks: "chunks.jsonl",
+		unknowns: "unknowns.jsonl",
+		answer: "answer.md",
+		reason: "reason.md",
+		usage: "usage.json",
+		fail: "fail.json",
+		messages: null,
 	}
 
 	/**
@@ -258,17 +261,6 @@ export default class Chat {
 	}
 
 	/**
-	 * Save the latest prompt
-	 * @param {string} prompt
-	 * @returns {Promise<string>} The prompt path.
-	 */
-	async savePrompt(prompt) {
-		const promptPath = this.#path.resolve(this.dir, "prompt.md")
-		await this.#fs.writeFile(promptPath, prompt)
-		return promptPath
-	}
-
-	/**
 	 * Append to a file
 	 * @param {string} path
 	 * @param {string} data
@@ -276,10 +268,40 @@ export default class Chat {
 	 */
 	async append(path, data, step) {
 		if (path.startsWith("/")) path = path.slice(1)
-		const file = this.allowed[path]
-		if ("string" === typeof file) path = file
-		if (step) path = "steps/" + String(step).padStart(3, "0") + "/" + path
+		const file = this.allowed[path] ?? path
+		if (step) path = "steps/" + String(step).padStart(3, "0") + "/" + file
 		await this.db.append(path, data)
+	}
+
+	/**
+	 * Reusable path resolution – formats `steps/00X/filename` pattern.
+	 * @param {string} path - File name (e.g., "answer.md")
+	 * @param {number} [step] - Optional step number (prepended as 00X)
+	 * @returns {string}
+	 */
+	static formatStepPath(path, step) {
+		const file = Chat.FILES[path] || path
+		if (step) path = `steps/${String(step).padStart(3, '0')}/${file}`
+		return path
+	}
+
+	/**
+	 * Glob split utility for patterns like "src\/**\/*.js".
+	 * @param {string} pattern - Glob pattern string
+	 * @returns {{ baseDir: string, globPattern: string }}
+	 */
+	static splitGlob(pattern) {
+		const parts = pattern.split("/")
+		let baseDir = "."
+		let globPattern = pattern
+		for (let i = 0; i < parts.length; i++) {
+			if (parts[i].includes("*")) {
+				baseDir = parts.slice(0, i).join("/") || "."
+				globPattern = parts.slice(i).join("/")
+				break
+			}
+		}
+		return { baseDir, globPattern }
 	}
 
 	/**
@@ -288,16 +310,9 @@ export default class Chat {
 	 * @returns {string}
 	 */
 	path(path, step) {
-		let rel = true
-		if (path.startsWith("/")) {
-			path = path.slice(1)
-			rel = false
-		}
-		const file = this.allowed[path] ?? path
-		if ("string" === typeof file) path = file
-		if (step) path = "steps/" + String(step).padStart(3, "0") + "/" + path
+		path = this.allowed[path] ?? path
+		if (step) path = Chat.formatStepPath(path, step)
 		path = this.#path.resolve(this.dir, path)
-		if (rel) path = this.fs.path.relative(this.fs.path.resolve("."), path)
 		return path
 	}
 
@@ -308,8 +323,7 @@ export default class Chat {
 	 * @returns {Promise<number>}
 	 */
 	async calcTokens(text) {
-		return Math.ceil(String(text).length / 3.6)
+		return Math.round(String(text).length / 3.6)
 	}
 }
-
 

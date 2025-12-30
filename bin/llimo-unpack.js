@@ -11,10 +11,12 @@
 import process from "node:process"
 import { Readable } from "node:stream"
 
-import { RESET } from "../src/cli/index.js"
+import { Ui } from "../src/cli/index.js"
 import { FileSystem, Path, ReadLine } from "../src/utils/index.js"
 import Markdown from "../src/utils/Markdown.js"
 import { unpackAnswer } from "../src/llm/unpack.js"
+
+const ui = new Ui({ debugMode: process.argv.includes("--debug") })
 
 /**
  * @typedef {Object} JSONResponse
@@ -24,18 +26,18 @@ import { unpackAnswer } from "../src/llm/unpack.js"
  */
 
 function usage() {
-	console.info("")
-	console.info("Usage with a pipe format:")
-	console.info("  ")
-	console.info(`  echo '{"filename":"test.md","content":"# Hello"}' | llimo-unpack [output-file]`)
-	console.info("  ")
-	console.info("Usage with a file format:")
-	console.info("  ")
-	console.info("  llimo-unpack <input-file> [output-file]")
-	console.info("  ")
-	console.info("    input-file  - Path to the input file")
-	console.info("    output-file - Path to the output file prints to stdout if not defined")
-	console.info("  ")
+	ui.console.info("")
+	ui.console.info("Usage with a pipe format:")
+	ui.console.info("  ")
+	ui.console.info(`  echo '{"filename":"test.md","content":"# Hello"}' | llimo-unpack [output-file]`)
+	ui.console.info("  ")
+	ui.console.info("Usage with a file format:")
+	ui.console.info("  ")
+	ui.console.info("  llimo-unpack <input-file> [output-file]")
+	ui.console.info("  ")
+	ui.console.info("    input-file  - Path to the input file")
+	ui.console.info("    output-file - Path to the output file prints to stdout if not defined")
+	ui.console.info("  ")
 }
 
 /**
@@ -118,16 +120,17 @@ async function main(argv = process.argv.slice(2)) {
 		usage()
 		return
 	}
-	console.info(RESET)
+	ui.console.info()
 
 	const parsed = await Markdown.parseStream(mdStream)
 	const stream = unpackAnswer(parsed, isDry, baseDir)
 	for await (const str of stream) {
-		console.info(str)
+		ui.console.info(str)
 	}
 }
 
-main().catch(err => {
-	console.error("❌ Fatal error in llimo‑pack:", err)
+main().catch((err) => {
+	ui.console.error(err.message)
+	if (err.stack) ui.console.debug(err.stack)
 	process.exit(1)
 })

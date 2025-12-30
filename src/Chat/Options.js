@@ -40,6 +40,13 @@ export default class ChatOptions {
 		help: "Tiny view in one row that is useful as subtask usage",
 		default: false,
 	}
+	/** @type {boolean} */
+	isFix
+	static isFix = {
+		alias: "fix",
+		help: "Fix the current project (starts with tests)",
+		default: false
+	}
 	/** @type {string} @deprecated Moved to the command test */
 	testDir
 	static testDir = {
@@ -81,6 +88,7 @@ export default class ChatOptions {
 			isYes = ChatOptions.isYes.default,
 			isTiny = ChatOptions.isTiny.default,
 			isHelp = ChatOptions.isHelp.default,
+			isFix = ChatOptions.isFix.default,
 			isTest = ChatOptions.isTest.default,
 			testDir = ChatOptions.testDir.default,
 			model = ChatOptions.model.default,
@@ -94,6 +102,7 @@ export default class ChatOptions {
 		this.isYes = Boolean(isYes)
 		this.isTiny = Boolean(isTiny)
 		this.isHelp = Boolean(isHelp)
+		this.isFix = Boolean(isFix)
 		this.isTest = Boolean(isTest)
 		this.testDir = String(testDir)
 		this.model = model

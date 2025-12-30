@@ -1,6 +1,7 @@
 import Ui from "../cli/Ui.js"
 import ModelInfo from "./ModelInfo.js"
 import { model2row } from "../cli/autocomplete.js"
+import { DIM, RESET } from "../cli/ANSI.js"
 
 /**
  * Helper to select a model (and optionally its provider) from a list of
@@ -45,6 +46,12 @@ export async function selectModel(models, modelPartial, providerPartial, ui, onS
 		return result
 	}
 
+	const exact = models.get(`${modelPartial}@${providerPartial}`)
+	if (exact) {
+		onSelect(exact)
+		return exact
+	}
+
 	/** @type {Array<ModelInfo>} */
 	let candidates = findCandidates(modelPartial, providerPartial)
 
@@ -56,7 +63,7 @@ export async function selectModel(models, modelPartial, providerPartial, ui, onS
 
 	if (candidates.length === 1) {
 		const chosen = candidates[0]
-		await onSelect(chosen)
+		onSelect(chosen)
 		return chosen
 	}
 	candidates.sort((a, b) => a.id.localeCompare(b.id))
@@ -78,8 +85,8 @@ export async function selectModel(models, modelPartial, providerPartial, ui, onS
 			row.id,
 			row.provider,
 			ui.formats.weight("T", row.context),
-			ui.formats.pricing(row.inputPrice, 2),
-			ui.formats.pricing(row.outputPrice, 2),
+			row.inputPrice < 0 ? `${DIM}empty${RESET}` : ui.formats.pricing(row.inputPrice, 2),
+			row.outputPrice < 0 ? `${DIM}empty${RESET}` : ui.formats.pricing(row.outputPrice, 2),
 		])
 	})
 	ui.console.table(rows, { aligns: ["right", "left", "left", "right", "right", "right"] })
@@ -90,14 +97,14 @@ export async function selectModel(models, modelPartial, providerPartial, ui, onS
 	// Direct id entry?
 	const direct = candidates.find(m => m.id === trimmed)
 	if (direct) {
-		await onSelect(direct)
+		onSelect(direct)
 		return direct
 	}
 
 	const idx = parseInt(trimmed, 10) - 1
 	if (!Number.isNaN(idx) && idx >= 0 && idx < candidates.length) {
 		const chosen = candidates[idx]
-		await onSelect(chosen)
+		onSelect(chosen)
 		return chosen
 	}
 

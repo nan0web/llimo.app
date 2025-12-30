@@ -5,28 +5,28 @@ import Usage from "./Usage.js"
  */
 export default class Pricing {
 	/** @type {number} - Completion cost per million tokens */
-	completion = -1
+	completion = 0
 	/** @type {number} - Image cost */
-	image = -1
+	image = 0
 	/** @type {number} - Input cache read cost */
-	input_cache_read = -1
+	input_cache_read = 0
 	/** @type {number} - Input cache write cost */
-	input_cache_write = -1
+	input_cache_write = 0
 	/** @type {number} - Internal reasoning cost */
-	internal_reasoning = -1
+	internal_reasoning = 0
 	/** @type {number} - Prompt cost per million tokens */
-	prompt = -1
+	prompt = 0
 	/** @type {number} - Request cost */
-	request = -1
+	request = 0
 	/** @type {number} - Web search cost */
-	web_search = -1
+	web_search = 0
 	/** @type {number} - average speed T/s */
-	speed = -1
+	speed = 0
 
 	/**
-	 * @param {Partial<Pricing>} input
+	 * @param {Partial<Pricing> & { input?: number, output?: number }} options
 	 */
-	constructor(input = {}) {
+	constructor(options = {}) {
 		const {
 			completion = this.completion,
 			image = this.image,
@@ -37,13 +37,15 @@ export default class Pricing {
 			request = this.request,
 			web_search = this.web_search,
 			speed = this.speed,
-		} = input
-		this.completion = Number(completion)
+			input,
+			output,
+		} = options
+		this.completion = Number(output ?? completion)
 		this.image = Number(image)
 		this.input_cache_read = Number(input_cache_read)
 		this.input_cache_write = Number(input_cache_write)
 		this.internal_reasoning = Number(internal_reasoning)
-		this.prompt = Number(prompt)
+		this.prompt = Number(input ?? prompt)
 		this.request = Number(request)
 		this.web_search = Number(web_search)
 		this.speed = Number(speed)

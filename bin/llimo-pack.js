@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 import { main } from "../src/llm/pack.js"
-main().catch(err => {
-	console.error("❌ Fatal error in llimo-pack:", err)
+import { Ui } from "../src/cli/index.js"
+
+const ui = new Ui({ debugMode: process.argv.includes("--debug") })
+
+main().catch((err) => {
+	ui.console.error(err.message)
+	if (err.stack) ui.console.debug(err.stack)
 	process.exit(1)
 })

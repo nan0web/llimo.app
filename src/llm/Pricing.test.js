@@ -5,14 +5,14 @@ import Pricing from "./Pricing.js"
 describe("Pricing", () => {
 	it("creates with defaults", () => {
 		const pricing = new Pricing()
-		assert.strictEqual(pricing.completion, -1)
-		assert.strictEqual(pricing.prompt, -1)
-		assert.strictEqual(pricing.image, -1)
-		assert.strictEqual(pricing.input_cache_read, -1)
-		assert.strictEqual(pricing.input_cache_write, -1)
-		assert.strictEqual(pricing.internal_reasoning, -1)
-		assert.strictEqual(pricing.request, -1)
-		assert.strictEqual(pricing.web_search, -1)
+		assert.strictEqual(pricing.completion, 0)
+		assert.strictEqual(pricing.prompt, 0)
+		assert.strictEqual(pricing.image, 0)
+		assert.strictEqual(pricing.input_cache_read, 0)
+		assert.strictEqual(pricing.input_cache_write, 0)
+		assert.strictEqual(pricing.internal_reasoning, 0)
+		assert.strictEqual(pricing.request, 0)
+		assert.strictEqual(pricing.web_search, 0)
 	})
 
 	it("sets values from input", () => {
@@ -26,7 +26,7 @@ describe("Pricing", () => {
 		assert.strictEqual(pricing.prompt, 0.8)
 		assert.strictEqual(pricing.image, 0.2)
 		// Others remain defaults
-		assert.strictEqual(pricing.input_cache_read, -1)
+		assert.strictEqual(pricing.input_cache_read, 0)
 	})
 
 	it("handles invalid numbers", () => {

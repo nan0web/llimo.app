@@ -1,12 +1,17 @@
 /**
+ * @typedef {'live'|'staging'} ProviderStatus
+ */
+/**
  * Represents information about a model.
  */
 export default class ModelInfo {
     /**
      * Constructs a ModelInfo instance.
-     * @param {Partial<ModelInfo>} input - Partial object with model properties.
+     * @param {Partial<ModelInfo> & { volume?: number }} input - Partial object with model properties.
      */
-    constructor(input?: Partial<ModelInfo>);
+    constructor(input?: Partial<ModelInfo> & {
+        volume?: number;
+    });
     /** @type {string} - Model ID */
     id: string;
     /** @type {Architecture} - Model architecture */
@@ -45,9 +50,13 @@ export default class ModelInfo {
     supports_structured_output: boolean;
     /** @type {boolean} */
     supportsTools: boolean;
-    /** @type {boolean} */
-    supportsStructuredOutput: boolean;
+    /** @type {ProviderStatus} */
+    status: ProviderStatus;
+    /** @returns {number} The volume of parameters inside model */
+    get volume(): number;
+    #private;
 }
+export type ProviderStatus = "live" | "staging";
 import Architecture from "./Architecture.js";
 import Limits from "./Limits.js";
 import Pricing from "./Pricing.js";

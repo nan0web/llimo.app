@@ -7,6 +7,22 @@
  * @property {()=>void} [onFinish] called when the stream ends successfully
  * @property {()=>void} [onAbort] called when the stream is aborted
  */
+export class AiStrategy {
+    /**
+     * @param {ModelInfo} model
+     * @param {number} tokens
+     * @param {number} [safeAnswerTokens=1_000]
+     * @returns {boolean}
+     */
+    shouldChangeModel(model: ModelInfo, tokens: number, safeAnswerTokens?: number): boolean;
+    /**
+     * @param {Map<string, ModelInfo>} models
+     * @param {number} tokens
+     * @param {number} [safeAnswerTokens=1_000]
+     * @returns {ModelInfo | undefined}
+     */
+    findModel(models: Map<string, ModelInfo>, tokens: number, safeAnswerTokens?: number): ModelInfo | undefined;
+}
 /**
  * Wrapper for AI providers.
  *
@@ -21,13 +37,16 @@ export default class AI {
      * @param {Object} input
      * @param {readonly[string, ModelInfo] | readonly [string, ModelInfo] | Map<string, ModelInfo | ModelInfo>} [input.models=[]]
      * @param {ModelInfo} [input.selectedModel]
+     * @param {AiStrategy} [input.strategy]
      */
     constructor(input?: {
         models?: Map<string, ModelInfo> | readonly [string, ModelInfo] | undefined;
         selectedModel?: ModelInfo | undefined;
+        strategy?: AiStrategy | undefined;
     });
     /** @type {ModelInfo?} */
     selectedModel: ModelInfo | null;
+    strategy: AiStrategy;
     /**
      * Flatten and normalize models to Map<string, ModelInfo[]>. Handles:
      * - Map: Pass-through.
@@ -105,8 +124,8 @@ export default class AI {
      * Stream text from a model.
      *
      * The method forwards the call to `ai.streamText` while providing a set of
-     * optional hooks that can be used by callers to monitor or control the
-     * streaming lifecycle.
+     * optional hooks that can be used by monitor or control the streaming
+     * lifecycle.
      *
      * @param {ModelInfo} model
      * @param {import('ai').ModelMessage[]} messages
@@ -125,6 +144,14 @@ export default class AI {
         text: string;
         usage: Usage;
     }>;
+    /**
+     * @throws {Error} When no correspondent model found.
+     * @param {ModelInfo} model
+     * @param {number} tokens
+     * @param {number} [safeAnswerTokens=1_000]
+     * @returns {ModelInfo | undefined}
+     */
+    ensureModel(model: ModelInfo, tokens: number, safeAnswerTokens?: number): ModelInfo | undefined;
     #private;
 }
 /**

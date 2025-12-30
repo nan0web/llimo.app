@@ -5,19 +5,18 @@
  *
  * @module utils/chatSteps
  */
-import { Stats } from 'node:fs'
-
 import Chat from "./Chat.js"
 import AI from "./AI.js"
 import { generateSystemPrompt } from "./system.js"
 import { unpackAnswer } from "./unpack.js"
-import { BOLD, GREEN, ITALIC, RED, RESET, YELLOW } from "../cli/ANSI.js"
+import { BOLD, GREEN, ITALIC, MAGENTA, RED, RESET, YELLOW } from "../cli/ANSI.js"
 import FileSystem from "../utils/FileSystem.js"
 import Markdown from "../utils/Markdown.js"
-import Ui from "../cli/Ui.js"
+import Ui, { UiStyle } from "../cli/Ui.js"
 import ModelInfo from './ModelInfo.js'
 import ChatOptions from '../Chat/Options.js'
-import { parseOutput } from '../cli/testing/node.js'
+import { parseOutput, Suite } from '../cli/testing/node.js'
+import { testingProgress, testingStatus } from '../cli/testing/progress.js'
 
 /**
  * Read the input either from STDIN or from the first CLI argument.
@@ -128,9 +127,11 @@ export async function copyInputToChat(inputFile, input, chat, ui, step = 1) {
 	if (!inputFile) return
 	const file = chat.db.path.basename(inputFile)
 	const full = chat.path("input")
+	let rel = chat.fs.path.relative(chat.fs.cwd, full)
+	if (rel.startsWith("..")) rel = full
 	await chat.save("input", input, step)
 	ui.console.debug(`> preparing ${file} (${inputFile})`)
-	ui.console.success(`+ ${file} (${full})`)
+	ui.console.success(`+ ${file} (${rel})`)
 }
 
 /**
@@ -264,14 +265,14 @@ export async function decodeAnswer({ ui, chat, options, logs = [] }) {
  * @param {Chat} param0.chat
  * @param {Function} param0.runCommand
  * @param {number} [param0.step=1]
+ * @param {(chunk) => void} [param0.onData]
  * @returns {Promise<import('../cli/runCommand.js').runCommandResult & { parsed: TestOutput }>}
  */
-export async function runTests({ ui, chat, runCommand, step = 1 }) {
+export async function runTests({ ui, chat, runCommand, step = 1, onData = (chunk) => ui.write(chunk) }) {
 	// Run `pnpm test:all` with live output
-	ui.console.info("@ Running tests...")
-	const onDataLive = (d) => ui.write(d)
+	ui.console.info("@ Running tests")
 	ui.console.debug("% pnpm test:all")
-	const result = await runCommand("pnpm", ["test:all"], { onData: onDataLive })
+	const result = await runCommand("pnpm", ["test:all"], { onData })
 	result.parsed = parseOutput(result.testStdout ?? "", result.testStderr ?? "")
 
 	// Save per‑step test output
@@ -283,21 +284,105 @@ export async function runTests({ ui, chat, runCommand, step = 1 }) {
 }
 
 /**
+ *
+ * @param {import('../cli/testing/node.js').TestInfo[]} tests
+ * @param {Ui} ui
+ * @returns {any[][]}
+ */
+export function renderTests(tests, ui = new Ui()) {
+	const stderr = []
+	tests.forEach(t => {
+		stderr.push([`${t.file}:${t.position?.[0]}:${t.position?.[1]}`, ui.createStyle({ paddingLeft: 2 })])
+		stderr.push([t.text, ui.createStyle({ paddingLeft: 4 })])
+		if (t.doc.error) stderr.push([t.doc?.error, ui.createStyle({ paddingLeft: 6 })])
+		if (t.doc.stack) stderr.push([t.doc?.stack, ui.createStyle({ paddingLeft: 8 })])
+		stderr.push([""])
+	})
+	return stderr
+}
+
+/**
+ *
+ * @param {Object} input
+ * @param {Ui} input.ui
+ * @param {"fail" | "skip" | "todo"} [input.type]
+ * @param {import('../cli/testing/node.js').TestInfo[]} [input.tests=[]]
+ * @param {string[]} [input.content=[]]
+ * @returns {Promise<boolean>}
+ */
+export async function printAnswer(input) {
+	let {
+		ui,
+		type = "fail",
+		tests = [],
+		content = [],
+	} = input
+	const types = {
+		fail: ["fail", "cancelled", "types"],
+	}
+
+	let ans = await ui.askYesNo(`\n${MAGENTA}? Do you want to continue fixing ${type} tests? (y)es, (n)o, (s)how, ., <message> % `)
+
+	const arr = tests.filter(t => (types[type] ?? [type]).includes(t.type))
+	ui.console.info("")
+
+	const stderr = renderTests(arr)
+	if (["show", "s"].includes(ans.toLowerCase())) {
+		stderr.forEach(args => ui.console.info(...args))
+		ans = await ui.askYesNo(`${MAGENTA}? Do you want to continue fixing ${type} tests? (y)es, (n)o, ., <message> % `)
+	}
+	if ("no" === ans) {
+		return false
+	}
+	if ("yes" === ans) {
+		// just continue
+	}
+	else if ("." === ans) {
+		// @todo read input file such as me.md and add as content.push(fileContent)
+	}
+	else {
+		content.push(ans)
+	}
+	stderr.map(args => args.filter(a => !(a instanceof UiStyle)).join(" ")).forEach(a => content.push(a))
+	arr.forEach(t => content.push(`- [](${t.file})`))
+	return true
+}
+
+/**
  * Decode the answer markdown, unpack if confirmed, run tests, parse results,
  * and ask user for continuation to continue fixing failed, cancelled, skipped, todo
  * tests, if they are.
  *
- * @param {import("../cli/Ui.js").default} ui User interface instance
- * @param {Chat} chat Chat instance (used for paths)
- * @param {import('../cli/runCommand.js').runCommandFn} runCommand Function to execute shell commands
- * @param {ChatOptions} options Always yes to user prompts
- * @param {number} [step] Optional step number for per-step files
- * @returns {Promise<{testsCode: boolean, shouldContinue: boolean, test: TestOutput}>}
+ * @param {Object} input
+ * @param {import("../cli/Ui.js").default} input.ui User interface instance
+ * @param {FileSystem} [input.fs]
+ * @param {Chat} input.chat Chat instance (used for paths)
+ * @param {import('../cli/runCommand.js').runCommandFn} input.runCommand Function to execute shell commands
+ * @param {ChatOptions} input.options Always yes to user prompts
+ * @param {number} [input.step] Optional step number for per-step files
+ * @returns {Promise<{testsCode?: boolean, shouldContinue: boolean, test?: import('../cli/testing/node.js').TapParseResult}>}
  */
-export async function decodeAnswerAndRunTests(ui, chat, runCommand, options, step = 1) {
+export async function decodeAnswerAndRunTests(input) {
+	const {
+		ui, fs = new FileSystem(), chat, runCommand, options, step = 1
+	} = input
 	const logs = []
-	await decodeAnswer({ ui, chat, options, logs })
-	const { stdout: testStdout, stderr: testStderr, exitCode } = await runTests({ ui, chat, runCommand, step })
+	try {
+		const answered = await decodeAnswer({ ui, chat, options, logs })
+		if (!answered.shouldContinue) {
+			return { shouldContinue: false }
+		}
+	} catch (err) {
+		if (!options.isFix) {
+			throw err
+		}
+	}
+	const now = Date.now()
+	const output = []
+	const testing = testingProgress({ ui, fs, output, rows: 12, prefix: "  " })
+	const onData = chunk => output.push(...String(chunk).split("\n"))
+	const { stdout: testStdout, stderr: testStderr, exitCode } = await runTests({ ui, chat, runCommand, step, onData })
+	clearInterval(testing)
 
 	// Append test output to log
 	logs.push("#### pnpm test:all")
@@ -310,62 +395,42 @@ export async function decodeAnswerAndRunTests(ui, chat, runCommand, options, ste
 	await chat.db.append("prompt.md", logs.join("\n"))
 
 	// Parse test results
-	const parsed = parseOutput(testStdout, testStderr)
-	const { fail, cancelled, pass, todo, skip, types } = parsed.counts
-
-	// Build coloured summary
-	let summary = "Tests: "
-	summary += fail > 0 ? `${RED}${fail} fail${RESET}` : "0 fail"
-	summary += " | "
-	summary += cancelled > 0 ? `${YELLOW}${cancelled} cancelled${RESET}` : "0 cancelled"
-	summary += " | "
-	summary += pass > 0 ? `${GREEN}${pass} pass${RESET}` : "0 pass"
-	summary += " | "
-	summary += todo > 0 ? `${YELLOW}${todo} todo${RESET}` : "0 todo"
-	summary += " | "
-	summary += skip > 0 ? `${YELLOW}${skip} skip${RESET}` : "0 skip"
-	summary += " | "
-	summary += types > 0 ? `${YELLOW}${types} types${RESET}` : "0 types"
-
-	ui.console.info(summary)
+	const suite = new Suite({ rows: [...testStdout.split("\n"), ...testStderr.split("\n")] })
+	const parsed = suite.parse()
+	const fail = parsed.counts.get("fail") ?? 0
+	const cancelled = parsed.counts.get("cancelled") ?? 0
+	const types = parsed.counts.get("types") ?? 0
+	const todo = parsed.counts.get("todo") ?? 0
+	const skip = parsed.counts.get("skip") ?? 0
+	// const { fail, cancelled, pass, todo, skip, types } = parsed.counts
+	ui.overwriteLine("  " + testingStatus(parsed, ui.formats.timer((Date.now() - now) / 1e3)))
+	ui.console.info("")
+	// ui.console.info()
 
 	let shouldContinue = true
 
 	if (!options.isYes) {
 		let continuing = false
+		const content = []
 		if (fail > 0 || cancelled > 0 || types > 0) {
-			const ans = await ui.askYesNo("Do you want to continue fixing fail tests? (Y)es, No, ., <message> % ")
-			if (ans !== "yes") {
-				shouldContinue = false
-				if (ans !== "no" && ans !== ".") {
-					chat.add({ role: "user", content: ans })
-				}
-				return { testsCode: ans === "yes" ? true : false, shouldContinue: false, test: parsed }
+			continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "fail" })
+			if (!continuing) {
+				return { testsCode: false, shouldContinue: false, test: parsed }
 			}
-			continuing = true
 		}
 		if (shouldContinue && todo > 0) {
-			const ans = await ui.askYesNo("Do you want to continue with todo tests fixing? (Y)es, No, ., <message> % ")
-			if (ans !== "yes" && !continuing) {
-				shouldContinue = false
-				if (ans !== "no" && ans !== ".") {
-					chat.add({ role: "user", content: ans })
-				}
+			continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "todo" })
+			if (!continuing) {
 				return { testsCode: false, shouldContinue: false, test: parsed }
 			}
-			continuing = true
 		}
 		if (shouldContinue && skip > 0) {
-			const ans = await ui.askYesNo("Do you want to continue with skipped tests fixing? (Y)es, No, ., <message> % ")
-			if (ans !== "yes" && !continuing) {
-				shouldContinue = false
-				if (ans !== "no" && ans !== ".") {
-					chat.add({ role: "user", content: ans })
-				}
+			continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "skip" })
+			if (!continuing) {
 				return { testsCode: false, shouldContinue: false, test: parsed }
 			}
-			continuing = true
 		}
+		chat.add({ role: "user", content: content.join("\n") })
 		if (shouldContinue && fail === 0 && cancelled === 0 && types === 0 && todo === 0 && skip === 0) {
 			ui.console.success("All tests passed.")
 			return { testsCode: true, shouldContinue: false, test: parsed }

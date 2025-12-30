@@ -33,28 +33,6 @@ export function sendAndStream(options: {
     isTiny?: boolean | undefined;
     fps?: number | undefined;
 }): Promise<sendAndStreamOptions>;
-/**
- * Handles post-stream processing: add to chat, save, unpack and test.
- * @param {Object} input
- * @param {Chat} input.chat
- * @param {Ui} input.ui
- * @param {string} input.answer
- * @param {string} input.reason
- * @param {number} input.step
- * @param {boolean} [input.isYes=false]
- * @returns {Promise<{shouldContinue: boolean, testsCode: string | boolean}>}
- */
-export function postStreamProcess(input: {
-    chat: Chat;
-    ui: Ui;
-    answer: string;
-    reason: string;
-    step: number;
-    isYes?: boolean | undefined;
-}): Promise<{
-    shouldContinue: boolean;
-    testsCode: string | boolean;
-}>;
 export type sendAndStreamOptions = {
     answer: string;
     reason: string;

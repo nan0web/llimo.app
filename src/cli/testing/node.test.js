@@ -5,7 +5,7 @@ import { dirname } from "node:path"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 import { FileSystem } from "../../utils/index.js"
-import { parseOutput } from "./node.js"
+import { Suite } from "./node.js"
 
 describe("parseOutput", () => {
 	const fs = new FileSystem({ cwd: __dirname })
@@ -13,18 +13,19 @@ describe("parseOutput", () => {
 	before(async () => {
 		nodeTxt = await fs.load("node.txt")
 	})
-	it("should parse TAP version 13", () => {
-		const parsed = parseOutput(nodeTxt, "", fs)
-		assert.deepStrictEqual(parsed.counts, {
+	it("should parse TAP version 13", async () => {
+		const suite = new Suite({ rows: nodeTxt.split("\n"), fs })
+		const parsed = suite.parse()
+		assert.deepStrictEqual(Object.fromEntries(parsed.counts.entries()), {
 			cancelled: 1 + 0,
-			duration: 661.434,
+			duration: 661.434291,
 			fail: 1 + 0,
 			pass: 1 + 18,
 			skip: 1 + 0,
 			suites: 0 + 3 ,
 			tests: 5 + 18,
 			todo: 1 + 0,
-			types: 102
+			types: 97,
 		})
 		assert.deepStrictEqual(parsed.tests[0].file, "node.test.js")
 		assert.deepStrictEqual(parsed.tests[0].position, [15, 2])
@@ -33,8 +34,8 @@ describe("parseOutput", () => {
 		assert.deepStrictEqual(parsed.tests[4].doc?.failureType, "testTimeoutFailure")
 		assert.deepStrictEqual(parsed.tests[6].type, "pass")
 		assert.deepStrictEqual(parsed.tests[6].doc?.type, "test")
-		assert.deepStrictEqual(parsed.tests[127].file, "src/strategies/fastest.js")
-		assert.deepStrictEqual(parsed.tests[127].position, [75, 11])
+		assert.deepStrictEqual(parsed.tests[119].file, "src/strategies/fastest.js")
+		assert.deepStrictEqual(parsed.tests[119].position, [75, 11])
 	})
 	it("should produce OK", () => {
 		assert.ok(true)

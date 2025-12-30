@@ -26,7 +26,7 @@ describe("008-Test-Structure – releases/v1.1.0/** & pnpm test:all", () => {
 const { execSync } = require('child_process');
 try {
 	execSync('pnpm test:all', { cwd: '${tempGitDir}' });
-	console.log('merge ready');
+	console.info('merge ready');
 } catch (err) {
 	console.error('no merge');
 	process.exit(1);

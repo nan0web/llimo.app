@@ -1,4 +1,12 @@
-/** @typedef {"success" | "info" | "warn" | "error" | "debug"} LogTarget */
+/** @typedef {"success" | "info" | "warn" | "error" | "debug" | "log"} LogTarget */
+export class UiStyle {
+    /**
+     * @param {Partial<UiStyle>} input
+     */
+    constructor(input?: Partial<UiStyle>);
+    /** @type {number} */
+    paddingLeft: number;
+}
 export class UiFormats {
     /**
      * Formats weight (size) of the value, available types:
@@ -75,6 +83,21 @@ export class UiConsole {
      * @param {string} prefix
      */
     style(prefix?: string): void;
+    /**
+     * @todo write jsdoc
+     * @param {any[]} args
+     * @returns {{ styles: UiStyle[], args: any[] }}
+     */
+    extractStyles(args?: any[]): {
+        styles: UiStyle[];
+        args: any[];
+    };
+    /**
+     * @todo write jsdoc
+     * @param {any[]} args
+     * @returns {string}
+     */
+    extractMessage(args?: any[]): string;
     /**
      * Output a debug message when debug mode is enabled.
      *
@@ -218,8 +241,17 @@ export class Ui {
         elapsed: number;
         startTime: number;
     }) => void, startTime?: number, fps?: number): NodeJS.Timeout;
+    /**
+     * @todo write jsdoc
+     * @param {Object} options
+     * @param {number} [options.paddingLeft]
+     * @returns {UiStyle}
+     */
+    createStyle(options?: {
+        paddingLeft?: number | undefined;
+    }): UiStyle;
 }
 export default Ui;
-export type LogTarget = "success" | "info" | "warn" | "error" | "debug";
+export type LogTarget = "success" | "info" | "warn" | "error" | "debug" | "log";
 import Alert from "./components/Alert.js";
 import Table from "./components/Table.js";

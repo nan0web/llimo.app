@@ -1,6 +1,31 @@
 import { selectModel } from "../llm/selectModel.js"
 
 /**
+ * @param {import("../llm/ModelInfo.js").default} model
+ * @param {import("./Ui.js").Ui} ui
+ */
+export function showModel(model, ui) {
+	// Show model & provider info
+	const inputPricePerM = model.pricing?.prompt ?? 0
+	const outputPricePerM = model.pricing?.completion ?? 0
+	const contextLen = ui.formats.weight("T", model.context_length)
+	const maxOutput = model.maximum_output > 0 ? ui.formats.weight("T", model.maximum_output) : contextLen
+
+	// Cache price only if both read/write >0
+	let cacheStr = ""
+	const cacheRead = model.pricing?.input_cache_read ?? 0
+	const cacheWrite = model.pricing?.input_cache_write ?? 0
+	if (cacheRead > 0 || cacheWrite > 0) {
+		const cachePerM = cacheRead + cacheWrite
+		cacheStr = ` (cache: ${ui.formats.pricing(cachePerM)} / 1M)`
+	}
+
+	ui.console.info(`@ ${model.id} @${model.provider} [${model.architecture?.modality ?? "?"}]`)
+	ui.console.info(`  context: ${contextLen} (max output → ${maxOutput})`)
+	ui.console.info(`  price: → ${ui.formats.money(inputPricePerM, 2)} / 1M ← ${ui.formats.money(outputPricePerM, 2)} / 1M${cacheStr}`)
+}
+
+/**
  * Pre-selects a model (loads from cache or defaults). If multiple matches,
  * shows the table and prompts. Persists selection to chat.config.model.
  *
@@ -21,10 +46,10 @@ export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect
 		const found = ai.findModel(DEFAULT_MODEL)
 		if (!found) {
 			const modelsList = ai.findModels(DEFAULT_MODEL)
-			ui.console.error(`❌ Model '${DEFAULT_MODEL}' not found`)
+			ui.console.error(`! Model '${DEFAULT_MODEL}' not found`)
 			if (modelsList.length) {
-				ui.console.info("Similar models, specify the model")
-				modelsList.forEach(m => ui.console.info(`- ${m.id}`))
+				ui.console.info("  Similar models, specify the model")
+				modelsList.forEach(m => ui.console.info(`  - ${m.id}`))
 			}
 			process.exit(1)
 		}
@@ -44,24 +69,7 @@ export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect
 		process.exit(1)
 	}
 
-	// Show model & provider info
-	const inputPricePerM = model.pricing?.prompt ?? 0
-	const outputPricePerM = model.pricing?.completion ?? 0
-	const contextLen = ui.formats.weight("T", model.context_length)
-	const maxOutput = model.maximum_output > 0 ? ui.formats.weight("T", model.maximum_output) : contextLen
-
-	// Cache price only if both read/write >0
-	let cacheStr = ""
-	const cacheRead = model.pricing?.input_cache_read ?? 0
-	const cacheWrite = model.pricing?.input_cache_write ?? 0
-	if (cacheRead > 0 || cacheWrite > 0) {
-		const cachePerM = cacheRead + cacheWrite
-		cacheStr = ` (cache: ${ui.formats.pricing(cachePerM)} / 1M)`
-	}
-
-	ui.console.info(`@ ${model.id} @${model.provider} [${model.architecture?.modality ?? "?"}]`)
-	ui.console.info(`  context: ${contextLen} (max output → ${maxOutput})`)
-	ui.console.info(`  price: → ${ui.formats.money(inputPricePerM, 2)} / 1M ← ${ui.formats.money(outputPricePerM, 2)} / 1M${cacheStr}`)
+	showModel(model, ui)
 	return model
 }
 

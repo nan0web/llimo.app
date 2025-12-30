@@ -8,6 +8,40 @@ export class ChatConfig {
  * Manages chat history and files
  */
 export default class Chat {
+    /** Constants for chat files – single source of truth */
+    static FILES: {
+        input: string;
+        prompt: string;
+        model: string;
+        files: string;
+        inputs: string;
+        response: string;
+        parts: string;
+        stream: string;
+        chunks: string;
+        unknowns: string;
+        answer: string;
+        reason: string;
+        usage: string;
+        fail: string;
+        messages: null;
+    };
+    /**
+     * Reusable path resolution – formats `steps/00X/filename` pattern.
+     * @param {string} path - File name (e.g., "answer.md")
+     * @param {number} [step] - Optional step number (prepended as 00X)
+     * @returns {string}
+     */
+    static formatStepPath(path: string, step?: number): string;
+    /**
+     * Glob split utility for patterns like "src\/**\/*.js".
+     * @param {string} pattern - Glob pattern string
+     * @returns {{ baseDir: string, globPattern: string }}
+     */
+    static splitGlob(pattern: string): {
+        baseDir: string;
+        globPattern: string;
+    };
     /**
      * @param {Partial<Chat>} [input={}]
      */
@@ -118,12 +152,6 @@ export default class Chat {
      * @returns {Promise<Stats>}
      */
     stat(path: string): Promise<Stats>;
-    /**
-     * Save the latest prompt
-     * @param {string} prompt
-     * @returns {Promise<string>} The prompt path.
-     */
-    savePrompt(prompt: string): Promise<string>;
     /**
      * Append to a file
      * @param {string} path

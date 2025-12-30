@@ -3,9 +3,12 @@
  */
 export default class Pricing {
     /**
-     * @param {Partial<Pricing>} input
+     * @param {Partial<Pricing> & { input?: number, output?: number }} options
      */
-    constructor(input?: Partial<Pricing>);
+    constructor(options?: Partial<Pricing> & {
+        input?: number;
+        output?: number;
+    });
     /** @type {number} - Completion cost per million tokens */
     completion: number;
     /** @type {number} - Image cost */

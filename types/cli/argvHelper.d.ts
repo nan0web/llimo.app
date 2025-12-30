@@ -34,6 +34,11 @@ export function parseIO(argv: string[], stdinData: string, fs?: FileSystem, path
  * @returns {T}
  */
 export function parseArgv<T>(argv: string[], Model: new (...args: any) => T): T;
+/**
+ * @param {typeof Object} Model
+ * @returns {string}
+ */
+export function renderHelp(Model: typeof Object): string;
 import FileSystem from "../utils/FileSystem.js";
 import Path from "../utils/Path.js";
 import ReadLine from "../utils/ReadLine.js";

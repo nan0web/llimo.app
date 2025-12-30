@@ -7,7 +7,21 @@ import { YELLOW, RED, RESET, GREEN, overwriteLine, cursorUp, DIM, stripANSI, ITA
 import Alert from "./components/Alert.js"
 import Table from "./components/Table.js"
 
-/** @typedef {"success" | "info" | "warn" | "error" | "debug"} LogTarget */
+/** @typedef {"success" | "info" | "warn" | "error" | "debug" | "log"} LogTarget */
+
+export class UiStyle {
+	/** @type {number} */
+	paddingLeft
+	/**
+	 * @param {Partial<UiStyle>} input
+	 */
+	constructor(input = {}) {
+		const {
+			paddingLeft = 0,
+		} = input
+		this.paddingLeft = Number(paddingLeft)
+	}
+}
 
 export class UiFormats {
 	/**
@@ -150,48 +164,84 @@ export class UiConsole {
 	}
 
 	/**
+	 * @todo write jsdoc
+	 * @param {any[]} args
+	 * @returns {{ styles: UiStyle[], args: any[] }}
+	 */
+	extractStyles(args = []) {
+		const styles = []
+		let rest = []
+		args.forEach(el => {
+			if (el instanceof UiStyle) {
+				styles.push(el)
+			} else {
+				rest.push(el)
+			}
+		})
+		let combined = {}
+		styles.forEach(s => combined = { ...combined, ...s })
+		Object.entries(new UiStyle(combined)).forEach(([name, value]) => {
+			if ("paddingLeft" === name) {
+				const spaces = " ".repeat(Number(value))
+				rest = rest.map(s => String(s).split("\n").map(l => `${spaces}${l}`).join("\n"))
+			}
+		})
+		return { styles, args: rest }
+	}
+
+	/**
+	 * @todo write jsdoc
+	 * @param {any[]} args
+	 * @returns {string}
+	 */
+	extractMessage(args = []) {
+		const { args: words } = this.extractStyles(args)
+		return words.join(" ")
+	}
+
+	/**
 	 * Output a debug message when debug mode is enabled.
 	 *
 	 * @param {...any} args
 	 */
 	debug(...args) {
 		if (!this.debugMode) return
-		const msg = args.join(" ")
+		const msg = this.extractMessage(args)
 		this.console.debug(DIM + msg + RESET)
 		this.appendFile("debug", msg)
 	}
 
 	/** @param {...any} args */
 	info(...args) {
-		const msg = this.prefixedStyle + args.join(" ") + RESET
+		const msg = this.prefixedStyle + this.extractMessage(args) + RESET
 		this.console.info(msg)
 		this.appendFile("info", msg)
 	}
 
 	/** @param {...any} args */
 	log(...args) {
-		const msg = args.join(" ")
+		const msg = this.extractMessage(args)
 		this.console.log(msg)
 		this.appendFile("log", msg)
 	}
 
 	/** @param {...any} args */
 	warn(...args) {
-		const msg = YELLOW + args.join(" ") + RESET
+		const msg = YELLOW + this.extractMessage(args) + RESET
 		this.console.warn(msg)
 		this.appendFile("warn", msg)
 	}
 
 	/** @param {...any} args */
 	error(...args) {
-		const msg = RED + args.join(" ") + RESET
+		const msg = RED + this.extractMessage(args) + RESET
 		this.console.error(msg)
 		this.appendFile("error", msg)
 	}
 
 	/** @param {...any} args */
 	success(...args) {
-		const msg = GREEN + args.join(" ") + RESET
+		const msg = GREEN + this.extractMessage(args) + RESET
 		// Use this.console.info to match test expectations
 		this.console.info(msg)
 		this.appendFile("success", msg)
@@ -204,7 +254,7 @@ export class UiConsole {
 	 * @returns {string}
 	 */
 	full(line, space = " ") {
-		const [w, h] = this.stdout.getWindowSize()
+		const [w, h] = this.stdout.getWindowSize?.() ?? [120, 30]
 		if (line.length > w) line = line.slice(0, w - 1) + "…"
 		if (line.length < w) line += space.repeat(w - line.length)
 		return line
@@ -325,7 +375,11 @@ export class Ui {
 		this.stdin = stdin
 		this.stdout = stdout
 		this.stderr = stderr
-		this.console = console ? console : new UiConsole({ debugMode: this.debugMode, stdout: /** @type {any} */ (stdout) })
+		this.console = console instanceof UiConsole ? console
+		: new UiConsole({
+			debugMode: this.debugMode,
+			stdout: /** @type {any} */ (stdout), ...(console ?? {})
+		})
 		this.formats = formats
 	}
 
@@ -431,6 +485,16 @@ export class Ui {
 			const elapsed = (Date.now() - startTime) / 1e3
 			fn({ elapsed, startTime })
 		}, 1e3 / fps)
+	}
+
+	/**
+	 * @todo write jsdoc
+	 * @param {Object} options
+	 * @param {number} [options.paddingLeft]
+	 * @returns {UiStyle}
+	 */
+	createStyle(options = {}) {
+		return new UiStyle(options)
 	}
 }
 

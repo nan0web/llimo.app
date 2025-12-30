@@ -22,6 +22,7 @@
  */
 
 import ModelInfo from "../ModelInfo.js"
+import Pricing from "../Pricing.js"
 
 /** @type {{ models: Array<[string, Partial<ModelInfo>]> }} */
 const free = {
@@ -203,10 +204,14 @@ const pro = {}
 
 const max = {}
 
-export default function getInfo(plan = "free") {
-	if ("free" === plan) return free
-	if ("developer" === plan) return developer
-	if ("pro" === plan) return pro
-	if ("max" === plan) return max
-	return {}
+/**
+ * @param {object[]} models
+ * @returns {ModelInfo[]}
+ */
+export function makeFlat(models) {
+	return models.map(m => new ModelInfo({ ...m, provider: "cerebras", pricing: new Pricing({ prompt: 0, completion: 0 }) }))
+}
+
+export default {
+	makeFlat
 }

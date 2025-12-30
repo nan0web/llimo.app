@@ -10,6 +10,8 @@ import { Git, FileSystem } from "../src/utils/index.js"
 import { RESET, parseArgv, Ui, ChatCLiApp } from "../src/cli/index.js"
 import { ChatOptions } from "../src/Chat/index.js"
 
+const ui = new Ui({ debugMode: process.argv.includes("--debug") })
+
 /**
  * Main chat loop
  * @param {string[]} [argv]
@@ -17,7 +19,6 @@ import { ChatOptions } from "../src/Chat/index.js"
 async function main(argv = process.argv.slice(2)) {
 	const fs = new FileSystem()
 	const git = new Git({ dry: true })
-	const ui = new Ui({ debugMode: argv.includes("--debug") })
 	ui.console.info(RESET)
 
 	// Parse arguments
@@ -73,8 +74,7 @@ Examples:
 /* -------------------------------------------------------------------------- */
 
 main().catch((err) => {
-	console.error("❌ Fatal error in llimo‑chat:", err.message)
-	if (err.stack && process.argv.includes("--debug")) console.error(err.stack)
+	ui.console.error(err.message)
+	if (err.stack) ui.console.debug(err.stack)
 	process.exit(1)
 })
-

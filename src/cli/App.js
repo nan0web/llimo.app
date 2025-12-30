@@ -4,7 +4,7 @@ import { GREEN, RESET, MAGENTA, ITALIC, BOLD, YELLOW, RED } from "./ANSI.js"
 import { Ui } from "./Ui.js"
 import UiOutput from "./UiOutput.js"
 import { runCommand } from "./runCommand.js"
-import { selectAndShowModel } from "./selectModel.js"
+import { selectAndShowModel, showModel } from "./selectModel.js"
 import {
 	AI, TestAI, Chat, packMarkdown,
 	initialiseChat, copyInputToChat, packPrompt,
@@ -13,7 +13,6 @@ import {
 	ModelInfo, Architecture, Pricing,
 	decodeAnswer,
 	decodeAnswerAndRunTests,
-	ModelProvider,
 	Usage,
 } from "../llm/index.js"
 import { loadModels, ChatOptions } from "../Chat/index.js"
@@ -215,12 +214,20 @@ export class ChatCLiApp {
 			step,
 			messages: []
 		})
-		this.ui.console.info(`\n@ step ${step}. ${new Date().toLocaleString()}`)
+		this.ui.console.info(`\n@ Step ${step}. ${new Date().toLocaleString()}`)
 
 		const promptFiles = 0
 		const all = this.chat.messages.map(m => JSON.stringify(m)).join("\n\n")
 		const totalSize = prompt.length + all.length
 		const totalTokens = await this.chat.calcTokens(prompt + all)
+
+		const found = this.ai.ensureModel(model, totalTokens)
+		if (found && found.id !== model.id) {
+			this.ui.console.info(`@ Model changed due to ${this.ai.strategy.constructor.name}`)
+			showModel(found, this.ui)
+			model = found
+		}
+
 		const cost = await this.chat.cost()
 		const left = model.context_length - totalTokens
 		const str = [
@@ -244,6 +251,7 @@ export class ChatCLiApp {
 		}
 		if (!this.options.isYes) {
 			const ans = await this.ui.askYesNo(`\n${MAGENTA}? Send prompt to LLiMo? (Y)es, No: ${RESET}`)
+			this.ui.console.info("")
 			if ("yes" !== ans) return false
 		}
 		return true
@@ -259,9 +267,15 @@ export class ChatCLiApp {
 		await this.chat.save()
 		this.ui.console.info("")
 		if (sent.reason) {
-			this.ui.console.info(`+ reason (${this.chat.path("reason.md", step)})`)
+			let reasonFile = this.chat.path("reason.md", step)
+			let rel = this.chat.fs.path.relative(this.chat.fs.cwd, reasonFile)
+			if (rel.startsWith("..")) rel = reasonFile
+			this.ui.console.info(`+ reason (${rel})`)
 		}
-		this.ui.console.info(`+ answer (${this.chat.path("answer.md", step)})`)
+		let answerFile = this.chat.path("answer.md", step)
+		let rel = this.chat.fs.path.relative(this.chat.fs.cwd, answerFile)
+		if (rel.startsWith("..")) rel = answerFile
+		this.ui.console.info(`+ answer (${rel})`)
 		return await decodeAnswer({ ui: this.ui, chat: this.chat, options: this.options })
 	}
 	/**
@@ -277,9 +291,6 @@ export class ChatCLiApp {
 			ai: this.ai, chat: this.chat, ui: this.ui, step, prompt,
 			format: this.#format, valuta: this.#valuta, model
 		})
-		if (streamed.reason) {
-			this.ui.console.info(`+ reason (${this.chat.path("reason.md", step)})`)
-		}
 		// Save step info including model
 		this.#steps.push({ step, model, prompt })
 		await this.chat.save("steps.jsonl", this.#steps)
@@ -288,18 +299,18 @@ export class ChatCLiApp {
 	/**
 	 *
 	 * @param {number} [step=1]
-	 * @returns {Promise<{ shouldContinue: boolean, test: import("../llm/chatSteps.js").TestOutput }>}
+	 * @returns {Promise<{ shouldContinue: boolean, test?: import("../cli/testing/node.js").TestOutput }>}
 	 */
 	async test(step = 1) {
 		// @todo use the small progress window
-		const onData = (d) => this.ui.write(String(d))
-		const tested = await decodeAnswerAndRunTests(
-			this.ui,
-			this.chat,
-			async (cmd, args, opts = {}) => runCommand(cmd, args, { ...opts, onData }),
-			this.options,
+		const tested = await decodeAnswerAndRunTests({
+			ui: this.ui,
+			fs: this.fs,
+			chat: this.chat,
+			runCommand,
+			options: this.options,
 			step
-		)
+		})
 		const { test } = tested
 		if (true === tested.testsCode) {
 			// Task is complete, let's commit and exit
@@ -384,11 +395,13 @@ export class ChatCLiApp {
 		// 3. copy source file to chat directory (if any)
 		let { step, prompt, model, packed } = await this.start()
 		while (true) {
-			let shouldContinue = await this.prepare(prompt, model, packed, step)
-			if (!shouldContinue) break
-			const sent = await this.send(prompt, model, step)
-			const unpacked = await this.unpack(sent, step)
-			if (!unpacked.shouldContinue) break
+			if (!this.options.isFix) {
+				let shouldContinue = await this.prepare(prompt, model, packed, step)
+				if (!shouldContinue) break
+				const sent = await this.send(prompt, model, step)
+				const unpacked = await this.unpack(sent, step)
+				if (!unpacked.shouldContinue) break
+			}
 			const tested = await this.test(step)
 			if (!tested.shouldContinue) break
 			await this.next(tested.test, step)

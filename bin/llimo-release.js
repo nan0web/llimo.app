@@ -12,8 +12,10 @@ import process from "node:process"
 import path from "node:path"
 import { spawn } from "node:child_process"
 import { promisify } from "node:util"
-import { mkdir, readdir, readFile, access } from "node:fs/promises"
-import { tmpdir } from "node:os"
+import { readdir } from "node:fs/promises"
+import { Ui } from "../src/cli/index.js"
+
+const ui = new Ui({ debugMode: process.argv.includes("--debug") })
 
 const spawnAsync = promisify(spawn)
 
@@ -26,8 +28,8 @@ class ParallelRunner {
 
 		// Log
 		settled.forEach((result, i) => {
-			if (result.status === "fulfilled") console.info(`DONE: ${indepTasks[i].name}`)
-			else console.error(`FAIL: ${indepTasks[i].name} - ${result.reason}`)
+			if (result.status === "fulfilled") ui.console.info(`DONE: ${indepTasks[i].name}`)
+			else ui.console.error(`FAIL: ${indepTasks[i].name} - ${result.reason}`)
 		})
 
 		return settled
@@ -35,7 +37,7 @@ class ParallelRunner {
 
 	static async execTask(task, { docker = false }) {
 		const taskDir = path.resolve("releases/1/v1.1.0", task.dir)
-		console.info(`Running: ${task.name} (${docker ? "in Docker" : "native"})`)
+		ui.console.info(`Running: ${task.name} (${docker ? "in Docker" : "native"})`)
 
 		if (docker) {
 			return this.runInDocker(taskDir)
@@ -71,7 +73,7 @@ async function loadTasks(releaseVer) {
 /** Main CLI. */
 async function main(argv = process.argv.slice(2)) {
 	if (argv.length < 1) {
-		console.error("Usage: llmo release <v1.1.0> [--docker] [--threads 4]")
+		ui.console.error("Usage: llmo release <v1.1.0> [--docker] [--threads 4]")
 		process.exit(1)
 	}
 
@@ -80,18 +82,19 @@ async function main(argv = process.argv.slice(2)) {
 	const threads = parseInt(argv.find(a => a.startsWith("--threads="))?.split("=")[1]) || 4
 
 	const tasks = await loadTasks(releaseVer)
-	console.info(`Running ${tasks.length} tasks in ${releaseVer} (${docker ? "Docker-isolated" : "native"}, ${threads} threads)`)
+	ui.console.info(`Running ${tasks.length} tasks in ${releaseVer} (${docker ? "Docker-isolated" : "native"}, ${threads} threads)`)
 
 	const results = await ParallelRunner.run(tasks, { threads, docker })
 
 	const passed = results.filter(r => r.status === "fulfilled").length
-	console.info(`\nComplete: ${passed}/${tasks.length} passed. Run index.test.js to verify.`)
+	ui.console.info(`\nComplete: ${passed}/${tasks.length} passed. Run index.test.js to verify.`)
 	if (passed === tasks.length) {
-		console.info("All passed! Suggest: git tag v${releaseVer} && pnpm publish")
+		ui.console.info("All passed! Suggest: git tag v${releaseVer} && pnpm publish")
 	}
 }
 
-main().catch(err => {
-	console.error("Release execution failed:", err)
+main().catch((err) => {
+	ui.console.error(err.message)
+	if (err.stack) ui.console.debug(err.stack)
 	process.exit(1)
 })
