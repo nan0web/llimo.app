@@ -81,9 +81,9 @@ export function formatChatProgress(input) {
 		const elapsedStr = ui.formats.timer(elapsed)
 		const phase = map.has("answer") ? "answer" : map.has("reason") ? "reason" : "read"
 		const value = map.get(phase)
-		const count = value?.tokens ?? 0
-		const phaseTokens = ui.formats.weight("T", count ?? 0)
-		const time = value?.endAt ?? now
+		const count = value?.tokens || 0
+		const phaseTokens = ui.formats.weight("T", count || 0)
+		const time = value?.endAt || now
 		const phaseTime = ui.formats.timer(safe((now - time) / 1e3))
 
 		const phaseSpeed = value?.speed ? `${ui.formats.count(value.speed)}T/s` : "∞T/s"
@@ -121,7 +121,7 @@ export function formatChatProgress(input) {
 	const totalSpeed = totalTime > 0 ? Math.round(totalTokens / totalTime) : 0
 	const totalSpeedStr = `${ui.formats.count(totalSpeed)}T/s`
 
-	const extraTokens = Math.max(0, (model.context_length ?? 0) - totalTokens)
+	const extraTokens = Math.max(0, (model.context_length || 0) - totalTokens)
 	const extraStr = ui.formats.weight("T", extraTokens)
 
 	const chatRow = [

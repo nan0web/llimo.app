@@ -79,8 +79,8 @@ export function makeFlat(models) {
 				}),
 				context_length: found.context_length ?? opts.context_length,
 				pricing: new Pricing({
-					prompt: found.pricing?.input ?? opts.pricing?.input ?? -1,
-					completion: found.pricing?.output ??opts.pricing?.output ?? -1,
+					prompt: found.pricing?.input ?? opts.pricing?.input ?? 0,
+					completion: found.pricing?.output ?? opts.pricing?.output ?? 0,
 				}),
 				provider: "huggingface/" + (found.provider ?? opts.provider),
 				supports_structured_output: (found.supports_structured_output ?? opts.supports_structured_output),

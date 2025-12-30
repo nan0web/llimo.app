@@ -16,10 +16,6 @@ Develop CLI application with the ability to run with the commands provided in th
 - `llimo chat --test /tmp/test-chat`: Simulates using log files from /tmp/test-chat, no API calls.
 - `llimo chat --debug me.md`: Verbose mode shows intermediate steps.
 
-- [](/src/cli/**) (argvHelper.js, Options.js from Chat)
-- [](/bin/llimo-chat.js) (main CLI entry, integrates parsing and input reading)
-- [](/src/llm/chatSteps.js) (readInput for stdin/file)
-
 Create: bin/llimo-chat.js (CLI router, parse options, read input, simulate basic chat init without AI call).
 
 Tests: bin/llimo-chat.test.js (spawn with args like --test, assert no crash, output matches expected; test --help), src/cli/argvHelper.test.js (parse flags/positionals), src/llm/chatSteps.test.js (readInput file/stdin cases, error on no input).
@@ -29,3 +25,10 @@ Deps: None (core CLI independent).
 Security: Sanitize argv paths with path.resolve (prevent ../ escapes); limit input size in readInput (~10KB to prevent DoS); for --test use cwd isolation.
 
 After code: Run tests from tests.txt, then pnpm test:all.
+
+## Resources
+
+- [argvHelper.js, Options.js from Chat](/src/cli/**)
+- [main CLI entry, integrates parsing and input reading](/bin/llimo-chat.js)
+- [readInput for stdin/file](/src/llm/chatSteps.js)
+

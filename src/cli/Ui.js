@@ -3,7 +3,7 @@ import { appendFileSync, existsSync, mkdirSync } from "node:fs"
 import process from "node:process"
 import { dirname } from "node:path"
 
-import { YELLOW, RED, RESET, GREEN, overwriteLine, cursorUp, DIM, stripANSI, ITALIC } from "./ANSI.js"
+import { YELLOW, RED, RESET, GREEN, overwriteLine, DIM, stripANSI, ITALIC } from "./ANSI.js"
 import Alert from "./components/Alert.js"
 import Table from "./components/Table.js"
 
@@ -63,7 +63,7 @@ export class UiFormats {
 	pricing(value, digits = 4) {
 		// Use currency style to ensure the $ sign and correct negative formatting.
 		const options = {
-			style: "currency",
+			style: 'currency',
 			currency: "USD",
 			minimumFractionDigits: digits,
 			maximumFractionDigits: digits,
@@ -376,10 +376,10 @@ export class Ui {
 		this.stdout = stdout
 		this.stderr = stderr
 		this.console = console instanceof UiConsole ? console
-		: new UiConsole({
-			debugMode: this.debugMode,
-			stdout: /** @type {any} */ (stdout), ...(console ?? {})
-		})
+			: new UiConsole({
+				debugMode: this.debugMode,
+				stdout: /** @type {any} */ (stdout), ...(console ?? {})
+			})
 		this.formats = formats
 	}
 
@@ -409,7 +409,7 @@ export class Ui {
 	 * @param {number} [lines=1]
 	 */
 	cursorUp(lines = 1) {
-		this.stdout.write(cursorUp(lines))
+		this.stdout.write(`\x1b[${lines}A`)
 	}
 
 	/**
@@ -499,3 +499,4 @@ export class Ui {
 }
 
 export default Ui
+

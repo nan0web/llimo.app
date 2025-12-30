@@ -1,7 +1,7 @@
 /**
  * Represents model architecture information.
  */
-export default class Architecture {
+export class Architecture {
 	/** @type {string[]} - Input modalities supported by the model */
 	input_modalities = []
 	/** @type {string} - Instruct type */
@@ -35,3 +35,5 @@ export default class Architecture {
 		this.context_length = Number(context_length)
 	}
 }
+
+export default Architecture

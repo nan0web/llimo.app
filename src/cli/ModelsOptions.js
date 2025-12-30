@@ -126,3 +126,4 @@ function getPath(obj, path) {
 }
 
 export default ModelsOptions
+

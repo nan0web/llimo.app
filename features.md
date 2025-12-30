@@ -155,3 +155,75 @@
 	```
 - For small (silly) models check the response and if there are no files at all, throw error or use another larger model (smarter) or try to continue with next message `Follow the output format.`.
 - If I use `- [@ls][src/**]` and then `- [](src/index.js)` prompt is not processing injections after listing.
+- Remove progresses from piped execution:
+	```bash
+	% node bin/llimo-models.js >> models.md
+
+	% cat models.md
+	Loading models …
+
+	[KLoading models @cerebras (0 in 0.03ms)
+	[KLoading models @cerebras (0 in 0.061ms)
+	[KLoading models @cerebras (0 in 0.092ms)
+	[KLoading models @cerebras (0 in 0.123ms)
+	[KLoading models @cerebras (0 in 0.154ms)
+	[KLoading models @cerebras (0 in 0.185ms)
+	[KLoading models @cerebras (0 in 0.217ms)
+	[KLoading models @cerebras (0 in 0.247ms)
+	[KLoading models @cerebras (0 in 0.279ms)
+	[KLoading models @cerebras (0 in 0.318ms)
+	[KLoading models @huggingface (6 in 0.348ms)
+	[KLoading models @huggingface (6 in 0.379ms)
+	[KLoading models @huggingface (6 in 0.41ms)
+	[KLoading models @huggingface (6 in 0.441ms)
+	[KLoading models @huggingface (6 in 0.472ms)
+	[KLoading models @huggingface (6 in 0.503ms)
+	[KLoading models @openrouter (284 in 0.534ms)
+	[KLoading models @openrouter (284 in 0.564ms)
+	[KLoading models @openrouter (284 in 0.596ms)
+	[KLoading models @openrouter (284 in 0.626ms)
+	[KLoading models @openrouter (284 in 0.657ms)
+	[K[1A
+	[K@ Loaded 637 inference models from 3 providers
+	> cerebras
+	> huggingface
+	> openrouter
+	```
+- Duplicate unpack process, fix it
+	```bash
+	? Send prompt to LLiMo? (Y)es, No: 
+	  read | 0:45 | $0.0422 | 168,990T |     3,699T/s
+	reason | 0:00 | $0.0021 |   4,215T | 4,215,000T/s
+	answer | 1:51 | $0.0079 |  15,825T |       141T/s
+	  chat | 2:37 | $0.0523 | 189,030T |     1,199T/s | 1,810,970T
+	+ reason (chat/b0416d7c-2e49-4408-9615-e32c41d08738/steps/001/reason.md)
+	
+	+ reason (chat/b0416d7c-2e49-4408-9615-e32c41d08738/steps/001/reason.md)
+	+ answer (chat/b0416d7c-2e49-4408-9615-e32c41d08738/steps/001/answer.md)
+	@ Extracting files (dry mode, no real saving)
+	• releases/1/v1.0.0/005-UI-Progress/task.test.js (3,930 bytes) — Updated test for UI Progress
+	• src/llm/Pricing.js (2,801 bytes) — Fixed Pricing.js
+	• src/cli/Ui.js (11,892 bytes) — Fixed Ui.js
+	• src/llm/Architecture.js (1,143 bytes) — Fixed Architecture.js
+	• src/llm/AI.js (10,468 bytes) — Fixed AI.js
+	• src/cli/ModelsOptions.js (3,786 bytes) — Fixed ModelsOptions.js
+	• src/llm/providers/cerebras.info.js (5,279 bytes) — Fixed providers/cerebras.info.js
+	Unpack current package? (Y)es, No, ., <message>: y
+	@ Extracting files 
+	+ releases/1/v1.0.0/005-UI-Progress/task.test.js (3,930 bytes) — Updated test for UI Progress
+	+ src/llm/Pricing.js (2,801 bytes) — Fixed Pricing.js
+	+ src/cli/Ui.js (11,892 bytes) — Fixed Ui.js
+	+ src/llm/Architecture.js (1,143 bytes) — Fixed Architecture.js
+	+ src/llm/AI.js (10,468 bytes) — Fixed AI.js
+	+ src/cli/ModelsOptions.js (3,786 bytes) — Fixed ModelsOptions.js
+	+ src/llm/providers/cerebras.info.js (5,279 bytes) — Fixed providers/cerebras.info.js
+	@ Extracting files (dry mode, no real saving)
+	• releases/1/v1.0.0/005-UI-Progress/task.test.js (3,930 bytes) — Updated test for UI Progress
+	• src/llm/Pricing.js (2,801 bytes) — Fixed Pricing.js
+	• src/cli/Ui.js (11,892 bytes) — Fixed Ui.js
+	• src/llm/Architecture.js (1,143 bytes) — Fixed Architecture.js
+	• src/llm/AI.js (10,468 bytes) — Fixed AI.js
+	• src/cli/ModelsOptions.js (3,786 bytes) — Fixed ModelsOptions.js
+	• src/llm/providers/cerebras.info.js (5,279 bytes) — Fixed providers/cerebras.info.js
+	Unpack current package? (Y)es, No, ., <message>: %  
+	```

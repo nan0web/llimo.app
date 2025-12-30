@@ -1,7 +1,7 @@
 /**
  * Represents model architecture information.
  */
-export default class Architecture {
+export class Architecture {
     /**
      * @param {Partial<Architecture>} input
      */
@@ -19,3 +19,4 @@ export default class Architecture {
     /** @type {number} */
     context_length: number;
 }
+export default Architecture;
