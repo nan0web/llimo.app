@@ -5,37 +5,37 @@ export class AlertDemo {
 	static async run() {
 		const ui = new Ui()
 
-		console.log('=== Alert Component Demo ===')
+		console.info('=== Alert Component Demo ===')
 
 		// Success
 		const successAlert = Alert.info('Task completed successfully!')
-		successAlert.renderIn(ui)
-		console.log('')
+		ui.render(successAlert)
+		console.info('')
 
 		// Warning
 		const warnAlert = new Alert({ variant: 'warn', text: 'This is a warning' })
-		warnAlert.renderIn(ui)
-		console.log('')
+		ui.render(warnAlert)
+		console.info('')
 
 		// Error
 		const errorAlert = Alert.error('An error occurred')
-		errorAlert.renderIn(ui)
-		console.log('')
+		ui.render(errorAlert)
+		console.info('')
 
 		// Custom construction
 		const customAlert = new Alert({
 			text: 'Custom alert via constructor',
 			variant: 'debug' // defaults to info if invalid
 		})
-		customAlert.renderIn(ui)
-		console.log('')
+		ui.render(customAlert)
+		console.info('')
 
 		// String input (simple text)
 		const simpleAlert = Alert.info('Simple alert from string')
-		simpleAlert.renderIn(ui)
-		console.log('')
+		ui.render(simpleAlert)
+		console.info('')
 
-		console.log('Demo complete!')
+		console.info('Demo complete!')
 	}
 }
 

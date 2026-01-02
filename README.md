@@ -1,7 +1,193 @@
-For fast qwen-3-235b:
-1. Set env: export CEREBRAS_API_KEY=... or HUGGINGFACE_API_KEY=...
-2. Run: llimo chat --fast
+# @nan0web/llimo.app
 
-For models browsing: llimo models
-- Interactive if TTY, pipe output otherwise
-- Table format with search/filter
+LLiMo is a language model‑powered CLI assistant for software development and content generation.
+It uses the AI SDK to integrate with models from OpenAI, Cerebras, Hugging Face, and OpenRouter.
+
+<!-- %PACKAGE_STATUS% -->
+
+## Description
+
+LLiMo provides a seamless way to:
+- **Chat** with AI models via `llimo chat` (interactive or batch mode).
+- **Pack** project files into prompts for model input.
+- **Unpack** AI responses (markdown with file checklists) back to your filesystem.
+- **Test** mode for simulating responses from log files without API calls.
+- **Model management** with automatic selection and caching.
+
+Core components:
+- `AI` / `TestAI` — Wrappers for AI providers and test simulation.
+- `Chat` — Manages chat history and file persistence.
+- `ModelInfo` / `ModelProvider` — Handles model metadata and selection.
+- CLI tools: `llimo chat`, `llimo pack`, `llimo unpack`.
+
+Supports commands like `@bash`, `@get`, `@ls`, `@rm`, `@summary`, `@validate` in responses.
+
+## Installation
+
+How to install with npm?
+```bash
+npm install @nan0web/llimo.app
+```
+
+How to install with pnpm?
+```bash
+pnpm add @nan0web/llimo.app
+```
+
+How to install with yarn?
+```bash
+yarn add @nan0web/llimo.app
+```
+
+Start an interactive chat with your input file.
+
+How to start an interactive chat?
+```js
+import { AI, Chat } from '@nan0web/llimo.app'
+const ai = new AI()
+const chat = new Chat({ id: "test-chat" })
+// Simulate loading existing chat or initializing new
+chat.add({ role: "user", content: "Hello, AI!" })
+const model = new ModelInfo({ id: "openai/gpt-4.1", provider: "openrouter" })
+// Stream response (in real use, handle async iteration)
+const { stream } = ai.streamText(model, chat.messages)
+```
+## Usage
+
+### Basic Chat
+@todo fix the error result is not async iterable
+
+it.todo("How to use test mode for simulation?", async () => {
+import { TestAI, Chat } from '@nan0web/llimo.app'
+const ai = new TestAI()
+const chat = new Chat({ id: "test-simulation" })
+// Load from test files - result is not async iterable
+const result = ai.streamText("test-model", chat.messages, { cwd: ".", step: 1 })
+console.info("Simulation mode using test files")
+for await (const chunk of result) {
+console.info(String(chunk))
+}
+### CLI Commands
+
+LLiMo provides several CLI entry points.
+
+How to run the main chat CLI?
+```js
+// Run interactively with a prompt file
+import { runSpawn } from '@nan0web/test'
+const { code, text } = await runSpawn("npx", ["llimo", "chat", "me.md"])
+console.info("Running: npx llimo chat me.md")
+// Expect code 0 for successful chat start
+```
+
+How to pack files into a prompt?
+```js
+import { runSpawn } from '@nan0web/test'
+// Pack markdown with file checklist
+const { code, text } = await runSpawn("npx", ["llimo", "pack", "checklist.md", ">prompt.md"])
+console.info("Running: npx llimo pack checklist.md > prompt.md")
+// Outputs packed prompt to stdout or file
+```
+
+How to unpack AI response markdown?
+```js
+import { runSpawn } from '@nan0web/test'
+// Unpack to filesystem from AI output
+await runSpawn("npx", ["llimo", "unpack", "response.md"])
+console.info("Running: npx llimo unpack response.md")
+// Extracts files and runs commands (@bash, etc.)
+```
+### Model Management
+
+Load and select models dynamically.
+
+How to load models from providers?
+```js
+import { ModelProvider } from '@nan0web/llimo.app'
+const provider = new ModelProvider()
+// Fetch available models
+const models = await provider.getAll()
+console.info("Loaded models:", models.size)
+```
+### Advanced: Bash Scripts in Responses
+
+LLiMo supports executing bash commands via `@bash` in AI responses. This allows the AI to run shell scripts directly in the project context.
+
+#### Example: Installing Dependencies
+To run a simple installation script:
+```
+#### [Install deps](@bash)
+```bash
+pnpm install
+```
+```
+When unpacked, this executes `pnpm install` and logs output to the chat.
+
+#### Example: Custom Script for Testing
+For more complex scripts, like running tests:
+```
+#### [Run tests](@bash)
+```bash
+pnpm test
+echo "Tests complete. Check results above."
+```
+```
+Output (stdout/stderr) is captured and saved in the chat history.
+
+#### Bash Script Guidelines
+- Use standard bash syntax inside ````bash ... ````.
+- Scripts run in the project root (cwd).
+- Multi-line scripts are supported.
+- Always include error handling if needed, e.g., `set -e` to stop on errors.
+- For safety, avoid destructive commands; the AI should confirm via chat if needed.
+
+Note: Scripts are executed after unpacking, and their output is appended to the prompt for context in the next iteration.
+
+Bash scripts in responses
+```js
+// Example in code: Simulate unpacking a @bash response
+console.info("Running: npx llimo unpack response-with-bash.md")
+// Expected: Extracts files, runs bash, captures output
+```
+### Single Binary Usage
+
+All tools are now unified under the `llimo` binary for simpler usage:
+```
+npx llimo chat me.md                    # Interactive chat
+npx llimo models --filter "id~gpt"       # List models
+npx llimo pack checklist.md > prompt.md  # Pack files
+npx llimo unpack response.md             # Unpack response
+```
+
+This replaces separate scripts like `llimo-chat`, `llimo-models`. Run `npx llimo --help` for full options.
+
+Unified CLI usage
+
+## API
+
+### AI & TestAI
+
+Main wrappers for AI interactions.
+- `streamText(model, messages)` — Streams from the provider.
+- `generateText(modelId, messages)` — Non-streaming generation.
+- TestAI simulates from log files for offline testing.
+
+### Chat
+- `add(message)` — Adds to message history.
+- `load()` / `save()` — Persist/load chat state.
+- `getTokensCount()` — Estimates tokens in messages.
+
+### ModelProvider
+- `getAll()` — Loads models from providers (cached).
+
+### ModelInfo
+- Properties: `id`, `provider`, `context_length`, `pricing`, etc.
+
+### Usage & Pricing
+- `Usage` tracks token consumption.
+- `Pricing.calc(usage)` — Computes cost.
+
+All exported classes should pass basic test to ensure API examples work
+```js
+import { AI, Chat, ModelProvider, ModelInfo, Usage, Architecture, Pricing } from '@nan0web/llimo.app'
+```

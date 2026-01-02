@@ -198,13 +198,15 @@ export default class FileSystem {
 	 * @param {boolean} [options.recursive=false] Whether to browse recursively.
 	 * @param {string[]} [options.ignore=[]] An array of directory/file patterns to ignore (supports glob patterns).
 	 * @param {(dir: string, entries: string[]) => Promise<void>} [options.onRead] Callback for each directory read.
+	 * @param {number} [options.depth=Infinity] Maximum depth to traverse.
 	 * @returns {Promise<string[]>} A promise that resolves to an array of file/directory paths.
 	 */
 	async browse(path, options = {}) {
-		const { recursive = false, ignore = [], onRead } = options
+		const { recursive = false, ignore = [], onRead, depth = Infinity } = options
 		const startPath = this.path.resolve(path)
 		const rel = this.path.relative(this.cwd, startPath)
 		const results = []
+		let currentDepth = 0
 
 		/**
 		 * @param {string} dir
@@ -213,6 +215,8 @@ export default class FileSystem {
 		 */
 		const _traverse = async (dir, dirPathRelative) => {
 			dirPathRelative = dirPathRelative || "."
+			currentDepth++
+			if (currentDepth > depth) return
 			let entries
 			try {
 				entries = await fs.readdir(dir, { withFileTypes: true })

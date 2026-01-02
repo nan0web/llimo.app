@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 import { FileSystem } from "../../utils/index.js"
 import { Suite } from "./node.js"
 
-describe("parseOutput", () => {
+describe("Suite", () => {
 	const fs = new FileSystem({ cwd: __dirname })
 	let nodeTxt
 	before(async () => {

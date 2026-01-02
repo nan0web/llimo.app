@@ -295,9 +295,10 @@ export default class AI {
 
 		const system = undefined
 		const provider = this.getProvider(model.provider)
+		const specific = provider(model.id)
 
 		const stream = streamText({
-			model: provider(model.id),
+			model: specific,
 			messages,
 			system,
 			abortSignal,

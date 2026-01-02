@@ -4,7 +4,7 @@
  *       - Tests: bin/llimo-release.test.js (mock spawn, assert parallel run, outcomes collected), src/security/VulnTest.test.js (fuzz paths, assert blocks ../, masks env in stdout, limits file sizes <10MB in unpack/pack).
  *       Deps: 8.2 (branch workflow), all commands/UI (tested indirectly).
  *       Security: Docker isolation (--security-opt no-new-privs, volume whitelist), vuln tests cover path inj/secrets/DoS (e.g., large input truncate in ReadLine).
- *       After code: Run llmo release v1.1.0, verify all tasks gen pass.txt (or pending), pnpm test:all includes vuln scans.
+ *       After code: Run llimo release v1.1.0, verify all tasks gen pass.txt (or pending), pnpm test:all includes vuln scans.
  */
 
 import { describe, it } from "node:test"

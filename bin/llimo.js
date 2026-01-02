@@ -15,46 +15,37 @@
  *   <other>  – Delegate to bin/llimo-<command>.js if exists
  */
 import process from "node:process"
-import { spawn } from "node:child_process"
-import path from "node:path"
+import { Ui } from "../src/cli/index.js"
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
+const ui = new Ui({ debugMode: process.argv.includes("--debug") })
 
-/**
- * Map subcommand to its script
- */
-const commands = new Map([
-	["chat", "bin/llimo-chat.js"],
-	["pack", "bin/llimo-pack.js"],
-	["unpack", "bin/llimo-unpack.js"],
-	["models", "bin/llimo-models.js"],
-	["system", "bin/llimo-system.js"],
-	["release", "bin/llimo-release.js"],
-	// Add more as needed
-])
-
-async function main(argv = process.argv.slice(2)) {
-	const subcmd = argv.shift()
-	if (!subcmd) {
-		console.error("Usage: llimo <command> [args...]")
-		console.error("Commands: " + Array.from(commands.keys()).join(", "))
-		process.exit(1)
-	}
-
-	const scriptPath = commands.get(subcmd)
-	if (!scriptPath) {
-		console.error(`Unknown command: ${subcmd}`)
-		process.exit(1)
-	}
-
-	// Delegate to the sub-script with remaining args
-	const child = spawn(process.execPath, [path.resolve(__dirname, "..", scriptPath), ...argv], {
-		stdio: "inherit"
-	})
-	child.on("exit", code => process.exit(code ?? 0))
+if (process.argv.length < 3) {
+	ui.console.error("Usage: llimo <command> [options]")
+	ui.console.info("\nCommands:")
+	ui.console.info("  chat     – Interactive chat with AI (default)")
+	ui.console.info("  models   – List available models and filter")
+	ui.console.info("  pack     – Pack markdown checklist into prompt")
+	ui.console.info("  unpack   – Unpack files/commands from markdown response")
+	// Add other commands as needed (e.g., release, system)
+	process.exit(1)
 }
 
-main().catch(err => {
-	console.error("❌ llimo error:", err.message)
+const subcmd = process.argv[2]
+const args = process.argv.slice(3)
+
+if (subcmd === "chat") {
+	// Delegate to chat main with remaining args
+	import("./llimo-chat.js").then(({ main }) => main(args))
+} else if (subcmd === "models") {
+	import("./llimo-models.js").then(({ main }) => main(args))
+} else if (subcmd === "pack") {
+	import("./llimo-pack.js").then(({ main }) => main(args))
+} else if (subcmd === "release") {
+	import("./llimo-release.js").then(({ main }) => main(args))
+} else if (subcmd === "unpack") {
+	// import("./llimo-unpack.js").then(({ main }) => main(args))
+} else {
+	ui.console.error(`Unknown command: ${subcmd}`)
+	ui.console.info("Available commands: chat, models, pack, unpack")
 	process.exit(1)
-})
+}

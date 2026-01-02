@@ -2,22 +2,22 @@ import process from "node:process"
 import { Git, FileSystem } from "../utils/index.js"
 import { GREEN, RESET, MAGENTA, ITALIC, BOLD, YELLOW, RED } from "./ANSI.js"
 import { Ui } from "./Ui.js"
-import UiOutput from "./UiOutput.js"
 import { runCommand } from "./runCommand.js"
 import { selectAndShowModel, showModel } from "./selectModel.js"
 import {
-	AI, TestAI, Chat, packMarkdown,
+	AI, Chat, packMarkdown,
 	initialiseChat, copyInputToChat, packPrompt,
 	handleTestMode, sendAndStream,
 	readInput,
 	ModelInfo, Architecture, Pricing,
 	decodeAnswer,
-	decodeAnswerAndRunTests,
 	Usage,
+	runTests,
 } from "../llm/index.js"
 import { loadModels, ChatOptions } from "../Chat/index.js"
 import { InfoCommand } from "../Chat/commands/info.js"
 import { TestCommand } from "../Chat/commands/test.js"
+import { ReleaseCommand } from "../Chat/commands/release.js"
 
 // const DEFAULT_MODEL = "gpt-oss-120b"
 // const DEFAULT_MODEL = "zai-glm-4.6"
@@ -98,6 +98,7 @@ export class ChatCLiApp {
 		const commands = [
 			InfoCommand,
 			TestCommand,
+			ReleaseCommand,
 		]
 		let shouldContinue = true
 		const found = commands.find(c => c.name === this.options.argv[0])
@@ -111,11 +112,8 @@ export class ChatCLiApp {
 					this.ui.console.debug(`[shouldContinue = ${shouldContinue ? 'yes' : 'no'}]`)
 					break
 				}
-				else if (chunk instanceof UiOutput) {
-					chunk.renderIn(this.ui)
-				}
 				else {
-					this.ui.console.info(chunk)
+					this.ui.render(chunk)
 				}
 			}
 		}
@@ -130,7 +128,7 @@ export class ChatCLiApp {
 		if (!this.ai) {
 			this.ai = new AI()
 		}
-		const models = await loadModels(this.ui)
+		const models = await loadModels({ ui: this.ui })
 		this.ai.setModels(models)
 		// Fixed pre-select: prioritize chat.config.model if available from loaded chat
 		const savedModel = await this.chat.load("model.json") ?? {}
@@ -299,11 +297,11 @@ export class ChatCLiApp {
 	/**
 	 *
 	 * @param {number} [step=1]
-	 * @returns {Promise<{ shouldContinue: boolean, test?: import("../cli/testing/node.js").TestOutput }>}
+	 * @returns {Promise<{ shouldContinue: boolean, test?: import("./testing/node.js").SuiteParseResult }>}
 	 */
 	async test(step = 1) {
 		// @todo use the small progress window
-		const tested = await decodeAnswerAndRunTests({
+		const tested = await runTests({
 			ui: this.ui,
 			fs: this.fs,
 			chat: this.chat,
@@ -312,7 +310,7 @@ export class ChatCLiApp {
 			step
 		})
 		const { test } = tested
-		if (true === tested.testsCode) {
+		if (true === tested.pass) {
 			// Task is complete, let's commit and exit
 			this.ui.console.info(`  ${GREEN}+ Task is complete${RESET}`)
 			await this.git.commitAll("Task is complete")
@@ -331,33 +329,30 @@ export class ChatCLiApp {
 	}
 	/**
 	 *
-	 * @param {import("../llm/chatSteps.js").TestOutput} tested
+	 * @param {import("./testing/node.js").SuiteParseResult} tested
 	 * @param {number} [step=1]
 	 */
 	async next(tested, step = 1) {
 		// Load test output to provide feedback for fixing
-		this.chat.save("fail", {
-			fail: tested.logs.fail,
-			cancelled: tested.logs.cancelled,
-			types: tested.logs.types
-		}, step)
+		this.chat.save("fail", tested, step)
 
 		const rows = [
 			"Test results:",
 			Object.entries(tested.counts).map(([k, v]) => `- ${k}: ${v}`).join("\n")
 		]
-		if (tested.logs.fail.length) {
-			rows.push("Fail tests:")
-			tested.logs.fail.forEach(e => rows.push(`- ${e.str}`))
-		}
-		if (tested.logs.cancelled.length) {
-			rows.push("Cancelled tests:")
-			tested.logs.cancelled.forEach(e => rows.push(`- ${e.str}`))
-		}
-		if (tested.logs.types.length) {
-			rows.push("Types tests:")
-			tested.logs.types.forEach(e => rows.push(`- ${e.str}`))
-		}
+		// @todo fix logging
+		// if (tested.logs.fail.length) {
+		// 	rows.push("Fail tests:")
+		// 	tested.logs.fail.forEach(e => rows.push(`- ${e.str}`))
+		// }
+		// if (tested.logs.cancelled.length) {
+		// 	rows.push("Cancelled tests:")
+		// 	tested.logs.cancelled.forEach(e => rows.push(`- ${e.str}`))
+		// }
+		// if (tested.logs.types.length) {
+		// 	rows.push("Types tests:")
+		// 	tested.logs.types.forEach(e => rows.push(`- ${e.str}`))
+		// }
 
 		// Pack the next input (original or test feedback)
 		const packed = await packPrompt(packMarkdown, rows.join("\n"), this.chat)
@@ -391,6 +386,9 @@ export class ChatCLiApp {
 
 		return { step, prompt, model, packed }
 	}
+	/**
+	 * Run communication loop.
+	 */
 	async loop() {
 		// 3. copy source file to chat directory (if any)
 		let { step, prompt, model, packed } = await this.start()

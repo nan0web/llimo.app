@@ -4,8 +4,10 @@ import process from "node:process"
 import { dirname } from "node:path"
 
 import { YELLOW, RED, RESET, GREEN, overwriteLine, DIM, stripANSI, ITALIC } from "./ANSI.js"
+import UiOutput from "./UiOutput.js"
 import Alert from "./components/Alert.js"
 import Table from "./components/Table.js"
+import Progress from "./components/Progress.js"
 
 /** @typedef {"success" | "info" | "warn" | "error" | "debug" | "log"} LogTarget */
 
@@ -251,11 +253,12 @@ export class UiConsole {
 	 * @todo write jsdoc
 	 * @param {string} line
 	 * @param {string} [space=" "]
+	 * @param {string} [more="…"]
 	 * @returns {string}
 	 */
-	full(line, space = " ") {
-		const [w, h] = this.stdout.getWindowSize?.() ?? [120, 30]
-		if (line.length > w) line = line.slice(0, w - 1) + "…"
+	full(line, space = " ", more = "…") {
+		const [w] = this.stdout.getWindowSize?.() ?? [120, 30]
+		if (line.length > w) line = line.slice(0, w - 1) + more
 		if (line.length < w) line += space.repeat(w - line.length)
 		return line
 	}
@@ -354,6 +357,8 @@ export class Ui {
 
 	/** @type {UiConsole} */
 	console
+	/** @type {string[]} */
+	progressFrame = []
 	/** @type {UiFormats} UiFormats instance to format numbers, if omitted new UiFormats() is used. */
 	formats = new UiFormats()
 
@@ -495,6 +500,30 @@ export class Ui {
 	 */
 	createStyle(options = {}) {
 		return new UiStyle(options)
+	}
+
+	/**
+	 * Renders the element
+	 * @param {UiOutput} element
+	 */
+	render(element) {
+		if (element instanceof Alert) {
+			if (element.variant in this.console) {
+				this.console[element.variant](element.text)
+			}
+			else {
+				this.console.info(element.text)
+			}
+		}
+		else if (element instanceof Table) {
+			this.console.table(Table.normalizeRows(element.rows), element.options)
+		}
+		else if (element instanceof Progress) {
+			const str = String(element)
+			this.cursorUp(this.progressFrame.length)
+			this.progressFrame = str.split("\n").map(s => this.console.full(s))
+			this.console.info("\r" + this.progressFrame.join("\n"))
+		}
 	}
 }
 

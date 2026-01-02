@@ -1,7 +1,7 @@
 import FileSystem from "../../utils/FileSystem.js"
 import { DIM, GREEN, RED, RESET, YELLOW } from "../ANSI.js"
 import Ui from "../Ui.js"
-import { parseOutput, Suite } from "./node.js"
+import { Suite } from "./node.js"
 
 export function noDebugger(str) {
 	return ![
@@ -41,7 +41,7 @@ export function testingProgress({ ui, fs = new FileSystem(), output = [], rows =
 
 		if (rows > 0) {
 			if (printed) ui.cursorUp(printed)
-				const lines = output.filter(Boolean).filter(noDebugger).slice(-rows).map(r => ui.console.full(prefix + r))
+			const lines = output.filter(Boolean).filter(noDebugger).slice(-rows).map(r => ui.console.full(prefix + r))
 			lines.forEach(l => ui.console.info(`\r${DIM}${l}${RESET}`))
 			if (lines.length < printed) {
 				for (let i = 0; i < printed - lines.length; i++) {

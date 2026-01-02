@@ -11,7 +11,7 @@ const rl = readline.createInterface({
 	output: process.stdout
 })
 
-console.log('Select UI Component to Demo:\n1. Ui (Full UI Helper)\n2. Alert (Console Alert)\n3. Table (Data Table)\n4. Progress (Progress Bar)\n5. UiConsole (Console Wrapper)\n6. All (Run all demos)')
+console.info('Select UI Component to Demo:\n1. Ui (Full UI Helper)\n2. Alert (Console Alert)\n3. Table (Data Table)\n4. Progress (Progress Bar)\n5. UiConsole (Console Wrapper)\n6. All (Run all demos)')
 
 rl.question('Enter number: ', async (choice) => {
 	rl.close()
@@ -38,9 +38,10 @@ rl.question('Enter number: ', async (choice) => {
 			await (await demos[choice]()).run()
 		} catch (error) {
 			console.error('Demo error:', error.message)
+			console.debug(error.stack)
 		}
 	} else {
-		console.log('Invalid choice. Exiting.')
+		console.info('Invalid choice. Exiting.')
 	}
 	process.exit(0)
 })

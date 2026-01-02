@@ -49,10 +49,10 @@ export default class ModelInfo {
 	supports_tools = false
 	/** @type {boolean} */
 	supports_structured_output = false
-	/** @type {boolean} */
-	supportsTools = false
 	/** @type {ProviderStatus} */
 	status = "staging"
+	/** @type {boolean} */
+	is_moderated = false
 
 	/**
 	 * Constructs a ModelInfo instance.
@@ -78,9 +78,9 @@ export default class ModelInfo {
 			limits = {},
 			supports_tools = false,
 			supports_structured_output = false,
-			supportsTools = false,
 			volume = 0,
 			status = this.status,
+			is_moderated = false,
 		} = input
 		this.id = String(id)
 		this.architecture = new Architecture(architecture)
@@ -99,8 +99,8 @@ export default class ModelInfo {
 		this.top_provider = new TopProvider(top_provider)
 		this.limits = new Limits(limits)
 		this.supports_tools = Boolean(supports_tools)
+		this.is_moderated = Boolean(is_moderated)
 		this.supports_structured_output = Boolean(supports_structured_output)
-		this.supportsTools = Boolean(supportsTools)
 		this.status = "live" === status ? "live" : "staging"
 		this.#volume = volume
 	}

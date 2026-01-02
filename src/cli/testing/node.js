@@ -8,6 +8,8 @@ import FileSystem from "../../utils/FileSystem.js"
  * @property {Map<number, Error>} errors
  * @property {Map<number, string>} unknowns
  * @property {Map<string, number>} counts
+ *
+ * @typedef {TapParseResult & { tap: TapParseResult, ts: TapParseResult }} SuiteParseResult
  */
 
 /**
@@ -257,7 +259,7 @@ export class DeclarationTS extends Tap {
 
 export class Suite extends Tap {
 	/**
-	 * @returns {TapParseResult & { tap: TapParseResult, ts: TapParseResult }}
+	 * @returns {SuiteParseResult}
 	 */
 	parse() {
 		const tap = new Tap({ rows: this.rows, fs: this.fs })
@@ -277,8 +279,8 @@ export class Suite extends Tap {
 			ts: tsed,
 			errors,
 			unknowns: tsed.unknowns,
-			tests: [...tapped.tests, ...tsed.tests],
 			counts,
+			tests: [...tapped.tests, ...tsed.tests],
 		}
 	}
 }
@@ -322,111 +324,4 @@ export class Suite extends Tap {
  * @property {number} types
  *
  * @typedef {{ logs: TestOutputLogs, counts: TestOutputCounts, types: Set<number>, tests: TestInfo[], guess: TestOutputCounts }} TestOutput
- *
- * @param {string} stdout
- * @param {string} stderr
- * @param {FileSystem} [fs]
- * @returns {TestOutput}
  */
-export function parseOutput(stdout, stderr, fs = new FileSystem()) {
-	const logs = {
-		fail: [],
-		cancelled: [],
-		pass: [],
-		tests: [],
-		suites: [],
-		skip: [],
-		todo: [],
-		duration: [],
-		types: [],
-		missing: [],
-	}
-	const counts = {
-		fail: 0,
-		cancelled: 0,
-		pass: 0,
-		tests: 0,
-		suites: 0,
-		skip: 0,
-		todo: 0,
-		duration: 0,
-		types: 0,
-	}
-	const guess = {
-		fail: 0,
-		cancelled: 0,
-		pass: 0,
-		tests: 0,
-		suites: 0,
-		skip: 0,
-		todo: 0,
-		duration: 0,
-		types: 0,
-	}
-	const out = stdout.split("\n")
-	const err = stderr.split("\n")
-	const all = [...out, ...err]
-
-	const parser = {
-		fail: ["# fail ", "ℹ fail "],
-		cancelled: ["# cancelled ", "ℹ cancelled "],
-		pass: ["# pass ", "ℹ pass "],
-		tests: ["# tests ", "ℹ tests "],
-		suites: ["# suites ", "ℹ suites "],
-		skip: ["# skipped ", "ℹ skipped "],
-		todo: ["# todo ", "ℹ todo "],
-		duration: ["# duration_ms ", "ℹ duration_ms "],
-	}
-
-	/** @type {TestInfo[]} */
-	const tests = []
-
-	for (let i = 0; i < all.length; i++) {
-		const row = all[i]
-		const str = row.trim()
-		const spaces = all[i].split('').findIndex(s => s != " ")
-		const notOk = str.match(/^not ok (\d+) - (.*)$/)
-		const ok = str.match(/^ok (\d+) - (.*)$/)
-		const dts = str.match(/^(.+)\((\d+),(\d+)\): error TS(\d+): (.*)/)
-
-		if (row.startsWith("TAP version ")) {
-			// ignored – version already processed by Tap
-		}
-		else if (str.startsWith("# Subtest: ")) {
-			const tap = new Tap({ rows: all, fs })
-			i = tap.collectTest({ i })
-			tests.push(...tap.tests)
-		}
-		else if (str.match(/^\d+\.\.\d+$/)) {
-			// ignore subtotal markers
-		}
-		else {
-			for (const [name, arr] of Object.entries(parser)) {
-				if (!(name in counts)) continue
-				for (const s of arr) {
-					if (str.startsWith(s)) {
-						if (name === "duration") {
-							counts[name] += parseFloat(str.slice(s.length))
-						} else {
-							counts[name] += parseInt(str.slice(s.length))
-						}
-					}
-				}
-			}
-		}
-	}
-
-	const types = new Set()
-	for (const test of tests) {
-		if (test.type in guess) ++guess[test.type]
-		if (test.type === "types") {
-			types.add(test.no)
-			counts.types++
-		}
-		guess.duration += test.doc?.duration_ms || 0
-	}
-	// deterministic rounding
-	counts.duration = Math.round(counts.duration * 1e3) / 1e3
-
-	return { counts, guess, logs, tests, types }
-}

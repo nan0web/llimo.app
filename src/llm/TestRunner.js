@@ -210,7 +210,8 @@ export default class TestRunner {
 		this.ui.console.info(`${GREEN}Simulating tests for step ${this.options.step}${RESET}`)
 
 		const testFile = `step/${String(this.options.step).padStart(3, '0')}/tests.txt`
-		let testOutput = ""
+		/** @type {string | Error | undefined} */
+		let testOutput
 		try {
 			if (this.fs.load && await this.fs.exists(testFile)) {
 				testOutput = await this.fs.load(testFile)

@@ -4,7 +4,7 @@ import Chat from "../../llm/Chat.js"
 import { InfoCommand } from "./info.js"
 import FileSystem from "../../utils/FileSystem.js"
 import { Progress, Alert } from "../../cli/components/index.js"
-import { parseOutput } from "../../cli/testing/node.js"
+import { Suite } from "../../cli/testing/node.js"
 import { testingProgress } from "../../cli/testing/progress.js"
 
 /**
@@ -149,16 +149,19 @@ export class TestCommand extends InfoCommand {
 		)
 		clearInterval(testing)
 		yield Alert.info("")
-		const parsed = parseOutput(testOut, testErr, this.fs)
+		const rows = [...testOut.split("\n"), ...testErr.split("\n")]
+		const suite = new Suite({ rows, fs: this.fs })
+		const parsed = suite.parse()
 		const ok = testExitCode === 0
-		const failed = parsed.counts.fail + parsed.counts.cancelled + parsed.counts.types
+		const { cancelled, fail, types } = Object.fromEntries(Array.from(parsed.counts))
+		const failed = fail + cancelled + types
 		yield warn(`${ok ? "+" : "-"} Baseline tests complete: ${ok ? "all passed" : `${failed} failed`}`)
 		if (failed > 0) {
-			if (parsed.counts.fail + parsed.counts.cancelled > 0) {
-				yield Alert.error(`There are ${parsed.counts.fail} failed test(s) and ${parsed.counts.cancelled} cancelled tests`)
+			if (fail + cancelled > 0) {
+				yield Alert.error(`There are ${fail} failed test(s) and ${cancelled} cancelled tests`)
 			}
-			if (parsed.counts.types > 0) {
-				yield Alert.error(`! There are ${parsed.counts.types} failed types`)
+			if (types > 0) {
+				yield Alert.error(`! There are ${types} failed types`)
 			}
 			yield Alert.error(`! It might be an issue`)
 		}

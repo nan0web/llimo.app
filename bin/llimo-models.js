@@ -46,9 +46,10 @@ export async function main(argv = process.argv.slice(2)) {
 	}
 }
 
-main().catch((err) => {
-	ui.console.error(err.message)
-	if (err.stack) ui.console.debug(err.stack)
-	process.exit(1)
-})
-
+if (import.meta.url === `file://${process.argv[1]}`) {
+	main().catch((err) => {
+		ui.console.error(err.message)
+		if (err.stack) ui.console.debug(err.stack)
+		process.exit(1)
+	})
+}

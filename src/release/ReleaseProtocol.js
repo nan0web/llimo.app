@@ -1,4 +1,4 @@
-import { FileProtocol, FileEntry } from "../FileProtocol.js"
+import FileProtocol from "../FileProtocol.js"
 
 /**
  * ReleaseProtocol – parses release‑notes markdown into a concise JSON structure.

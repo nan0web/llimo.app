@@ -69,6 +69,10 @@
 10. **Auto file attachment**: check every file that were injected/returned in chat messages and inject in the prompt updated ones.
 
 ## v1.2.0+ (Future)
+- Possible to load strategies to select a proper models based on a context and from `{system|agent|input}.md`, as configuration header in yaml format, for instance:
+	```yaml
+	strategy: [fastest cheapest](models.txt)
+	```
 - Multi-modal (full video gen via ai-sdk).
 - Parallel chats, advanced archiving (S3 or other clouds or database agnostic?).
 - Extend `streamText` to ai-sdk file tools: Text (inline), Audio (transcribe on ref like story.mp3 → .txt), Vision (analyze image/dir → description).

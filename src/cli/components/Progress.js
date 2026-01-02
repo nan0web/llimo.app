@@ -11,6 +11,8 @@ export class Progress extends UiOutput {
 	text = ""
 	/** @type {string} */
 	prefix = ""
+	/** @type {string[]} */
+	rows = []
 	/** @param {Partial<Progress>} [input={}] */
 	constructor(input = {}) {
 		super()
@@ -18,10 +20,19 @@ export class Progress extends UiOutput {
 			value = this.value,
 			text = this.text,
 			prefix = this.prefix,
+			rows = this.rows,
 		} = input
 		this.value = Number(value)
 		this.text = String(text)
 		this.prefix = String(prefix)
+		this.rows = rows.map(r => String(r)).join("\n").split("\n")
+	}
+
+	/**
+	 * @param {string} row
+	 */
+	add(row) {
+		String(row).split("\n").map(r => this.rows.push(r))
 	}
 
 	toString(options = {}) {

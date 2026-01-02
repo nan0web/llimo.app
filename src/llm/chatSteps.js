@@ -15,7 +15,7 @@ import Markdown from "../utils/Markdown.js"
 import Ui, { UiStyle } from "../cli/Ui.js"
 import ModelInfo from './ModelInfo.js'
 import ChatOptions from '../Chat/Options.js'
-import { parseOutput, Suite } from '../cli/testing/node.js'
+import { Suite } from '../cli/testing/node.js'
 import { testingProgress, testingStatus } from '../cli/testing/progress.js'
 
 /**
@@ -260,30 +260,6 @@ export async function decodeAnswer({ ui, chat, options, logs = [] }) {
 }
 
 /**
- * @param {Object} param0
- * @param {Ui} param0.ui
- * @param {Chat} param0.chat
- * @param {Function} param0.runCommand
- * @param {number} [param0.step=1]
- * @param {(chunk) => void} [param0.onData]
- * @returns {Promise<import('../cli/runCommand.js').runCommandResult & { parsed: TestOutput }>}
- */
-export async function runTests({ ui, chat, runCommand, step = 1, onData = (chunk) => ui.write(chunk) }) {
-	// Run `pnpm test:all` with live output
-	ui.console.info("@ Running tests")
-	ui.console.debug("% pnpm test:all")
-	const result = await runCommand("pnpm", ["test:all"], { onData })
-	result.parsed = parseOutput(result.testStdout ?? "", result.testStderr ?? "")
-
-	// Save per‑step test output
-	if (step) {
-		const testOutput = `${result.testStdout}\n${result.testStderr}`
-		await chat.db.save(`test-step${step}.txt`, testOutput)
-	}
-	return result
-}
-
-/**
  *
  * @param {import('../cli/testing/node.js').TestInfo[]} tests
  * @param {Ui} ui
@@ -360,7 +336,7 @@ export async function printAnswer(input) {
  * @param {import('../cli/runCommand.js').runCommandFn} input.runCommand Function to execute shell commands
  * @param {ChatOptions} input.options Always yes to user prompts
  * @param {number} [input.step] Optional step number for per-step files
- * @returns {Promise<{testsCode?: boolean, shouldContinue: boolean, test?: import('../cli/testing/node.js').TapParseResult}>}
+ * @returns {Promise<{pass?: boolean, shouldContinue: boolean, test?: import('../cli/testing/node.js').TapParseResult}>}
  */
 export async function decodeAnswerAndRunTests(input) {
 	const {
@@ -377,26 +353,104 @@ export async function decodeAnswerAndRunTests(input) {
 			throw err
 		}
 	}
+
+	// @todo run sequence of tests:
+	// 1. context tests (attached or generated tests)
+	// 2. run `pnpm test:all`
+
+	const { pass, shouldContinue, test } = await runTests({
+		ui,
+		fs,
+		chat,
+		runCommand,
+		logs,
+		options,
+		step,
+	})
+
+	return { pass, shouldContinue, test }
+}
+
+
+/**
+ * @param {Object} param0
+ * @param {Ui} param0.ui
+ * @param {Chat} param0.chat
+ * @param {Function} param0.runCommand
+ * @param {number} [param0.step=1]
+ * @param {(chunk) => void} [param0.onData]
+ * @returns {Promise<import('../cli/runCommand.js').runCommandResult & { parsed: import("../cli/testing/node.js").TestOutput }>}
+ */
+export async function runTests0({ ui, chat, runCommand, step = 1, onData = (chunk) => ui.write(chunk) }) {
+	// Run `pnpm test:all` with live output
+	ui.console.info("@ Running tests")
+	ui.console.debug("% pnpm test:all")
+	const result = await runCommand("pnpm", ["test:all"], { onData })
+	const suite = new Suite({ rows: [...result.testStdout.split("\n"), ...result.testStderr.split("\n")], fs })
+	const parsed = suite.parse()
+
+	// Save per‑step test output
+	if (step) {
+		const testOutput = `${result.testStdout}\n${result.testStderr}`
+		await chat.save("test.txt", testOutput, step)
+	}
+	return { ...result, ...parsed }
+}
+
+/**
+ * @typedef {Object} runTestsResult
+ * @property {boolean} pass
+ * @property {boolean} shouldContinue
+ * @property {import("../cli/testing/node.js").SuiteParseResult} test
+ *
+ * @param {Object} input
+ * @param {Ui} input.ui
+ * @param {FileSystem} input.fs
+ * @param {Chat} input.chat
+ * @param {Function} input.runCommand
+ * @param {number} [input.step=1]
+ * @param {string[]} [input.logs=[]]
+ * @param {object} [input.options={}]
+ * @returns {Promise<runTestsResult>}
+ */
+export async function runTests(input) {
+	const {
+		ui,
+		fs,
+		chat,
+		runCommand = () => {},
+		logs = [],
+		options = {},
+		step = 1,
+	} = input
 	const now = Date.now()
 	const output = []
 	const testing = testingProgress({ ui, fs, output, rows: 12, prefix: "  " })
 	const onData = chunk => output.push(...String(chunk).split("\n"))
-	const { stdout: testStdout, stderr: testStderr, exitCode } = await runTests({ ui, chat, runCommand, step, onData })
+	// const { stdout: testStdout, stderr: testStderr, exitCode } = await runTests({ ui, chat, runCommand, step, onData })
+
+	ui.console.info("@ Running tests")
+	ui.console.debug("% pnpm test:all")
+	const result = await runCommand("pnpm", ["test:all"], { onData })
+	const suite = new Suite({ rows: [...result.testStdout.split("\n"), ...result.testStderr.split("\n")], fs })
+	const parsed = suite.parse()
 	clearInterval(testing)
+
+	if (step) {
+		await chat.save("test.txt", `${result.testStdout}\n${result.testStderr}`, step)
+	}
 
 	// Append test output to log
 	logs.push("#### pnpm test:all")
 	logs.push("```stdeerr")
-	logs.push(testStderr)
+	logs.push(result.testStderr)
 	logs.push("```")
 	logs.push("```stdout")
-	logs.push(testStdout)
+	logs.push(result.testStdout)
 	logs.push("```")
 	await chat.db.append("prompt.md", logs.join("\n"))
 
 	// Parse test results
-	const suite = new Suite({ rows: [...testStdout.split("\n"), ...testStderr.split("\n")] })
-	const parsed = suite.parse()
 	const fail = parsed.counts.get("fail") ?? 0
 	const cancelled = parsed.counts.get("cancelled") ?? 0
 	const types = parsed.counts.get("types") ?? 0
@@ -415,39 +469,39 @@ export async function decodeAnswerAndRunTests(input) {
 		if (fail > 0 || cancelled > 0 || types > 0) {
 			continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "fail" })
 			if (!continuing) {
-				return { testsCode: false, shouldContinue: false, test: parsed }
+				return { pass: false, shouldContinue: false, test: parsed }
 			}
 		}
 		if (shouldContinue && todo > 0) {
 			continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "todo" })
 			if (!continuing) {
-				return { testsCode: false, shouldContinue: false, test: parsed }
+				return { pass: false, shouldContinue: false, test: parsed }
 			}
 		}
 		if (shouldContinue && skip > 0) {
 			continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "skip" })
 			if (!continuing) {
-				return { testsCode: false, shouldContinue: false, test: parsed }
+				return { pass: false, shouldContinue: false, test: parsed }
 			}
 		}
 		chat.add({ role: "user", content: content.join("\n") })
 		if (shouldContinue && fail === 0 && cancelled === 0 && types === 0 && todo === 0 && skip === 0) {
 			ui.console.success("All tests passed.")
-			return { testsCode: true, shouldContinue: false, test: parsed }
+			return { pass: true, shouldContinue: false, test: parsed }
 		}
 	}
 
 	const testFailed = fail > 0 || cancelled > 0 || types > 0
-	let testsCode = !testFailed
+	let pass = !testFailed
 
-	if (0 === exitCode) {
+	if (0 === result.exitCode) {
 		shouldContinue = false
-		testsCode = true
+		pass = true
 	}
 
 	if (!testFailed) {
 		ui.console.info("All tests passed, no typed mistakes.")
 	}
 
-	return { testsCode, shouldContinue, test: parsed }
+	return { pass, shouldContinue, test: parsed }
 }

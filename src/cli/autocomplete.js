@@ -16,6 +16,7 @@ import ModelInfo from "../llm/ModelInfo.js"
  * @typedef {Object} ModelRow
  * @property {string} id - Model ID (info.id, not full key)
  * @property {number} context
+ * @property {number} maxOut
  * @property {string} provider
  * @property {string} modality
  * @property {number} inputPrice
@@ -23,6 +24,7 @@ import ModelInfo from "../llm/ModelInfo.js"
  * @property {number} speed
  * @property {boolean} tools
  * @property {boolean} json
+ * @property {boolean} isModerated
  */
 
 /**
@@ -53,6 +55,8 @@ export function model2row(info, id) {
 	return {
 		id: info.id || id, // Use info.id instead of full key for display/search
 		context,
+		maxOut: info.maximum_output,
+		isModerated: info.is_moderated,
 		provider: info.provider,
 		modality,
 		speed: pricing?.speed || -1,
@@ -350,7 +354,7 @@ export async function interactive(modelMap, ui) {
  */
 export function pipeOutput(allModels, ui) {
 	const rows = [
-		["Model.id", "Context", "Provider", "Modality", "Speed T/s", "Input", "Output", "Tools", "JSON"],
+		["Model.id", "Context", "Max.out", "Provider", "Modality", "Speed T/s", "Input", "Output", "Mod"],
 		["---", "---", "---", "---", "---", "---", "---", "---", "---"],
 	]
 	for (const row of allModels) {
@@ -359,13 +363,13 @@ export function pipeOutput(allModels, ui) {
 		rows.push([
 			row.id, // Use model.id, not full key
 			formatContext(row.context),
+			formatContext(row.maxOut),
 			row.provider,
 			row.modality,
 			String(row.speed >= 0 ? row.speed : "?"),
 			inp,
 			outp,
-			row.tools ? '+' : '-',
-			row.json ? '+' : '-'
+			row.isModerated ? " M" : "",
 		])
 	}
 	ui.console.table(rows, {

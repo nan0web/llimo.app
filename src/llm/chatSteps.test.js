@@ -142,21 +142,15 @@ describe("chatSteps – packPrompt (integration with mock)", () => {
 	})
 })
 
-describe("chatSteps – decodeAnswerAndRunTests (mocked)", () => {
-	it("handles test output parsing", async () => {
-		const mockChat = {
-			db: new FileSystem(),
-			messages: [{ role: "assistant", content: "test" }]
-		}
-		const mockUiMock = new Ui({ ...mockUi })
-		mockUiMock.askYesNo = async () => "yes"
-		const result = await chatSteps.decodeAnswerAndRunTests({
-			ui: mockUiMock,
-			chat: mockChat,
-			runCommand: mockRunCommand,
-			options: { isYes: true },
-		})
-		assert.ok(result.testsCode !== undefined)
+describe("chatSteps – decodeAnswer (mocked)", () => {
+	it.todo("should decode formatted llm response", async () => {
+		assert.fail("mock the answer and decode it")
+	})
+})
+
+describe("chatSteps – runTests (mocked)", () => {
+	it.todo("should run sequence of tests", async () => {
+		assert.fail("mock the answer and decode it")
 	})
 })
 

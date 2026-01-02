@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 /**
  * CLI entry point for LLiMo
  * @see https://github.com/nan0web/llimo
@@ -16,7 +15,7 @@ const ui = new Ui({ debugMode: process.argv.includes("--debug") })
  * Main chat loop
  * @param {string[]} [argv]
  */
-async function main(argv = process.argv.slice(2)) {
+export async function main(argv = process.argv.slice(2)) {
 	const fs = new FileSystem()
 	const git = new Git({ dry: true })
 	ui.console.info(RESET)
@@ -27,15 +26,9 @@ async function main(argv = process.argv.slice(2)) {
 	if (command.isHelp) {
 		ui.console.info(`LLiMo CLI - Language Living Models Chat
 
-Usage: llimo <command> [options]
+Usage: llimo chat [options]
 
-Commands:
-	chat      Interactive chat with AI (default)
-	models    List available models with filter
-	pack      Pack markdown checklist into prompt
-	unpack    Unpack files/commands from markdown response
-
-Global options:
+Options:
 	--help     Show this help
 	--debug    Enable debug output
 	--new      Start new chat instead of loading existing
@@ -73,8 +66,11 @@ Examples:
 
 /* -------------------------------------------------------------------------- */
 
-main().catch((err) => {
-	ui.console.error(err.message)
-	if (err.stack) ui.console.debug(err.stack)
-	process.exit(1)
-})
+if (import.meta.url === `file://${process.argv[1]}`) {
+	main().catch((err) => {
+		ui.console.error(err.message)
+		if (err.stack) ui.console.debug(err.stack)
+		process.exit(1)
+	})
+}
+

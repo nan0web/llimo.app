@@ -119,6 +119,7 @@ export default class Chat {
 		reason: "reason.md",
 		usage: "usage.json",
 		fail: "fail.json",
+		test: "test.txt",
 		messages: null,
 	}
 

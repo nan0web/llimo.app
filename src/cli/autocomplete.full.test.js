@@ -111,7 +111,9 @@ describe("autocomplete – core utilities", () => {
 				context: 131000,
 				provider: "openrouter",
 				speed: -1,
+				isModerated: false,
 				modality: "text",
+				maxOut: 0,
 				inputPrice: 3,
 				outputPrice: 15,
 				tools: false,
@@ -214,10 +216,10 @@ describe("autocomplete – core utilities", () => {
 		const call = mockUi.console.table.mock.calls[0].arguments
 		assert.ok(Array.isArray(call[0]))
 		// header row
-		assert.deepStrictEqual(call[0][0], ["Model.id", "Context", "Provider", "Modality", "Speed T/s", "Input", "Output", "Tools", "JSON"])
+		assert.deepStrictEqual(call[0][0], ["Model.id", "Context", "Max.out", "Provider", "Modality", "Speed T/s", "Input", "Output", "Mod"])
 		// last data row matches our model because sorted by id
 		const dataRow = call[0][3]
 		assert.strictEqual(dataRow[0], "x-ai/grok-3")
-		assert.strictEqual(dataRow[2], "openrouter")
+		assert.strictEqual(dataRow[3], "openrouter")
 	})
 })

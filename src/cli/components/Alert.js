@@ -11,6 +11,9 @@ export class Alert extends UiOutput {
 	text = ""
 	/** @type {AlertVariant} */
 	variant = "info"
+	/**
+	 * @param {Partial<Alert>} input
+	 */
 	constructor(input = {}) {
 		super()
 		if ("string" === typeof input) {

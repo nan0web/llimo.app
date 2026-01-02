@@ -213,7 +213,7 @@ export async function sendAndStream(options) {
 		}
 		else if (["AI_APICallError", "APICallError", "RetryError"].includes(err.name)) {
 			shortMsg = err.message.split("\n")[0] || shortMsg
-			ui.console.error(`${RED}API Error: ${shortMsg}${RESET}`)
+			ui.console.error(`\n${RED}API Error: ${shortMsg}${RESET}`)
 			if (isWindowLimit(err)) {
 				ui.console.warn(`${YELLOW}Message is too long - choose another model${RESET}`)
 				// @todo select another model

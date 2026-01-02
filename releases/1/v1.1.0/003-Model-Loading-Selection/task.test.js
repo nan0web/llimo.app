@@ -10,7 +10,7 @@ import { tmpdir } from "node:os"
 describe("003-Model-Loading-Selection – src/Chat/models.js & src/llm/*", () => {
 	describe("3.1 Load models from providers (OpenAI, Cerebras, etc.) with progress UI", () => {
 		it("Loads and caches models from multiple providers with UI progress", async () => {
-			const mockUi = {
+			const ui = {
 				console: { info: () => {}, overwriteLine: () => {} },
 				createProgress: () => ({ start: () => {}, stop: () => {} }),
 				cursorUp: () => {}
@@ -22,25 +22,25 @@ describe("003-Model-Loading-Selection – src/Chat/models.js & src/llm/*", () =>
 				["llama3.1-8b", new ModelInfo({ id: "llama3.1-8b", provider: "cerebras", context_length: 8192 })]
 			])
 			// @todo: Override in loadModels (or test directly)
-			const models = await loadModels(mockUi)
+			const models = await loadModels({ ui })
 			ok(models.size >= 2, "Loads at least 2 models from providers")
 			ok(models.has("gpt-oss-120b"), "Includes OpenAI model with pricing")
-			ok(mockUi.console.info.mock.calls.some(call => call[0].includes("Loaded 2 models")), "Shows progress via UI")
+			ok(ui.console.info.mock.calls.some(call => call[0].includes("Loaded 2 models")), "Shows progress via UI")
 		})
 
 		it("Caches models for 1 hour, skips fetch on second call if fresh", async () => {
 			const tempDir = await mkdtemp(path.join(tmpdir(), "model-cache-"))
 			const fs = new FileSystem({ cwd: tempDir })
-			const mockUi = { console: { info: () => {} }, createProgress: () => setInterval(() => {}, 1000) }
-			const models1 = await loadModels(mockUi)
+			const ui = { console: { info: () => {} }, createProgress: () => setInterval(() => {}, 1000) }
+			const models1 = await loadModels({ ui })
 			// Mock time: Assume cache written
 			const cachePath = "chat/models.jsonl"
 			const cacheContent = { timestamp: Date.now(), data: Array.from(models1) }
 			await fs.save(cachePath, cacheContent)
 			// Second call: should use cache (no fetch)
-			const models2 = await loadModels(mockUi)
+			const models2 = await loadModels({ ui })
 			deepStrictEqual(Array.from(models2.keys()), Array.from(models1.keys()), "Returns cached models")
-			ok(mockUi.console.info.mock.calls.some(call => call[0].includes("from cache")), "Indicates cache use")
+			ok(ui.console.info.mock.calls.some(call => call[0].includes("from cache")), "Indicates cache use")
 			await rm(tempDir, { recursive: true })
 		})
 	})
@@ -48,9 +48,9 @@ describe("003-Model-Loading-Selection – src/Chat/models.js & src/llm/*", () =>
 	describe("3.2 Select model interactively or by partial id/provider", () => {
 		it("Selects exact match without prompt", async () => {
 			const models = new Map([["exact-match", new ModelInfo({ id: "exact-match", provider: "test" })]])
-			const mockUi = { console: { info: () => {} }, ask: async () => {} } // No prompt
+			const ui = { console: { info: () => {} }, ask: async () => {} } // No prompt
 			const fs = new FileSystem()
-			const selected = await selectModel(models, "exact-match", undefined, mockUi, fs)
+			const selected = await selectModel(models, "exact-match", undefined, ui, fs)
 			strictEqual(selected.id, "exact-match", "Selects single matching model without UI")
 		})
 

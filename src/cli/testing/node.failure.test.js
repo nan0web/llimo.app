@@ -1,7 +1,7 @@
 import { before, describe, it } from "node:test"
 import assert from "node:assert/strict"
 import { FileSystem } from "../../utils/index.js"
-import { parseOutput, Tap } from "./node.js"
+import { Tap } from "./node.js"
 import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -27,11 +27,5 @@ describe("node.failure.txt handling", () => {
 		assert.strictEqual(first.file, "node.test.js")
 		// error code from the YAML block must be captured
 		assert.strictEqual(first.doc?.code, "ERR_TEST_FAILURE")
-	})
-
-	it("parseOutput should expose the failure in counts", () => {
-		const result = parseOutput(txt, "", fs)
-		// at least one failure must be reflected in either counts or guess
-		assert.ok(result.counts.fail > 0 || result.guess.fail > 0, "failure not counted")
 	})
 })

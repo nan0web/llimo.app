@@ -5,7 +5,7 @@ export class TableDemo {
 	static async run() {
 		const ui = new Ui()
 
-		console.log('=== Table Component Demo ===')
+		console.info('=== Table Component Demo ===')
 
 		// Basic table
 		const basicTable = new Table({
@@ -17,9 +17,9 @@ export class TableDemo {
 			],
 			options: { divider: " | ", aligns: ["left", "right", "left"] }
 		})
-		console.log('Basic Table:')
-		basicTable.renderIn(ui)
-		console.log('')
+		console.info('Basic Table:')
+		ui.render(basicTable)
+		console.info('')
 
 		// Advanced options
 		const advancedTable = new Table({
@@ -35,19 +35,19 @@ export class TableDemo {
 				overflow: "visible" // or "hidden"
 			}
 		})
-		console.log('Advanced Table:')
-		advancedTable.renderIn(ui)
-		console.log('')
+		console.info('Advanced Table:')
+		ui.render(advancedTable)
+		console.info('')
 
 		// Rendering without UI (toString)
-		const stringTable = new Table({ rows: [["A", "B"]] })
-		console.log('As String:', stringTable.toString())
+		console.info('Rendering without UI (toString):')
+		console.info(String(advancedTable))
 
 		// Silent table (no console output)
 		const silentTable = new Table({ rows: [["Silent", "Row"]] })
-		silentTable.renderIn(ui) // No output due to silent: false by default, but can set options.silent=true
+		ui.render(silentTable) // No output due to silent: false by default, but can set options.silent=true
 
-		console.log('Demo complete!')
+		console.info('Demo complete!')
 	}
 }
 

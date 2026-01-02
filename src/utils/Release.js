@@ -1,5 +1,3 @@
-import { FileEntry } from "../FileProtocol.js"
-
 /**
  * ReleaseProtocol – parses release‑notes markdown into a concise JSON structure.
  *
@@ -18,6 +16,27 @@ import { FileEntry } from "../FileProtocol.js"
  * @class
  */
 export default class ReleaseProtocol {
+	/** @type {string} */
+	version = ""
+	/** @param {Partial<ReleaseProtocol>} [input={}] */
+	constructor(input = {}) {
+		const {
+			version = this.version,
+		} = input
+		this.version = String(version)
+	}
+	get x() {
+		let [x] = this.version.split(".")
+		return x.startsWith("v") ? x.slice(1) : x
+	}
+	get y() {
+		let [, y] = this.version.split(".")
+		return y.startsWith("v") ? y.slice(1) : y
+	}
+	get z() {
+		let [, , z] = this.version.split(".")
+		return z.startsWith("v") ? z.slice(1) : z
+	}
 	/**
 	 * Parse a release‑notes markdown source.
 	 *

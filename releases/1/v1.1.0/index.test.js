@@ -49,7 +49,7 @@ async function runTaskTest(taskDir) {
  * For release success: 100% pass.txt across all tasks, no fail/pending.
  * It also ensures tests.txt exists with test file lists for each task (run after code updates, before pnpm test:all).
  * Dependencies: Tasks are ordered (001 before 002), but can run parallel if no inter-task deps.
- * Safety: Tests use temp dirs; for full isolation, run in Docker (see llmo release command).
+ * Safety: Tests use temp dirs; for full isolation, run in Docker (see llimo release command).
  */
 describe("LLiMo v1.1.0 Release – Task Outcome Verification", () => {
 	const releaseDir = "releases/v1.1.0"

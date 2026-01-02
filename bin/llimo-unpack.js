@@ -29,11 +29,11 @@ function usage() {
 	ui.console.info("")
 	ui.console.info("Usage with a pipe format:")
 	ui.console.info("  ")
-	ui.console.info(`  echo '{"filename":"test.md","content":"# Hello"}' | llimo-unpack [output-file]`)
+	ui.console.info(`  echo '{"filename":"test.md","content":"# Hello"}' | llimo unpack [output-file]`)
 	ui.console.info("  ")
 	ui.console.info("Usage with a file format:")
 	ui.console.info("  ")
-	ui.console.info("  llimo-unpack <input-file> [output-file]")
+	ui.console.info("  llimo unpack <input-file> [output-file]")
 	ui.console.info("  ")
 	ui.console.info("    input-file  - Path to the input file")
 	ui.console.info("    output-file - Path to the output file prints to stdout if not defined")
@@ -103,6 +103,7 @@ async function main(argv = process.argv.slice(2)) {
 					input: (await fs.open(mdFile)).createReadStream(),
 					crlfDelay: Infinity,
 				})
+				baseDir = path.dirname(mdFile)
 				// If a second argument exists, treat it as the destination file.
 				if (argv.length > 1) {
 					outputPath = path.resolve(process.cwd(), argv[1])
@@ -134,3 +135,4 @@ main().catch((err) => {
 	if (err.stack) ui.console.debug(err.stack)
 	process.exit(1)
 })
+
