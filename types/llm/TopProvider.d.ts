@@ -1,7 +1,7 @@
 /**
  * Represents top provider information for a model.
  */
-export default class TopProvider {
+export class TopProvider {
     /**
      * @param {Partial<TopProvider>} input
      */

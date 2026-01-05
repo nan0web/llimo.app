@@ -7,4 +7,4 @@
  * @returns {AsyncGenerator<string | UiOutput>}
  */
 export function unpackAnswer(parsed: import("../FileProtocol").ParsedFile, isDry?: boolean, cwd?: string, format?: (n: number) => string): AsyncGenerator<string | UiOutput>;
-import UiOutput from "../cli/UiOutput.js";
+import { UiOutput } from "../cli/UiOutput.js";

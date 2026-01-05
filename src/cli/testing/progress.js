@@ -1,9 +1,9 @@
-import FileSystem from "../../utils/FileSystem.js"
+import { FileSystem } from "../../utils/FileSystem.js"
 import { DIM, GREEN, RED, RESET, YELLOW } from "../ANSI.js"
-import Ui from "../Ui.js"
+import { Ui } from "../Ui.js"
 import { Suite } from "./node.js"
 
-export function noDebugger(str) {
+function noDebugger(str) {
 	return ![
 		"Error: Waiting for the debugger to disconnect",
 		"Error: Debugger attached",

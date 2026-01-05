@@ -1,5 +1,5 @@
 import { Progress } from '../src/cli/components/Progress.js'
-import Ui from '../src/cli/Ui.js'
+import { Ui }from '../src/cli/Ui.js'
 
 export class ProgressDemo {
 	static async run() {

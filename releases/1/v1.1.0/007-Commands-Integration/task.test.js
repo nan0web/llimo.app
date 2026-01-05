@@ -13,9 +13,9 @@ import { spawnAsync } from "node:child_process"  // Assume promisify
 import path from "node:path"
 import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
-import { FileEntry } from "../../../src/FileProtocol.js"
-import * as commands from "../../../src/llm/commands/index.js"
-import FileSystem from "../../../src/utils/FileSystem.js"
+import { FileEntry } from "../../../../src/FileProtocol.js"
+import * as commands from "../../../../src/llm/commands/index.js"
+import { FileSystem } from "../../../../src/utils/FileSystem.js"
 
 describe("007-Commands-Integration – src/llm/commands/*", () => {
 	describe("7.1 @title: Auto-title chats in first response (add to system prompt)", () => {

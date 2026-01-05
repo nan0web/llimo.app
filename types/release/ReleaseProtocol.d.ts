@@ -18,22 +18,22 @@ export default class ReleaseProtocol extends FileProtocol {
      * Parse a release‑notes markdown source.
      *
      * @param {string} source – markdown content of a release file.
-     * @returns {{ title: string, tasks: Array<{label:string, link:string, text:string}> }}
+     * @returns {Promise<import("../FileProtocol.js").ParsedFile & { title: string, tasks: Array<{label:string, link:string, text:string}> }>}
      */
-    static parse(source: string): {
+    static parse(source: string): Promise<import("../FileProtocol.js").ParsedFile & {
         title: string;
         tasks: Array<{
             label: string;
             link: string;
             text: string;
         }>;
-    };
+    }>;
     /**
      * Parse from stream.
-     * @param {import('node:readline').Interface} stream
-     * @returns {Promise<{ title: string, tasks: Array<{label:string, link:string, text:string}> }>}
+     * @param {AsyncGenerator<string> | import("node:readline").Interface} stream
+     * @returns {Promise<import("../FileProtocol.js").ParsedFile & { title: string, tasks: Array<{label:string, link:string, text:string}> }>}
      */
-    static parseStream(stream: import("node:readline").Interface): Promise<{
+    static parseStream(stream: AsyncGenerator<string> | import("node:readline").Interface): Promise<import("../FileProtocol.js").ParsedFile & {
         title: string;
         tasks: Array<{
             label: string;
@@ -42,4 +42,4 @@ export default class ReleaseProtocol extends FileProtocol {
         }>;
     }>;
 }
-import FileProtocol from "../FileProtocol.js";
+import { FileProtocol } from "../FileProtocol.js";

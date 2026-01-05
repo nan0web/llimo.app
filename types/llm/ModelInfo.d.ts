@@ -4,7 +4,7 @@
 /**
  * Represents information about a model.
  */
-export default class ModelInfo {
+export class ModelInfo {
     /**
      * Constructs a ModelInfo instance.
      * @param {Partial<ModelInfo> & { volume?: number }} input - Partial object with model properties.
@@ -57,7 +57,7 @@ export default class ModelInfo {
     #private;
 }
 export type ProviderStatus = "live" | "staging";
-import Architecture from "./Architecture.js";
-import Limits from "./Limits.js";
-import Pricing from "./Pricing.js";
-import TopProvider from "./TopProvider.js";
+import { Architecture } from "./Architecture.js";
+import { Limits } from "./Limits.js";
+import { Pricing } from "./Pricing.js";
+import { TopProvider } from "./TopProvider.js";

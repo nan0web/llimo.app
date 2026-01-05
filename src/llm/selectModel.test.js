@@ -4,8 +4,8 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { selectModel } from "./selectModel.js"
-import ModelInfo from "./ModelInfo.js"
-import Ui from "../cli/Ui.js"
+import { ModelInfo } from "./ModelInfo.js"
+import { Ui }from "../cli/Ui.js"
 
 describe("selectModel – model/provider selection logic", () => {
 	let cwd

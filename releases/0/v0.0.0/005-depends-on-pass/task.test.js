@@ -1,7 +1,7 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 
-import FileSystem from "../../../src/utils/FileSystem.js"
+import { FileSystem } from "../../../../src/utils/FileSystem.js"
 
 describe("005-depends-on-pass task", () => {
 	it("should pass if 001-pass has pass.txt", async () => {

@@ -3,7 +3,7 @@ import assert from "node:assert"
 import { mkdtemp, rm, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
-import FileSystem from "./FileSystem.js"
+import { FileSystem } from "./FileSystem.js"
 
 describe("FileSystem – JSON loader & saver", () => {
 	let tempDir

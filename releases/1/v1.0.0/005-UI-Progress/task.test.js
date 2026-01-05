@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process"
 import { resolve } from "node:path"
 import { clearDebugger } from "../../../../src/utils/test.js"
 import { formatChatProgress } from "../../../../src/llm/chatProgress.js"
-import Ui from "../../../../src/cli/Ui.js"
+import { Ui }from "../../../../src/cli/Ui.js"
 
 const rootDir = resolve("src/llm/chat-progress")
 

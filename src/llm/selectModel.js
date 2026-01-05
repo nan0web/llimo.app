@@ -1,5 +1,5 @@
-import Ui from "../cli/Ui.js"
-import ModelInfo from "./ModelInfo.js"
+import { Ui }from "../cli/Ui.js"
+import { ModelInfo } from "./ModelInfo.js"
 import { model2row } from "../cli/autocomplete.js"
 import { DIM, RESET } from "../cli/ANSI.js"
 

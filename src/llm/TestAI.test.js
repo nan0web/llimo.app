@@ -3,13 +3,16 @@ import assert from "node:assert/strict"
 import { mkdtemp, rm, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
-import TestAI from "./TestAI.js"
+import { TestAI } from "./TestAI.js"
 import { formatChatProgress } from "./chatProgress.js"
-import Usage from "./Usage.js"
-import ModelInfo from "./ModelInfo.js"
+import { Usage } from "./Usage.js"
+import { ModelInfo } from "./ModelInfo.js"
+import { Pricing } from "./Pricing.js"
+import { Ui } from "../cli/Ui.js"
 
 describe.skip("TestAI – file-based chat simulation", () => {
 	let chatDir
+	const ui = new Ui()
 
 	before(async () => {
 		chatDir = await mkdtemp(resolve(tmpdir(), "llimo-testai-"))
@@ -55,15 +58,15 @@ describe.skip("TestAI – file-based chat simulation", () => {
 			answerTime: now,  // Current time
 		}
 		const model = new ModelInfo({
-			pricing: { prompt: 0.0035, completion: 0, input_cache_read: 0 },  // Simulate non-zero pricing for real models
+			pricing: new Pricing({ prompt: 0.0035, completion: 0, input_cache_read: 0 }),  // Simulate non-zero pricing for real models
 		})
 
 		const lines = formatChatProgress({
+			ui,
 			usage,
 			clock,
 			model,
 			now,
-			elapsed: 4.1,  // Override for test
 		})
 
 		// Verify speed is not NaN: 65879 / 4.1 ≈ 16058 T/s (reading)
@@ -76,8 +79,9 @@ describe.skip("TestAI – file-based chat simulation", () => {
 
 	it("should load and simulate response from files (all files handled)", async () => {
 		const ai = new TestAI()
+		/** @type {import("ai").ModelMessage[]} */
 		const messages = [{ role: "user", content: "Test" }]
-		const result = await ai.streamText("test-model", messages, { cwd: chatDir, step: 1 })
+		const result = await ai.streamText("test-model", messages)
 		const { fullResponse, reasoning, usage, chunks, textStream } = result
 
 		assert.equal(fullResponse, "Hello world!\nAppended stream content")  // answer.md + stream.md

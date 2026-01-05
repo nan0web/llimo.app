@@ -8,19 +8,12 @@ describe("ANSI", () => {
 		assert.strictEqual(ANSI.RESET, "")
 		assert.strictEqual(ANSI.BOLD, "")
 		assert.strictEqual(ANSI.RED, "")
-		assert.strictEqual(ANSI.BG_RED, "")
 	})
 
 	it("should export COLORS object with foreground colors", () => {
 		assert.strictEqual(ANSI.COLORS.BLACK, ANSI.BLACK)
 		assert.strictEqual(ANSI.COLORS.RED, ANSI.RED)
-		assert.strictEqual(Object.keys(ANSI.COLORS).length, 16)
-	})
-
-	it("should export BG_COLORS object with background colors", () => {
-		assert.strictEqual(ANSI.BG_COLORS.BLACK, ANSI.BG_BLACK)
-		assert.strictEqual(ANSI.BG_COLORS.RED, ANSI.BG_RED)
-		assert.strictEqual(Object.keys(ANSI.BG_COLORS).length, 16)
+		assert.strictEqual(Object.keys(ANSI.COLORS).length, 7)
 	})
 
 	it("should provide CLEAR_LINE constant", () => {

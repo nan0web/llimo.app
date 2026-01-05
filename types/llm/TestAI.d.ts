@@ -26,7 +26,7 @@
  *
  * Supports per-step simulation by prefixing files with `step${options.step}/`
  */
-export default class TestAI extends AI {
+export class TestAI extends AI {
     /**
      * Simulates streaming by reading chunks from files and yielding them with delays.
      * Loads chat state from files if available. Handles all specified chat files.
@@ -68,10 +68,25 @@ export default class TestAI extends AI {
      * 3. complete the chat.
      */
     simulateChat(): Promise<void>;
+    /**
+     * Runs the chat loop.
+     *
+     * Workflow
+     * 1. load current chat --chat-dir or start new if --new.
+     * 2. start the chat.
+     * 2.1. Run tests if --fix provided.
+     * 2.2. Pack input > prompt.
+     * 2.3. Send chat messages to API.
+     * 2.4. Unpack the response.
+     * 2.5. Run tests.
+     * 2.6. Continue the chat if any test fail (exitCode !== 0).
+     * 3. complete the chat.
+     */
+    chat(): Promise<void>;
     simulateRelease(): Promise<void>;
 }
 export type StreamTextResult = import("ai").StreamTextResult<any, any>;
 export type ModelMessage = import("ai").ModelMessage;
 export type UIMessageStreamOptions = import("ai").UIMessageStreamOptions<import("ai").UIMessage<any, any, any>>;
-import AI from "./AI.js";
-import Usage from "./Usage.js";
+import { AI } from "./AI.js";
+import { Usage } from "./Usage.js";

@@ -1,12 +1,13 @@
 import { describe, it, mock } from "node:test"
 import assert from "node:assert/strict"
 
-import { modelRows, filterModels, formatContext, highlightCell, parseFieldFilter, renderTable } from "./autocomplete.js"
-import ModelInfo from "../llm/ModelInfo.js"
-import Pricing from "../llm/Pricing.js"
-import Architecture from "../llm/Architecture.js"
+// import { modelRows, filterModels, formatContext, highlightCell, parseFieldFilter, renderTable } from "./autocomplete.js"
+import { autocomplete } from "./autocomplete.js"
+import { ModelInfo } from "../llm/ModelInfo.js"
+import { Pricing } from "../llm/Pricing.js"
+import { Architecture } from "../llm/Architecture.js"
 import { RESET, YELLOW } from "./ANSI.js"
-import { UiFormats } from "./Ui.js"
+import { Ui } from "./Ui.js"
 
 // Test model map - each has only one info, but to test max logic, add multiple for same id
 const testModelMap = new Map([
@@ -52,7 +53,7 @@ const testModelMap = new Map([
 describe("autocomplete – core functions", () => {
 	describe("modelRows", () => {
 		it("flattens map correctly", () => {
-			const rows = modelRows(testModelMap)
+			const rows = autocomplete.modelRows(testModelMap)
 			assert.strictEqual(rows.length, 3)
 			assert.strictEqual(rows[0].id, "qwen-3-32b")
 			assert.strictEqual(rows[0].context, 8192) // Max of 8192 and 4096
@@ -68,134 +69,130 @@ describe("autocomplete – core functions", () => {
 
 	describe("formatContext", () => {
 		it("formats small numbers as T", () => {
-			assert.strictEqual(formatContext(123), "123t")
+			assert.strictEqual(autocomplete.formatContext(123), "123t")
 		})
 
 		it("formats thousands as K", () => {
-			assert.strictEqual(formatContext(131072), "131Kt")
+			assert.strictEqual(autocomplete.formatContext(131072), "131Kt")
 		})
 
 		it("formats millions as M", () => {
-			assert.strictEqual(formatContext(1e6), "1Mt")
+			assert.strictEqual(autocomplete.formatContext(1e6), "1Mt")
 		})
 	})
 
 	describe("highlightCell", () => {
 		it("no highlight for empty search", () => {
-			assert.strictEqual(highlightCell("test", ""), "test")
+			assert.strictEqual(autocomplete.highlightCell("test", ""), "test")
 		})
 
 		it("highlights match in ID", () => {
-			const hl = highlightCell("qwen-3-model", "qwen")
+			const hl = autocomplete.highlightCell("qwen-3-model", "qwen")
 			assert.ok(hl.includes(YELLOW + "qwen" + RESET))
 		})
 
 		it("highlights match in provider", () => {
-			const hl = highlightCell("huggingface-novita", "novita")
+			const hl = autocomplete.highlightCell("huggingface-novita", "novita")
 			assert.ok(hl.includes(YELLOW + "novita" + RESET))
 		})
 
 		it("no highlight for command search", () => {
-			assert.strictEqual(highlightCell("test", "/help"), "test")
+			assert.strictEqual(autocomplete.highlightCell("test", "/help"), "test")
 		})
 	})
 
 	describe("parseFieldFilter", () => {
 		it("parses field=value", () => {
-			const parsed = parseFieldFilter("provider=novita")
+			const parsed = autocomplete.parseFieldFilter("provider=novita")
 			assert.deepStrictEqual(parsed, { field: "provider", op: "=", value: "novita" })
 		})
 
 		it("parses field op value", () => {
-			const parsed = parseFieldFilter("context>8K")
+			const parsed = autocomplete.parseFieldFilter("context>8K")
 			assert.deepStrictEqual(parsed, { field: "context", op: ">", value: "8K" })
 		})
 
 		it("parses simple includes (no =)", () => {
-			const parsed = parseFieldFilter("qwen")
+			const parsed = autocomplete.parseFieldFilter("qwen")
 			assert.deepStrictEqual(parsed, { field: "", op: "", value: "qwen" })
 		})
 	})
 
 	describe("filterModels", () => {
-		const allModels = modelRows(testModelMap)
+		const allModels = autocomplete.modelRows(testModelMap)
 
 		it("filters by ID substring (partial match via includes)", () => {
-			const result = filterModels(allModels, "qwen-3-32b")
+			const result = autocomplete.filterModels(allModels, "qwen-3-32b")
 			// Fixed: expect the 3 partial matches (including -hf)
 			assert.strictEqual(result.length, 3)
 			assert.ok(result.every(r => r.id.toLowerCase().includes("qwen-3-32b")))
 		})
 
 		it("filters by provider substring", () => {
-			const result = filterModels(allModels, "novita")
+			const result = autocomplete.filterModels(allModels, "novita")
 			assert.strictEqual(result.length, 1)
 			assert.strictEqual(result[0].provider, "huggingface/novita")
 		})
 
 		it("filters by @provider=value", () => {
-			const result = filterModels(allModels, "@provider=novita")
+			const result = autocomplete.filterModels(allModels, "@provider=novita")
 			assert.strictEqual(result.length, 1)
 			assert.strictEqual(result[0].provider, "huggingface/novita")
 		})
 
 		it("filters by @id=value", () => {
-			const result = filterModels(allModels, "@id=qwen-3-32b")
+			const result = autocomplete.filterModels(allModels, "@id=qwen-3-32b")
 			assert.strictEqual(result.length, 2)
 			assert.ok(result.every(r => r.id === "qwen-3-32b"))
 		})
 
 		it("filters numerically by @context>4096", () => {
-			const result = filterModels(allModels, "@context>4096")
+			const result = autocomplete.filterModels(allModels, "@context>4096")
 			assert.strictEqual(result.length, 1)
 			assert.strictEqual(result[0].context, 8192)
 		})
 
 		it("supports K/M suffixes in numeric filters", () => {
-			const result = filterModels(allModels, "@context>4K") // 4000
+			const result = autocomplete.filterModels(allModels, "@context>4K") // 4000
 			assert.strictEqual(result.length, 3)
 
-			const result2 = filterModels(allModels, "@context>8K") // 8000
+			const result2 = autocomplete.filterModels(allModels, "@context>8K") // 8000
 			assert.strictEqual(result2.length, 1)
 			assert.strictEqual(result2[0].context, 8192)
 		})
 
 		it("returns all for empty search", () => {
-			const result = filterModels(allModels, "")
+			const result = autocomplete.filterModels(allModels, "")
 			assert.deepStrictEqual(result, allModels)
 		})
 
 		it("ignores filtering in command mode", () => {
-			const result = filterModels(allModels, "/help")
+			const result = autocomplete.filterModels(allModels, "/help")
 			assert.deepStrictEqual(result, allModels)
 		})
 
 		it("handles invalid field as no match", () => {
-			const result = filterModels(allModels, "@invalid=foo")
+			const result = autocomplete.filterModels(allModels, "@invalid=foo")
 			assert.strictEqual(result.length, 0)
 		})
 	})
 })
 
 describe("renderTable", () => {
-	const mockUi = {
-		console: {
-			info: () => { },
-			table: mock.fn(),
-		},
-		formats: new UiFormats(),
-	}
+	const mockUi = new Ui()
+	mockUi.console.info = () => { }
+	mockUi.console.table = mock.fn()
 	const mockRows = [
-		{ id: "long-model-id-123456789", context: 8192, provider: "test/novita", modality: "text", inputPrice: -1, outputPrice: 0.004, tools: true, json: false }
+		{ id: "long-model-id-123456789", context: 8192, provider: "test/novita", modality: "text", inputPrice: -1, outputPrice: 0.004, tools: true, json: false, maxOut: 8192, speed: 0, isModerated: false }
 	]
 
 	it("renders table with highlighting in ID and provider", () => {
-		renderTable(mockRows, "novita", 0, 10, mockUi)
+		autocomplete.renderTable(mockRows, "novita", 0, 10, mockUi)
 		assert.strictEqual(mockUi.console.table.mock.callCount(), 1)
 	})
 
 	it("handles negative pricing as '-'", () => {
-		renderTable(mockRows, "", 0, 10, mockUi)
+		autocomplete.renderTable(mockRows, "", 0, 10, mockUi)
 	})
 })
 

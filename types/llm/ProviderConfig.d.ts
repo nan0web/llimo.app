@@ -4,7 +4,3 @@
  * @throws {Error} If API key is missing, with provider-specific help.
  */
 export function validateApiKey(provider: string): void;
-declare namespace _default {
-    export { validateApiKey };
-}
-export default _default;

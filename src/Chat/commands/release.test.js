@@ -2,7 +2,7 @@ import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 
 import { ReleaseCommand, ReleaseOptions } from "./release.js"
-import TestFileSystem from "../../cli/testing/TestFileSystem.js"
+import { TestFileSystem } from "../../cli/testing/index.js"
 
 class StubReleaseCommand extends ReleaseCommand {
 	async exec() {

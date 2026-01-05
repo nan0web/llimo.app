@@ -15,7 +15,7 @@
  *
  * @class
  */
-export default class ReleaseProtocol {
+export class ReleaseProtocol {
     /**
      * Parse a release‑notes markdown source.
      *

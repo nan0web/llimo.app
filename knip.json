@@ -1,0 +1,9 @@
+{
+	"ignoreBinaries": ["dotenv"],
+	"ignore": [
+		"types/**",
+		"play/**",
+		"src/README.md.js"
+	],
+	"ignoreDependencies": []
+}

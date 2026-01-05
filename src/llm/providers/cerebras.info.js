@@ -21,14 +21,14 @@
  * used by the `cerebras.info` provider.
  */
 
-import ModelInfo from "../ModelInfo.js"
-import Pricing from "../Pricing.js"
+import { ModelInfo } from "../ModelInfo.js"
+import { Pricing } from "../Pricing.js"
 
 /**
  * @param {object[]} models
  * @returns {ModelInfo[]}
  */
-export function makeFlat(models) {
+function makeFlat(models) {
 	return models.map(m => new ModelInfo({ ...m, provider: "cerebras", pricing: new Pricing({ prompt: 0, completion: 0 }) }))
 }
 

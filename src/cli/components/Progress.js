@@ -1,4 +1,4 @@
-import UiOutput from "../UiOutput.js"
+import { UiOutput } from "../UiOutput.js"
 import { RESET, GREEN, YELLOW } from "../ANSI.js"
 
 /**
@@ -50,5 +50,3 @@ export class Progress extends UiOutput {
 		ui.overwriteLine(this.toString())
 	}
 }
-
-export default Progress

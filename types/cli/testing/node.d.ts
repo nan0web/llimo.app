@@ -118,4 +118,4 @@ export type TestOutput = {
     tests: TestInfo[];
     guess: TestOutputCounts;
 };
-import FileSystem from "../../utils/FileSystem.js";
+import { FileSystem } from "../../utils/FileSystem.js";

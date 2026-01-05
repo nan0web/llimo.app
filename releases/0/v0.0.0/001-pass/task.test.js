@@ -1,7 +1,7 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 
-import FileSystem from "../../../src/utils/FileSystem.js"
+import { FileSystem } from "../../../../src/utils/FileSystem.js"
 
 describe("001-pass task", () => {
 	it("should create pass.txt", async () => {

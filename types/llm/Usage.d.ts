@@ -7,7 +7,8 @@ export class Usage {
     reasoningTokens: number;
     /** @type {number} */
     outputTokens: number;
+    /** @type {number} */
+    cachedInputTokens: number;
     /** @returns {number} */
     get totalTokens(): number;
 }
-export default Usage;

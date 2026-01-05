@@ -1,16 +1,4 @@
 /**
- * Options for the `info` command.
- */
-export class InfoOptions {
-    static id: {
-        help: string;
-        default: string;
-    };
-    constructor(input?: {});
-    /** @type {string} */
-    id: string;
-}
-/**
  * `info` command – shows a table with per‑message statistics,
  * cost and model/provider columns.
  */
@@ -20,12 +8,12 @@ export class InfoCommand extends UiCommand {
     /**
      * @param {object} [input]
      * @param {string[]} [input.argv=[]]
-     * @param {Partial<Chat>} [input.chat]
+     * @param {Chat} [input.chat]
      * @returns {InfoCommand}
      */
     static create(input?: {
         argv?: string[] | undefined;
-        chat?: Partial<Chat> | undefined;
+        chat?: Chat | undefined;
     }): InfoCommand;
     /**
      * @param {Partial<InfoCommand>} input
@@ -46,8 +34,21 @@ export class InfoCommand extends UiCommand {
     info(): Promise<Table>;
 }
 import { UiCommand } from "../../cli/Ui.js";
-import Chat from "../../llm/Chat.js";
+/**
+ * Options for the `info` command.
+ */
+declare class InfoOptions {
+    static id: {
+        help: string;
+        default: string;
+    };
+    constructor(input?: {});
+    /** @type {string} */
+    id: string;
+}
+import { Chat } from "../../llm/Chat.js";
 import { Ui } from "../../cli/Ui.js";
-import FileSystem from "../../utils/FileSystem.js";
-import UiOutput from "../../cli/UiOutput.js";
+import { FileSystem } from "../../utils/FileSystem.js";
+import { UiOutput } from "../../cli/UiOutput.js";
 import { Table } from "../../cli/components/index.js";
+export {};

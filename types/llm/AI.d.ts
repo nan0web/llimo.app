@@ -1,29 +1,4 @@
 /**
- * @typedef {Object} StreamOptions callbacks and abort signal
- * @property {AbortSignal} [abortSignal] aborts the request when signaled
- * @property {import('ai').StreamTextOnChunkCallback<import('ai').ToolSet>} [onChunk] called for each raw chunk
- * @property {import('ai').StreamTextOnStepFinishCallback<import('ai').ToolSet>} [onStepFinish] called after a logical step finishes (see description above)
- * @property {import('ai').StreamTextOnErrorCallback} [onError] called on stream error
- * @property {()=>void} [onFinish] called when the stream ends successfully
- * @property {()=>void} [onAbort] called when the stream is aborted
- */
-export class AiStrategy {
-    /**
-     * @param {ModelInfo} model
-     * @param {number} tokens
-     * @param {number} [safeAnswerTokens=1_000]
-     * @returns {boolean}
-     */
-    shouldChangeModel(model: ModelInfo, tokens: number, safeAnswerTokens?: number): boolean;
-    /**
-     * @param {Map<string, ModelInfo>} models
-     * @param {number} tokens
-     * @param {number} [safeAnswerTokens=1_000]
-     * @returns {ModelInfo | undefined}
-     */
-    findModel(models: Map<string, ModelInfo>, tokens: number, safeAnswerTokens?: number): ModelInfo | undefined;
-}
-/**
  * Wrapper for AI providers.
  *
  * Apart from the static model list, the class now exposes a method
@@ -32,7 +7,8 @@ export class AiStrategy {
  *
  * @class
  */
-export default class AI {
+export class AI {
+    static Strategy: typeof AiStrategy;
     /**
      * @param {Object} input
      * @param {readonly[string, ModelInfo] | readonly [string, ModelInfo] | Map<string, ModelInfo | ModelInfo>} [input.models=[]]
@@ -129,18 +105,18 @@ export default class AI {
      *
      * @param {ModelInfo} model
      * @param {import('ai').ModelMessage[]} messages
-     * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage>} [options={}]
+     * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage> & StreamOptions} [options={}]
      * @returns {import('ai').StreamTextResult<import('ai').ToolSet>}
      */
-    streamText(model: ModelInfo, messages: import("ai").ModelMessage[], options?: import("ai").UIMessageStreamOptions<import("ai").UIMessage>): import("ai").StreamTextResult<import("ai").ToolSet, any>;
+    streamText(model: ModelInfo, messages: import("ai").ModelMessage[], options?: import("ai").UIMessageStreamOptions<import("ai").UIMessage> & StreamOptions): import("ai").StreamTextResult<import("ai").ToolSet, any>;
     /**
      * Generate text from a model (non‑streaming).
      *
-     * @param {string} modelId
+     * @param {ModelInfo} model
      * @param {import('ai').ModelMessage[]} messages
      * @returns {Promise<{text: string, usage: Usage}>}
      */
-    generateText(modelId: string, messages: import("ai").ModelMessage[]): Promise<{
+    generateText(model: ModelInfo, messages: import("ai").ModelMessage[]): Promise<{
         text: string;
         usage: Usage;
     }>;
@@ -183,5 +159,31 @@ export type StreamOptions = {
      */
     onAbort?: (() => void) | undefined;
 };
-import ModelInfo from './ModelInfo.js';
-import Usage from './Usage.js';
+import { ModelInfo } from './ModelInfo.js';
+/**
+ * @typedef {Object} StreamOptions callbacks and abort signal
+ * @property {AbortSignal} [abortSignal] aborts the request when signaled
+ * @property {import('ai').StreamTextOnChunkCallback<import('ai').ToolSet>} [onChunk] called for each raw chunk
+ * @property {import('ai').StreamTextOnStepFinishCallback<import('ai').ToolSet>} [onStepFinish] called after a logical step finishes (see description above)
+ * @property {import('ai').StreamTextOnErrorCallback} [onError] called on stream error
+ * @property {()=>void} [onFinish] called when the stream ends successfully
+ * @property {()=>void} [onAbort] called when the stream is aborted
+ */
+declare class AiStrategy {
+    /**
+     * @param {ModelInfo} model
+     * @param {number} tokens
+     * @param {number} [safeAnswerTokens=1_000]
+     * @returns {boolean}
+     */
+    shouldChangeModel(model: ModelInfo, tokens: number, safeAnswerTokens?: number): boolean;
+    /**
+     * @param {Map<string, ModelInfo>} models
+     * @param {number} tokens
+     * @param {number} [safeAnswerTokens=1_000]
+     * @returns {ModelInfo | undefined}
+     */
+    findModel(models: Map<string, ModelInfo>, tokens: number, safeAnswerTokens?: number): ModelInfo | undefined;
+}
+import { Usage } from './Usage.js';
+export {};

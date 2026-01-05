@@ -43,5 +43,4 @@ export class TestFileSystem extends FileSystem {
     browse(path: string, options?: object): Promise<string[]>;
     #private;
 }
-export default TestFileSystem;
-import FileSystem from "../../utils/FileSystem.js";
+import { FileSystem } from "../../utils/FileSystem.js";

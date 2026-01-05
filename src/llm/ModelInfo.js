@@ -1,7 +1,7 @@
-import Pricing from "./Pricing.js"
-import Architecture from "./Architecture.js"
-import TopProvider from "./TopProvider.js"
-import Limits from "./Limits.js"
+import { Pricing } from "./Pricing.js"
+import { Architecture } from "./Architecture.js"
+import { TopProvider } from "./TopProvider.js"
+import { Limits } from "./Limits.js"
 
 /**
  * @typedef {'live'|'staging'} ProviderStatus
@@ -10,7 +10,7 @@ import Limits from "./Limits.js"
 /**
  * Represents information about a model.
  */
-export default class ModelInfo {
+export class ModelInfo {
 	/** @type {string} - Model ID */
 	id = ""
 	/** @type {Architecture} - Model architecture */

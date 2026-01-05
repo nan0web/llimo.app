@@ -4,7 +4,7 @@ import { dirname, extname, resolve, basename, relative, sep } from 'node:path'
 /**
  * Path operations wrapper
  */
-export default class Path {
+export class Path {
 	/** @type {string} */
 	cwd
 	/**

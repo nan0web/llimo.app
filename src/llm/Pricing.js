@@ -1,9 +1,9 @@
-import Usage from "./Usage.js"
+import { Usage } from "./Usage.js"
 
 /**
  * Represents pricing information for a model.
  */
-export default class Pricing {
+export class Pricing {
 	/** @type {number} - Completion cost per million tokens */
 	completion = 0
 	/** @type {number} - Image cost */

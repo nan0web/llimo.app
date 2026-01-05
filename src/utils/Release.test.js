@@ -1,8 +1,8 @@
 import { describe, it, before } from "node:test"
 import assert from "node:assert"
 
-import Release from "./Release.js"
-import FileSystem from "./FileSystem.js"
+import { ReleaseProtocol } from "./Release.js"
+import { FileSystem } from "./FileSystem.js"
 
 const fs = new FileSystem()
 
@@ -14,7 +14,7 @@ describe("Release.parseStream", () => {
 	})
 
 	it("should correctly read → parse → save file", async () => {
-		const parsed = Release.parse(content)
+		const parsed = ReleaseProtocol.parse(content)
 		assert.deepStrictEqual(parsed.title, "LLiMo v1.0.0 Release Notes")
 		assert.deepStrictEqual(parsed.tasks.map(
 			({ label, link, text }) => [Boolean(label), parseInt(link.slice(0, 3)), Boolean(text)]

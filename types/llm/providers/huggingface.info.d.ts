@@ -1,43 +1,3 @@
-/**
- * @returns {{ models: readonly Array<[string, object]> }}
- */
-export function getModels(): {
-    models: readonly Array<[string, object]>;
-};
-/**
- * @typedef {Object} HuggingFaceArchitecture
- * @property {string[]} input_modalities - List of input modalities (e.g., ["text"], ["text","image"])
- * @property {string[]} output_modalities - List of output modalities (e.g., ["text"])
- */
-/**
- * @typedef {Object} HuggingFacePricing
- * @property {number} input - Price per input token (or unit) in USD
- * @property {number} output - Price per output token (or unit) in USD
- */
-/**
- * @typedef {Object} HuggingFaceProviderInfo
- * @property {string} provider - Provider identifier (e.g., "novita", "zai-org")
- * @property {import("../ModelInfo.js").ProviderStatus} status - Provider status (e.g., "live", "staging")
- * @property {number} [context_length] - Maximum context length supported by the provider
- * @property {HuggingFacePricing} [pricing] - Pricing details, if available
- * @property {boolean} [supports_tools] - Whether the provider supports tool usage
- * @property {boolean} [supports_structured_output] - Whether the provider supports structured output
- * @property {boolean} [is_model_author] - True if the provider is the model's author
- */
-/**
- * @typedef {Object} HuggingFaceModelInfo
- * @property {string} id - Full model identifier (e.g., "zai-org/GLM-4.7")
- * @property {string} object - Object type, always "model"
- * @property {number} created - Unix timestamp of creation
- * @property {string} owned_by - Owner of the model
- * @property {HuggingFaceArchitecture} architecture - Model architecture description
- * @property {HuggingFaceProviderInfo[]} providers - Array of provider information objects
- */
-/**
- * @param {HuggingFaceModelInfo[]} models
- * @returns {ModelInfo[]}
- */
-export function makeFlat(models: HuggingFaceModelInfo[]): ModelInfo[];
 declare namespace _default {
     export { getModels };
     export { makeFlat };
@@ -119,4 +79,44 @@ export type HuggingFaceModelInfo = {
      */
     providers: HuggingFaceProviderInfo[];
 };
-import ModelInfo from "../ModelInfo.js";
+/**
+ * @returns {{ models: readonly Array<[string, object]> }}
+ */
+declare function getModels(): {
+    models: readonly Array<[string, object]>;
+};
+/**
+ * @typedef {Object} HuggingFaceArchitecture
+ * @property {string[]} input_modalities - List of input modalities (e.g., ["text"], ["text","image"])
+ * @property {string[]} output_modalities - List of output modalities (e.g., ["text"])
+ */
+/**
+ * @typedef {Object} HuggingFacePricing
+ * @property {number} input - Price per input token (or unit) in USD
+ * @property {number} output - Price per output token (or unit) in USD
+ */
+/**
+ * @typedef {Object} HuggingFaceProviderInfo
+ * @property {string} provider - Provider identifier (e.g., "novita", "zai-org")
+ * @property {import("../ModelInfo.js").ProviderStatus} status - Provider status (e.g., "live", "staging")
+ * @property {number} [context_length] - Maximum context length supported by the provider
+ * @property {HuggingFacePricing} [pricing] - Pricing details, if available
+ * @property {boolean} [supports_tools] - Whether the provider supports tool usage
+ * @property {boolean} [supports_structured_output] - Whether the provider supports structured output
+ * @property {boolean} [is_model_author] - True if the provider is the model's author
+ */
+/**
+ * @typedef {Object} HuggingFaceModelInfo
+ * @property {string} id - Full model identifier (e.g., "zai-org/GLM-4.7")
+ * @property {string} object - Object type, always "model"
+ * @property {number} created - Unix timestamp of creation
+ * @property {string} owned_by - Owner of the model
+ * @property {HuggingFaceArchitecture} architecture - Model architecture description
+ * @property {HuggingFaceProviderInfo[]} providers - Array of provider information objects
+ */
+/**
+ * @param {HuggingFaceModelInfo[]} models
+ * @returns {ModelInfo[]}
+ */
+declare function makeFlat(models: HuggingFaceModelInfo[]): ModelInfo[];
+import { ModelInfo } from "../ModelInfo.js";

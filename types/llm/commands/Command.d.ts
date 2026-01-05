@@ -22,7 +22,7 @@ export default class Command extends UiCommand {
     run(): AsyncGenerator<string | Alert | Table>;
 }
 import { UiCommand } from "../../cli/Ui.js";
-import FileSystem from "../../utils/FileSystem.js";
+import { FileSystem } from "../../utils/FileSystem.js";
 import { FileEntry } from "../../FileProtocol.js";
 import { Alert } from "../../cli/components/index.js";
 import { Table } from "../../cli/components/index.js";

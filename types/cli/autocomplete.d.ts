@@ -27,71 +27,7 @@
  * @returns {ModelRow}
  */
 export function model2row(info: ModelInfo, id?: string): ModelRow;
-/**
- * Flatten models map into ModelRow[] for filtering/sorting.
- * @param {Map<string, import("../llm/ModelInfo").default>} modelMap
- * @returns {ModelRow[]}
- */
-export function modelRows(modelMap: Map<string, import("../llm/ModelInfo").default>): ModelRow[];
-/**
- * Format context length (e.g. 131072 -> 131K)
- * @param {number} ctx
- * @returns {string}
- */
-export function formatContext(ctx: number): string;
-/**
- * Highlight search term in a cell
- * @param {string} cell
- * @param {string} search
- * @returns {string}
- */
-export function highlightCell(cell: string, search: string): string;
-/**
- * Parse field filter like @provider=novi or @context>32K
- * @param {string} filterStr e.g. "provider=novi" or "context>32K"
- * @returns {{field: string, op: string, value: string}} – returns empty strings when no explicit operator is present.
- */
-export function parseFieldFilter(filterStr: string): {
-    field: string;
-    op: string;
-    value: string;
-};
-/**
- * Filter models based on ID substring (plain search) or field filters (@field=val).
- * @param {ModelRow[]} models
- * @param {string} search
- * @returns {ModelRow[]}
- */
-export function filterModels(models: ModelRow[], search: string): ModelRow[];
-/**
- * Render table with dynamic widths and highlighting
- * @param {ModelRow[]} filtered
- * @param {string} search
- * @param {number} startIndex
- * @param {number} maxY
- * @param {Ui} ui
- * @returns {void}
- */
-export function renderTable(filtered: ModelRow[], search: string, startIndex: number, maxY: number, ui: Ui): void;
-/**
- * Clear specific number of lines and move cursor to start
- * @param {number} lines
- */
-export function clearLines(lines: number): void;
-/**
- * Interactive search with live keypress, scrolling, and command suggestions
- * @param {Map<string, import("../llm/ModelInfo").default>} modelMap
- * @param {Ui} ui
- * @returns {Promise<void>}
- */
-export function interactive(modelMap: Map<string, import("../llm/ModelInfo").default>, ui: Ui): Promise<void>;
-/**
- * Output all models in pipe format for non-interactive use
- * @param {ModelRow[]} allModels
- * @param {Ui} ui
- */
-export function pipeOutput(allModels: ModelRow[], ui: Ui): void;
-export namespace autocompleteModels {
+export namespace autocomplete {
     export { modelRows };
     export { filterModels };
     export { formatContext };
@@ -118,5 +54,70 @@ export type ModelRow = {
     json: boolean;
     isModerated: boolean;
 };
-import ModelInfo from "../llm/ModelInfo.js";
-import Ui from "./Ui.js";
+import { ModelInfo } from "../llm/ModelInfo.js";
+/**
+ * Flatten models map into ModelRow[] for filtering/sorting.
+ * @param {Map<string, import("../llm/ModelInfo").ModelInfo>} modelMap
+ * @returns {ModelRow[]}
+ */
+declare function modelRows(modelMap: Map<string, import("../llm/ModelInfo").ModelInfo>): ModelRow[];
+/**
+ * Filter models based on ID substring (plain search) or field filters (@field=val).
+ * @param {ModelRow[]} models
+ * @param {string} search
+ * @returns {ModelRow[]}
+ */
+declare function filterModels(models: ModelRow[], search: string): ModelRow[];
+/**
+ * Format context length (e.g. 131072 -> 131K)
+ * @param {number} ctx
+ * @returns {string}
+ */
+declare function formatContext(ctx: number): string;
+/**
+ * Highlight search term in a cell
+ * @param {string} cell
+ * @param {string} search
+ * @returns {string}
+ */
+declare function highlightCell(cell: string, search: string): string;
+/**
+ * Parse field filter like @provider=novi or @context>32K
+ * @param {string} filterStr e.g. "provider=novi" or "context>32K"
+ * @returns {{field: string, op: string, value: string}} – returns empty strings when no explicit operator is present.
+ */
+declare function parseFieldFilter(filterStr: string): {
+    field: string;
+    op: string;
+    value: string;
+};
+/**
+ * Render table with dynamic widths and highlighting
+ * @param {ModelRow[]} filtered
+ * @param {string} search
+ * @param {number} startIndex
+ * @param {number} maxY
+ * @param {Ui} ui
+ * @returns {void}
+ */
+declare function renderTable(filtered: ModelRow[], search: string, startIndex: number, maxY: number, ui: Ui): void;
+/**
+ * Clear specific number of lines and move cursor to start
+ * @param {number} lines
+ */
+declare function clearLines(lines: number): void;
+/**
+ * Interactive search with live keypress, scrolling, and command suggestions
+ * @param {Map<string, import("../llm/ModelInfo").ModelInfo>} modelMap
+ * @param {Ui} ui
+ * @returns {Promise<void>}
+ */
+declare function interactive(modelMap: Map<string, import("../llm/ModelInfo").ModelInfo>, ui: Ui): Promise<void>;
+/**
+ * Output all models in pipe format for non-interactive use
+ * @param {ModelRow[]} allModels
+ * @param {Ui} ui
+ */
+declare function pipeOutput(allModels: ModelRow[], ui: Ui): void;
+import { Ui } from "./Ui.js";
+export {};

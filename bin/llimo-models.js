@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import process from "node:process"
-import { autocompleteModels } from "../src/cli/autocomplete.js"
+import { autocomplete } from "../src/cli/autocomplete.js"
 import { loadModels } from "../src/Chat/models.js"
 import { parseArgv, Ui } from "../src/cli/index.js"
-import ModelsOptions from "../src/cli/ModelsOptions.js"
+import { ModelsOptions } from "../src/cli/ModelsOptions.js"
 import { renderHelp } from "../src/cli/argvHelper.js"
 
 const ui = new Ui({ debugMode: process.argv.includes("--debug") })
@@ -29,20 +29,20 @@ export async function main(argv = process.argv.slice(2)) {
 				filtered.set(id, model)
 			}
 		}
-		const rows = autocompleteModels.modelRows(filtered)
-		autocompleteModels.pipeOutput(rows, ui)
+		const rows = autocomplete.modelRows(filtered)
+		autocomplete.pipeOutput(rows, ui)
 		// Exit after filtering (non-interactive)
 		process.exit(0)
 	}
 
 	if (!process.stdout.isTTY || argv[0] === ">") {
 		// Pipe mode: just output all models
-		const allModels = autocompleteModels.modelRows(modelMap)
-		autocompleteModels.pipeOutput(allModels, ui)
+		const allModels = autocomplete.modelRows(modelMap)
+		autocomplete.pipeOutput(allModels, ui)
 	} else {
 		// Interactive mode
 		ui.console.info("Loading models... (press /help for usage)\n")
-		await autocompleteModels.interactive(modelMap, ui)
+		await autocomplete.interactive(modelMap, ui)
 	}
 }
 

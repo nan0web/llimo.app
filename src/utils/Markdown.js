@@ -1,11 +1,11 @@
-import FileProtocol, { FileEntry, FileError } from "../FileProtocol.js"
+import { FileProtocol, FileEntry, FileError } from "../FileProtocol.js"
 
 /** @typedef {import("../FileProtocol.js").ParsedFile} ParsedFile */
 
 /**
  * MarkdownProtocol – parses markdown with file blocks into a structured format.
  */
-export default class MarkdownProtocol extends FileProtocol {
+export class MarkdownProtocol extends FileProtocol {
 	/**
 	 * Process a single line of markdown input.
 	 * @param {string} rawLine - The raw line to process
@@ -113,7 +113,7 @@ export default class MarkdownProtocol extends FileProtocol {
 	}
 
 	/**
-	 * @param {AsyncGenerator<string>} stream – an async iterator yielding one line per call.
+	 * @param {AsyncGenerator<string> | import("node:readline").Interface} stream – an async iterator yielding one line per call.
 	 * @returns {Promise<ParsedFile>}
 	 */
 	static async parseStream(stream) {

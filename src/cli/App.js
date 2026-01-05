@@ -411,6 +411,3 @@ export class ChatCLiApp {
 		await this.chat.save("steps.jsonl", this.#steps)
 	}
 }
-
-export default ChatCLiApp
-

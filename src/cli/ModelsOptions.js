@@ -1,4 +1,4 @@
-import ModelInfo from "../llm/ModelInfo.js"
+import { ModelInfo } from "../llm/ModelInfo.js"
 
 export class ModelsOptions {
 	filter
@@ -124,6 +124,4 @@ function getPath(obj, path) {
 	}
 	return current
 }
-
-export default ModelsOptions
 

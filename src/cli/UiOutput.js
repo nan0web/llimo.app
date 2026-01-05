@@ -6,4 +6,3 @@ export class UiOutput {
 	renderIn(ui) { }
 }
 
-export default UiOutput

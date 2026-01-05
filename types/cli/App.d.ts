@@ -104,7 +104,6 @@ export class ChatCLiApp {
     loop(): Promise<void>;
     #private;
 }
-export default ChatCLiApp;
 import { FileSystem } from "../utils/index.js";
 import { Git } from "../utils/index.js";
 import { Ui } from "./Ui.js";

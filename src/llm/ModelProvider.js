@@ -14,15 +14,15 @@
 import { FileSystem } from "../utils/index.js"
 
 import CerebrasInfo from "./providers/cerebras.info.js"
-import HFInfo from "./providers/huggingface.info.js"
-import Openrouter from "./providers/openrouter.info.js"
-import ModelInfo from "./ModelInfo.js"
-import Pricing from "./Pricing.js"
+import HuggingFaceInfo from "./providers/huggingface.info.js"
+import OpenrouterInfo from "./providers/openrouter.info.js"
+import { ModelInfo } from "./ModelInfo.js"
+import { Pricing } from "./Pricing.js"
 
 const transformers = {
 	cerebras: CerebrasInfo.makeFlat,
-	huggingface: HFInfo.makeFlat,
-	openrouter: Openrouter.makeFlat,
+	huggingface: HuggingFaceInfo.makeFlat,
+	openrouter: OpenrouterInfo.makeFlat,
 }
 
 /** @typedef {"cerebras" | "openrouter" | "huggingface"} AvailableProvider */
@@ -37,7 +37,7 @@ const transformers = {
  * @property {boolean} is_model_author
 */
 
-export class CacheConfig {
+class CacheConfig {
 	/** @type {number} Cache duration – 1 hour (in milliseconds) */
 	ttl = 60 * 60 * 1e3
 	file = "chat/cache/{provider}.jsonl"
@@ -67,7 +67,7 @@ export class CacheConfig {
 	}
 }
 
-export default class ModelProvider {
+export class ModelProvider {
 	/** @type {AvailableProvider[]} */
 	static AvailableProviders = ["cerebras", "huggingface", "openrouter"]
 	/** @type {FileSystem} */

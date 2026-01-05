@@ -3,7 +3,7 @@ import assert from "node:assert"
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
-import Markdown from "../../utils/Markdown.js"
+import { MarkdownProtocol } from "../../utils/Markdown.js"
 import GetFilesCommand from "./GetFilesCommand.js"
 
 describe("GetFilesCommand", () => {
@@ -41,10 +41,10 @@ src/**
 `
 		// Parse the markdown in the temporary cwd so that the FileProtocol
 		// resolves paths relative to the temp project.
-		const parsed = await Markdown.parse(markdown)
+		const parsed = await MarkdownProtocol.parse(markdown)
 
 		// Locate the @get entry
-		const file = parsed.correct.find((e) => e.filename === "@get")
+		const file = parsed.correct?.find((e) => e.filename === "@get")
 		assert.ok(file, "Expected @get entry")
 
 		const cmd = new GetFilesCommand({ cwd: workdir, file, parsed })
@@ -65,8 +65,8 @@ src/**
 **/*
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@get")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@get")
 		assert.ok(file, "Expected @get entry")
 
 		const cmd = new GetFilesCommand({ cwd: workdir, file, parsed })
@@ -90,8 +90,8 @@ src/app.js
 src/readme.txt
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@get")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@get")
 		assert.ok(file, "Expected @get entry")
 
 		const cmd = new GetFilesCommand({ cwd: workdir, file, parsed })

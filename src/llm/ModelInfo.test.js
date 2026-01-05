@@ -1,9 +1,9 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import ModelInfo from "./ModelInfo.js"
-import Pricing from "./Pricing.js"
-import Architecture from "./Architecture.js"
-import TopProvider from "./TopProvider.js"
+import { ModelInfo } from "./ModelInfo.js"
+import { Pricing } from "./Pricing.js"
+import { Architecture } from "./Architecture.js"
+import { TopProvider } from "./TopProvider.js"
 
 describe("ModelInfo", () => {
 	it("creates with defaults", () => {

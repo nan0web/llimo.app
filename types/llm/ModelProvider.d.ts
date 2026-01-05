@@ -1,33 +1,4 @@
-/** @typedef {"cerebras" | "openrouter" | "huggingface"} AvailableProvider */
-/**
- * @typedef {Object} HuggingFaceProviderInfo
- * @property {string} provider
- * @property {string} status
- * @property {number} context_length
- * @property {{ input: number, output: number }} pricing
- * @property {boolean} supports_tools
- * @property {boolean} supports_structured_output
- * @property {boolean} is_model_author
-*/
-export class CacheConfig {
-    /** @param {Partial<CacheConfig>} [input] */
-    constructor(input?: Partial<CacheConfig>);
-    /** @type {number} Cache duration – 1 hour (in milliseconds) */
-    ttl: number;
-    file: string;
-    /**
-     * @param {string} provider
-     * @return {string}
-     */
-    getFile(provider: string): string;
-    /**
-     * @param {number} time File change time in milliseconds
-     * @param {number} [now] Now time in milliseconds
-     * @returns {boolean}
-     */
-    isAlive(time: number, now?: number): boolean;
-}
-export default class ModelProvider {
+export class ModelProvider {
     /** @type {AvailableProvider[]} */
     static AvailableProviders: AvailableProvider[];
     constructor(input?: {});
@@ -111,4 +82,34 @@ export type HuggingFaceProviderInfo = {
     supports_structured_output: boolean;
     is_model_author: boolean;
 };
-import ModelInfo from "./ModelInfo.js";
+/** @typedef {"cerebras" | "openrouter" | "huggingface"} AvailableProvider */
+/**
+ * @typedef {Object} HuggingFaceProviderInfo
+ * @property {string} provider
+ * @property {string} status
+ * @property {number} context_length
+ * @property {{ input: number, output: number }} pricing
+ * @property {boolean} supports_tools
+ * @property {boolean} supports_structured_output
+ * @property {boolean} is_model_author
+*/
+declare class CacheConfig {
+    /** @param {Partial<CacheConfig>} [input] */
+    constructor(input?: Partial<CacheConfig>);
+    /** @type {number} Cache duration – 1 hour (in milliseconds) */
+    ttl: number;
+    file: string;
+    /**
+     * @param {string} provider
+     * @return {string}
+     */
+    getFile(provider: string): string;
+    /**
+     * @param {number} time File change time in milliseconds
+     * @param {number} [now] Now time in milliseconds
+     * @returns {boolean}
+     */
+    isAlive(time: number, now?: number): boolean;
+}
+import { ModelInfo } from "./ModelInfo.js";
+export {};

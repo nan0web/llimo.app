@@ -1,7 +1,7 @@
 /**
  * Represents pricing information for a model.
  */
-export default class Pricing {
+export class Pricing {
     /**
      * @param {Partial<Pricing> & { input?: number, output?: number }} options
      */
@@ -44,4 +44,4 @@ export default class Pricing {
         output?: number;
     }): number;
 }
-import Usage from "./Usage.js";
+import { Usage } from "./Usage.js";

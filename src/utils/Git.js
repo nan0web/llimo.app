@@ -99,5 +99,3 @@ export class Git {
 		return stdout
 	}
 }
-
-export default Git

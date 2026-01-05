@@ -1,5 +1,5 @@
 import { Table } from '../src/cli/components/Table.js'
-import Ui from '../src/cli/Ui.js'
+import { Ui }from '../src/cli/Ui.js'
 
 export class TableDemo {
 	static async run() {

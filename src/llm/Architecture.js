@@ -35,5 +35,3 @@ export class Architecture {
 		this.context_length = Number(context_length)
 	}
 }
-
-export default Architecture

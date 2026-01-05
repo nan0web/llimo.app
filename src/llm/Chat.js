@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto"
 import { Stats } from "node:fs"
-import ModelInfo from "./ModelInfo.js"
-import FileSystem from "../utils/FileSystem.js"
-import Usage from "./Usage.js"
+import { ModelInfo } from "./ModelInfo.js"
+import { FileSystem } from "../utils/FileSystem.js"
+import { Usage } from "./Usage.js"
 
 /** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
 
-export class ChatConfig {
+class ChatConfig {
 	model = ""
 	provider = ""
 	constructor(input = {}) {
@@ -22,7 +22,8 @@ export class ChatConfig {
 /**
  * Manages chat history and files
  */
-export default class Chat {
+export class Chat {
+	static Config = ChatConfig
 	/** @type {string} */
 	id
 	/** @type {string} */
@@ -50,7 +51,7 @@ export default class Chat {
 			id = randomUUID(), cwd = process.cwd(), root = "chat", messages = [],
 			steps = [],
 			dir = "",
-			config = new ChatConfig({}),
+			config = new Chat.Config({}),
 		} = input
 		this.id = String(id)
 		this.cwd = String(cwd)

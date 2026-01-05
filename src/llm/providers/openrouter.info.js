@@ -1,11 +1,11 @@
-import ModelInfo from "../ModelInfo.js"
-import Pricing from "../Pricing.js"
+import { ModelInfo } from "../ModelInfo.js"
+import { Pricing } from "../Pricing.js"
 
 /**
  * @param {object[]} models
  * @returns {ModelInfo[]}
  */
-export function makeFlat(models) {
+function makeFlat(models) {
 	return models.map(m => {
 		const pricing = new Pricing({ ...(m?.pricing ?? {}) })
 		pricing.completion *= 1e6

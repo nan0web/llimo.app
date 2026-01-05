@@ -1,4 +1,3 @@
-export function noDebugger(str: any): boolean;
 /**
  * @param {import("./node.js").TapParseResult} parsed
  * @returns
@@ -25,5 +24,5 @@ export function testingProgress({ ui, fs, output, rows, prefix, startTime, fps }
     startTime?: number | undefined;
     fps?: number | undefined;
 }): NodeJS.Timeout;
-import Ui from "../Ui.js";
-import FileSystem from "../../utils/FileSystem.js";
+import { Ui } from "../Ui.js";
+import { FileSystem } from "../../utils/FileSystem.js";

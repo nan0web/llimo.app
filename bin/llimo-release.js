@@ -3,10 +3,10 @@ import { resolve } from "node:path"
 
 import { ReleaseCommand, ReleaseOptions } from "../src/Chat/commands/release.js"
 import { parseArgv } from "../src/cli/argvHelper.js"
-import Ui from "../src/cli/Ui.js"
+import { Ui }from "../src/cli/Ui.js"
 import { DIM, GREEN, MAGENTA, RED, RESET } from "../src/cli/ANSI.js"
 import ReleaseProtocol from "../src/utils/Release.js"
-import FileSystem from "../src/utils/FileSystem.js"
+import { FileSystem } from "../src/utils/FileSystem.js"
 
 const ui = new Ui({ debugMode: process.argv.includes("--debug") })
 

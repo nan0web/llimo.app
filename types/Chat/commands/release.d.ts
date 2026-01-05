@@ -71,12 +71,12 @@ export class ReleaseCommand extends UiCommand {
     /**
      * @param {object} [input]
      * @param {string[]} [input.argv=[]]
-     * @param {Partial<Chat>} [input.chat]
+     * @param {Chat} [input.chat]
      * @returns {ReleaseCommand}
      */
     static create(input?: {
         argv?: string[] | undefined;
-        chat?: Partial<Chat> | undefined;
+        chat?: Chat | undefined;
     }): ReleaseCommand;
     /**
      * @param {Partial<ReleaseCommand>} input
@@ -137,15 +137,7 @@ export type Task = {
     text: string;
 };
 import { UiCommand } from "../../cli/Ui.js";
-import FileSystem from "../../utils/FileSystem.js";
-import Chat from "../../llm/Chat.js";
+import { FileSystem } from "../../utils/FileSystem.js";
+import { Chat } from "../../llm/Chat.js";
 import { Alert } from "../../cli/components/index.js";
-import ReleaseProtocol from "../../utils/Release.js";
-/**
- * Tracks stage progression for the release task.
- */
-export const STAGE_DETAILS: {
-    key: string;
-    label: string;
-}[];
-export const STAGE_LABELS: {};
+import { ReleaseProtocol } from "../../utils/Release.js";

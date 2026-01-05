@@ -13,8 +13,8 @@ import path from "node:path"
 import { mkdtemp, rm, writeFile, mkdir, readFile, access } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import crypto from "node:crypto"
-import Chat from "../../../src/llm/Chat.js"
-import FileSystem from "../../../src/utils/FileSystem.js"
+import Chat from "../../../../src/llm/Chat.js"
+import { FileSystem } from "../../../../src/utils/FileSystem.js"
 import AdmZip from "adm-zip"  // Assume pnpm add adm-zip
 
 describe("005-Chat-Management – src/llm/Chat.js", () => {

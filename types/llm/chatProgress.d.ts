@@ -39,6 +39,6 @@ export type ChatProgressInput = {
     now?: number | undefined;
     precision?: number | undefined;
 };
-import Ui from "../cli/Ui.js";
-import Usage from "./Usage.js";
-import ModelInfo from "./ModelInfo.js";
+import { Ui } from "../cli/Ui.js";
+import { Usage } from "./Usage.js";
+import { ModelInfo } from "./ModelInfo.js";

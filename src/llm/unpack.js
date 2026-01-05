@@ -1,5 +1,5 @@
 import { FileError } from "../FileProtocol.js"
-import FileSystem from "../utils/FileSystem.js"
+import { FileSystem } from "../utils/FileSystem.js"
 import {
 	MAGENTA,
 	GREEN,
@@ -10,7 +10,7 @@ import {
 	ITALIC,
 } from "../cli/ANSI.js"
 import commands from "./commands/index.js"
-import UiOutput from "../cli/UiOutput.js"
+import { UiOutput } from "../cli/UiOutput.js"
 
 /**
  *

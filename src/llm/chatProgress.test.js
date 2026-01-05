@@ -2,20 +2,23 @@ import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 
 import { formatChatProgress } from "./chatProgress.js"
-import ModelInfo from "./ModelInfo.js"
-import Usage from "./Usage.js"
+import { ModelInfo } from "./ModelInfo.js"
+import { Usage } from "./Usage.js"
+import { Pricing } from "./Pricing.js"
+import { Ui } from "../cli/Ui.js"
 
 const model = new ModelInfo({
-	pricing: { prompt: 350, completion: 750 },
+	pricing: new Pricing({ prompt: 350, completion: 750 }),
 	context_length: 131_000,
 })
 const now = 1_000_000
+const ui = new Ui()
 
 describe("chatProgress - Standard multi‑line format", () => {
 	it("should draw empty progress", () => {
 		const usage = new Usage({ inputTokens: 420 })
 		const clock = { startTime: now }
-		const lines = formatChatProgress({ usage, clock, model, now })
+		const lines = formatChatProgress({ ui, usage, clock, model, now })
 		assert.deepStrictEqual(lines, [
 			'read | 0:00 | $0.1470 | 420T | 0T/s',
 			'chat | 0:00 | $0.1470 | 420T | 0T/s | 130,580T',
@@ -24,7 +27,7 @@ describe("chatProgress - Standard multi‑line format", () => {
 	it("should draw first progress (read)", () => {
 		const usage = new Usage({ inputTokens: 420 })
 		const clock = { startTime: now - 500 }
-		const lines = formatChatProgress({ usage, clock, model, now })
+		const lines = formatChatProgress({ ui, usage, clock, model, now })
 		assert.deepStrictEqual(lines, [
 			'read | 0:01 | $0.1470 | 420T | 840T/s',
 			'chat | 0:01 | $0.1470 | 420T | 840T/s | 130,580T',
@@ -33,7 +36,7 @@ describe("chatProgress - Standard multi‑line format", () => {
 	it("should draw second progress (read + reason)", () => {
 		const usage = new Usage({ inputTokens: 420, reasoningTokens: 1 })
 		const clock = { startTime: now - 600, reasonTime: now - 100 }
-		const lines = formatChatProgress({ usage, clock, model, now })
+		const lines = formatChatProgress({ ui, usage, clock, model, now })
 		assert.deepStrictEqual(lines, [
 			'  read | 0:01 | $0.1470 | 420T | 840T/s',
 			'reason | 0:00 | $0.0008 |   1T |  10T/s',
@@ -43,7 +46,7 @@ describe("chatProgress - Standard multi‑line format", () => {
 	it("should draw third progress (read + reason + asnwer)", () => {
 		const usage = new Usage({ inputTokens: 420, reasoningTokens: 1, outputTokens: 30_000 })
 		const clock = { startTime: now - 31_600, reasonTime: now - 24_100, answerTime: now - 23_000 }
-		const lines = formatChatProgress({ usage, clock, model, now })
+		const lines = formatChatProgress({ ui, usage, clock, model, now })
 		assert.deepStrictEqual(lines, [
 			'  read | 0:08 |  $0.1470 |    420T |    56T/s',
 			'reason | 0:01 |  $0.0008 |      1T |     1T/s',
@@ -63,7 +66,7 @@ describe("chatProgress - Standard multi‑line format", () => {
 			reasonTime: now - 3_000,
 			answerTime: now - 2_000,
 		}
-		const lines = formatChatProgress({ usage, clock, model, now })
+		const lines = formatChatProgress({ ui, usage, clock, model, now })
 		assert.deepStrictEqual(lines, [
 			"  read | 1:17 | $42.0000 | 120,000T | 1,558T/s",
 			"reason | 0:01 |  $0.2250 |     300T |   300T/s",
@@ -76,7 +79,7 @@ describe("chatProgress - Standard multi‑line format", () => {
 		const clock = { startTime: Date.now() }
 		const model = new ModelInfo({ context_length: 128_000 })
 
-		const lines = formatChatProgress({ usage, clock, model })
+		const lines = formatChatProgress({ ui, usage, clock, model })
 		assert.deepStrictEqual(lines, [
 			"chat | 0:00 | $0.0000 | 0T | 0T/s | 128,000T"
 		])
@@ -87,7 +90,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 	it("should draw empty progress", () => {
 		const usage = new Usage({ inputTokens: 420 })
 		const clock = { startTime: now }
-		const lines = formatChatProgress({ usage, clock, model, now, isTiny: true })
+		const lines = formatChatProgress({ ui, usage, clock, model, now, isTiny: true })
 		assert.deepStrictEqual(lines, [
 			'step 1 | 0:00 | $0.1470 | read | 0:00 | 420T | ∞T/s | 130,580T of 131,000T',
 		])
@@ -95,7 +98,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 	it("should draw first progress (read)", () => {
 		const usage = new Usage({ inputTokens: 420 })
 		const clock = { startTime: now - 500 }
-		const lines = formatChatProgress({ usage, clock, model, now, isTiny: true })
+		const lines = formatChatProgress({ ui, usage, clock, model, now, isTiny: true })
 		assert.deepStrictEqual(lines, [
 			'step 1 | 0:01 | $0.1470 | read | 0:00 | 420T | 840T/s | 130,580T of 131,000T',
 		])
@@ -103,7 +106,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 	it("should draw second progress (read + reason)", () => {
 		const usage = new Usage({ inputTokens: 420, reasoningTokens: 1 })
 		const clock = { startTime: now - 600, reasonTime: now - 100 }
-		const lines = formatChatProgress({ usage, clock, model, now, isTiny: true })
+		const lines = formatChatProgress({ ui, usage, clock, model, now, isTiny: true })
 		assert.deepStrictEqual(lines, [
 			'step 1 | 0:01 | $0.1478 | reason | 0:00 | 1T | 10T/s | 130,579T of 131,000T',
 		])
@@ -112,7 +115,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 		// @todo fix the calculation in formatChatProgress, because it works for isTiny: false above.
 		const usage = new Usage({ inputTokens: 420, reasoningTokens: 1, outputTokens: 30_000 })
 		const clock = { startTime: now - 31_600, reasonTime: now - 24_100, answerTime: now - 23_000 }
-		const lines = formatChatProgress({ usage, clock, model, now, isTiny: true })
+		const lines = formatChatProgress({ ui, usage, clock, model, now, isTiny: true })
 		assert.deepStrictEqual(lines, [
 			'step 1 | 0:31 | $22.6478 | answer | 0:23 | 30,000T | 963T/s | 100,579T of 131,000T',
 		])
@@ -122,9 +125,10 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 		// @todo fix the calculation in formatChatProgress, because it works for isTiny: false above.
 		const usage = new Usage({ inputTokens: 1_000, outputTokens: 100 })
 		const clock = { startTime: now - 120_000, answerTime: now - 100_000 }
-		const model = new ModelInfo({ pricing: { prompt: 0.1, completion: 0.2 }, context_length: 128_000 })
+		const model = new ModelInfo({ pricing: new Pricing({ prompt: 0.1, completion: 0.2 }), context_length: 128_000 })
 
 		const lines = formatChatProgress({
+			ui,
 			usage,
 			clock,
 			model,
@@ -142,6 +146,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 		const model = new ModelInfo({ context_length: 128_000 })
 
 		const lines = formatChatProgress({
+			ui,
 			usage,
 			clock,
 			model,

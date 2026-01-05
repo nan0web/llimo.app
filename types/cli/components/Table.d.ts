@@ -1,7 +1,26 @@
+export class Table extends UiOutput {
+    static Options: typeof TableOptions;
+    /**
+     * @todo write jsdoc
+     * @param {any[][] | object[]} rows
+     * @returns {any[][]}
+     */
+    static normalizeRows(rows: any[][] | object[]): any[][];
+    /**
+     * @param {Partial<Table>} [input={}]
+     */
+    constructor(input?: Partial<Table>);
+    /** @type {any[][] | object[]} */
+    rows: any[][] | object[];
+    /** @type {Partial<TableOptions>} */
+    options: Partial<TableOptions>;
+}
+export type TableAlign = "left" | "center" | "right";
+import { UiOutput } from "../UiOutput.js";
 /**
  * @typedef {"left" | "center" | "right"} TableAlign
  */
-export class TableOptions {
+declare class TableOptions {
     static divider: {
         help: string;
         default: string;
@@ -21,22 +40,4 @@ export class TableOptions {
     /** @type {TableAlign[]} */
     aligns: TableAlign[];
 }
-export class Table extends UiOutput {
-    /**
-     * @todo write jsdoc
-     * @param {any[][] | object[]} rows
-     * @returns {any[][]}
-     */
-    static normalizeRows(rows: any[][] | object[]): any[][];
-    /**
-     * @param {Partial<Table>} [input={}]
-     */
-    constructor(input?: Partial<Table>);
-    /** @type {any[][] | object[]} */
-    rows: any[][] | object[];
-    /** @type {Partial<TableOptions>} */
-    options: Partial<TableOptions>;
-}
-export default Table;
-export type TableAlign = "left" | "center" | "right";
-import UiOutput from "../UiOutput.js";
+export {};

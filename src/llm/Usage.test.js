@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import Usage from "./Usage.js"
+import { Usage } from "./Usage.js"
 
 describe("Usage", () => {
 	it("creates with defaults", () => {
@@ -30,6 +30,7 @@ describe("Usage", () => {
 			inputTokens: "200",
 			totalTokens: null,
 		}
+		// @ts-ignore provokes incorrect types
 		const usage = new Usage(input)
 		assert.strictEqual(usage.inputTokens, 200)
 		assert.strictEqual(usage.totalTokens, 200)

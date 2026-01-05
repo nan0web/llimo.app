@@ -57,4 +57,3 @@ export class Git {
      */
     getCurrentBranch(): Promise<string>;
 }
-export default Git;

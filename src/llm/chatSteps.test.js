@@ -5,14 +5,15 @@ import os from "node:os"
 import path from "node:path"
 
 import * as chatSteps from "./chatSteps.js"
-import FileSystem from "../utils/FileSystem.js"
-import Chat from "./Chat.js"
-import Ui, { UiFormats } from "../cli/Ui.js"
+import { FileSystem } from "../utils/FileSystem.js"
+import { Chat } from "./Chat.js"
+import { Ui, UiFormats } from "../cli/Ui.js"
+import { AI } from "./index.js"
 
 /* -------------------------------------------------
 	 Helper mocks
 	 ------------------------------------------------- */
-class DummyAI {
+class DummyAI extends AI {
 	streamText() {
 		// mimic the shape used by `startStreaming`
 		const asyncIter = (async function* () {
@@ -26,11 +27,8 @@ class DummyAI {
 	}
 }
 
+// @ts-ignore mock stdin in short way
 const mockUi = new Ui({ stdin: { isTTY: true } })
-const mockRunCommand = async (cmd, options = {}) => {
-	options.onData?.("mock output\n")
-	return { stdout: "mock output", stderr: "", exitCode: 0 }
-}
 
 /* -------------------------------------------------
 	 Tests
@@ -58,7 +56,7 @@ describe("chatSteps – readInput", () => {
 		)
 		assert.equal(input, "file content")
 		// inputFile should resolve to the temporary location
-		assert.ok(inputFile.endsWith("test.txt"))
+		assert.ok(inputFile?.endsWith("test.txt"))
 	})
 })
 
@@ -168,7 +166,8 @@ describe("chatSteps – initialiseChat", () => {
 	})
 
 	it("creates new chat with system prompt", async () => {
-		const mockUiMock = { console: { info: () => { } }, formats: new UiFormats() } // Mock to prevent output
+		const mockUiMock = new Ui()
+		mockUiMock.console.info = () => { }
 		const { chat } = await chatSteps.initialiseChat({
 			fs: fsInstance,
 			ui: mockUiMock,

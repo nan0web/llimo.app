@@ -9,9 +9,9 @@
 
 import { describe, it } from "node:test"
 import { strictEqual, ok } from "node:assert/strict"
-import { formatChatProgress } from "../../../src/llm/chatProgress.js"
-import Ui from "../../../src/cli/Ui.js"
-import { stripANSI } from "../../../src/cli/ANSI.js"
+import { formatChatProgress } from "../../../../src/llm/chatProgress.js"
+import { Ui }from "../../../../src/cli/Ui.js"
+import { stripANSI } from "../../../../src/cli/ANSI.js"
 import Usage from "../../../../src/llm/Usage.js"
 
 describe("006-UI-Progress – src/cli/* & src/llm/chatProgress.js", () => {

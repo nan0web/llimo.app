@@ -1,7 +1,7 @@
 import readline from "node:readline"
 import { RESET, YELLOW } from "./ANSI.js"
-import Ui from "./Ui.js"
-import ModelInfo from "../llm/ModelInfo.js"
+import { Ui }from "./Ui.js"
+import { ModelInfo } from "../llm/ModelInfo.js"
 
 /**
  * Autocomplete for models – shared interactive search and filtering logic.
@@ -49,7 +49,7 @@ export function model2row(info, id) {
 		|| info.architecture?.modality
 		|| "text"
 
-	const tools = !!(info.supports_tools ?? info.supportsTools ?? false)
+	const tools = !!(info.supports_tools ?? false)
 	const jsonMode = !!(info.supports_structured_output ?? info.supports_structured_output ?? false)
 
 	return {
@@ -69,10 +69,10 @@ export function model2row(info, id) {
 
 /**
  * Flatten models map into ModelRow[] for filtering/sorting.
- * @param {Map<string, import("../llm/ModelInfo").default>} modelMap
+ * @param {Map<string, import("../llm/ModelInfo").ModelInfo>} modelMap
  * @returns {ModelRow[]}
  */
-export function modelRows(modelMap) {
+function modelRows(modelMap) {
 	const flat = []
 	for (const [key, info] of modelMap.entries()) {
 		flat.push(model2row(info, key)) // key is id@provider, but row.id = info.id
@@ -85,7 +85,7 @@ export function modelRows(modelMap) {
  * @param {number} ctx
  * @returns {string}
  */
-export function formatContext(ctx) {
+function formatContext(ctx) {
 	if (ctx >= 1e6) {
 		return (ctx / 1e6).toFixed(1).replace(".0", "") + "Mt"
 	}
@@ -104,7 +104,7 @@ export function formatContext(ctx) {
  * @param {string} search
  * @returns {string}
  */
-export function highlightCell(cell, search) {
+function highlightCell(cell, search) {
 	if (!search || search.startsWith("/")) return cell
 	const idx = cell.toLowerCase().indexOf(search.toLowerCase())
 	if (idx === -1) return cell
@@ -116,7 +116,7 @@ export function highlightCell(cell, search) {
  * @param {string} filterStr e.g. "provider=novi" or "context>32K"
  * @returns {{field: string, op: string, value: string}} – returns empty strings when no explicit operator is present.
  */
-export function parseFieldFilter(filterStr) {
+function parseFieldFilter(filterStr) {
 	// Require operator for field parsing, fallback for plain search
 	const match = filterStr.match(/^([^=<>]+)([~><=]{1})(.+)$/i)
 	if (match) {
@@ -131,7 +131,7 @@ export function parseFieldFilter(filterStr) {
  * @param {string} search
  * @returns {ModelRow[]}
  */
-export function filterModels(models, search) {
+function filterModels(models, search) {
 	if (!search || search.startsWith("/")) return models
 
 	const lower = s => String(s ?? "").toLowerCase()
@@ -187,7 +187,7 @@ export function filterModels(models, search) {
  * @param {Ui} ui
  * @returns {void}
  */
-export function renderTable(filtered, search, startIndex, maxY, ui) {
+function renderTable(filtered, search, startIndex, maxY, ui) {
 	const headers = ["Model.ID", "Context", "Provider", "Modality", "Price in", "Price out", "Tools", "JSON."]
 	const dataRows = []
 	const endIndex = Math.min(startIndex + maxY - 4, filtered.length)
@@ -227,17 +227,17 @@ export function renderTable(filtered, search, startIndex, maxY, ui) {
  * Clear specific number of lines and move cursor to start
  * @param {number} lines
  */
-export function clearLines(lines) {
+function clearLines(lines) {
 	process.stdout.write(`\r\x1b[K${"\x1b[" + lines + "A"}\r\x1b[K`)
 }
 
 /**
  * Interactive search with live keypress, scrolling, and command suggestions
- * @param {Map<string, import("../llm/ModelInfo").default>} modelMap
+ * @param {Map<string, import("../llm/ModelInfo").ModelInfo>} modelMap
  * @param {Ui} ui
  * @returns {Promise<void>}
  */
-export async function interactive(modelMap, ui) {
+async function interactive(modelMap, ui) {
 	const allModels = modelRows(modelMap)
 	let search = ""
 	let filtered = allModels
@@ -352,7 +352,7 @@ export async function interactive(modelMap, ui) {
  * @param {ModelRow[]} allModels
  * @param {Ui} ui
  */
-export function pipeOutput(allModels, ui) {
+function pipeOutput(allModels, ui) {
 	const rows = [
 		["Model.id", "Context", "Max.out", "Provider", "Modality", "Speed T/s", "Input", "Output", "Mod"],
 		["---", "---", "---", "---", "---", "---", "---", "---", "---"],
@@ -378,7 +378,7 @@ export function pipeOutput(allModels, ui) {
 	})
 }
 
-export const autocompleteModels = {
+export const autocomplete = {
 	modelRows,
 	filterModels,
 	formatContext,

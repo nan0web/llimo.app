@@ -3,4 +3,3 @@ export class UiOutput {
     /** @param {import("./Ui.js").Ui} ui */
     renderIn(ui: import("./Ui.js").Ui): void;
 }
-export default UiOutput;

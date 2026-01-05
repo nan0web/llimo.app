@@ -19,4 +19,3 @@ export class Architecture {
     /** @type {number} */
     context_length: number;
 }
-export default Architecture;

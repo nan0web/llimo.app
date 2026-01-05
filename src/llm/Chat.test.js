@@ -3,7 +3,7 @@ import assert from "node:assert/strict"
 import { mkdtemp, rm } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
-import Chat from "./Chat.js"
+import { Chat } from "./Chat.js"
 
 describe("Chat – message persistence", () => {
 	let tempDir

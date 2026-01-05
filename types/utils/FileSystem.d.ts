@@ -4,7 +4,7 @@
 /**
  * File system operations wrapper to allow testing
  */
-export default class FileSystem {
+export class FileSystem {
     /**
      * @param {Partial<FileSystem>} [input={}]
      */
@@ -155,6 +155,6 @@ export default class FileSystem {
     #private;
 }
 export type MkDirOptions = import("node:fs").Mode | import("node:fs").MakeDirectoryOptions | null;
-import Path from './Path.js';
+import { Path } from './Path.js';
 import { Stream } from 'node:stream';
 import { Stats } from 'node:fs';

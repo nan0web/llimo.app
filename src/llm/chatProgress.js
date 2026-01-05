@@ -1,6 +1,6 @@
-import Ui from "../cli/Ui.js"
-import Usage from "./Usage.js"
-import ModelInfo from "./ModelInfo.js"
+import { Ui } from "../cli/Ui.js"
+import { Usage } from "./Usage.js"
+import { ModelInfo } from "./ModelInfo.js"
 
 /**
  * @typedef {Object} ChatProgressInput
@@ -41,6 +41,8 @@ export function formatChatProgress(input) {
 	/* --------------------------------------------------------------- */
 	const rawRows = []
 	let totalPrice = 0, totalTime = 0
+	/** @type {Array<"read" | "reason" | "answer">} */
+	const PHASES = ["read", "reason", "answer"]
 	/** @type {Map<"read" | "reason" | "answer", { endAt: number, elapsed: number, tokens: number, speed: number, price: number }>} */
 	const map = new Map()
 	const costs = { input: 0, reason: 0, output: 0 }
@@ -70,7 +72,7 @@ export function formatChatProgress(input) {
 		map.set("answer", { endAt, elapsed, speed, price: costs.output, tokens: usage.outputTokens })
 	}
 
-		/* --------------------------------------------------------------- */
+	/* --------------------------------------------------------------- */
 	/* Tiny‑mode (single‑line)                                         */
 	/* --------------------------------------------------------------- */
 	if (isTiny) {
@@ -97,7 +99,8 @@ export function formatChatProgress(input) {
 
 
 	let totalTokens = 0
-	for (const phase of ["read", "reason", "answer"]) {
+
+	for (const phase of PHASES) {
 		const row = map.get(phase)
 		if (row) {
 			totalTime += row.elapsed

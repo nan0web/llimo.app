@@ -1,13 +1,8 @@
-/** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
-export class ChatConfig {
-    constructor(input?: {});
-    model: string;
-    provider: string;
-}
 /**
  * Manages chat history and files
  */
-export default class Chat {
+export class Chat {
+    static Config: typeof ChatConfig;
     /** Constants for chat files – single source of truth */
     static FILES: {
         answer: string;
@@ -185,7 +180,14 @@ export type ChatMessage = {
         type: string;
     };
 };
-import ModelInfo from "./ModelInfo.js";
-import Usage from "./Usage.js";
-import FileSystem from "../utils/FileSystem.js";
+import { ModelInfo } from "./ModelInfo.js";
+import { Usage } from "./Usage.js";
+/** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
+declare class ChatConfig {
+    constructor(input?: {});
+    model: string;
+    provider: string;
+}
+import { FileSystem } from "../utils/FileSystem.js";
 import { Stats } from "node:fs";
+export {};

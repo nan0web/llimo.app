@@ -1,9 +1,9 @@
 import { describe, it } from "node:test"
 import { strictEqual, deepStrictEqual, ok } from "node:assert/strict"
-import { loadModels, selectAndShowModel } from "../../../src/Chat/index.js"
-import ModelProvider from "../../../src/llm/ModelProvider.js"
-import ModelInfo from "../../../src/llm/ModelInfo.js"
-import FileSystem from "../../../src/utils/FileSystem.js"
+import { loadModels, selectAndShowModel } from "../../../../src/Chat/index.js"
+import { ModelProvider } from "../../../../src/llm/ModelProvider.js"
+import { ModelInfo } from "../../../../src/llm/ModelInfo.js"
+import { FileSystem } from "../../../../src/utils/FileSystem.js"
 import { rm, mkdtemp } from "node:fs/promises"
 import { tmpdir } from "node:os"
 

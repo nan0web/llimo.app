@@ -1,12 +1,13 @@
 import { before, describe, it, beforeEach, mock, afterEach } from "node:test"
 import assert from "node:assert/strict"
-import ModelProvider from "./ModelProvider.js"
-import { FileSystem } from "../utils/index.js"
-import ModelInfo from "./ModelInfo.js"
 import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
 const __dirname = dirname(fileURLToPath(import.meta.url))
-import TestFileSystem from "../cli/testing/TestFileSystem.js"
+
+import { ModelProvider } from "./ModelProvider.js"
+import { ModelInfo } from "./ModelInfo.js"
+import { FileSystem } from "../utils/index.js"
+import { TestFileSystem } from "../cli/testing/index.js"
 
 
 describe("ModelProvider", () => {

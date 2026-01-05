@@ -1,4 +1,3 @@
-import Git from "./Git.js";
-import FileSystem from "./FileSystem.js";
-import Path from "./Path.js";
-export { Git, FileSystem, Path };
+export { Path } from "./Path.js";
+export { FileSystem } from "./FileSystem.js";
+export { Git } from "./Git.js";

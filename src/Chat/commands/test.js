@@ -1,11 +1,8 @@
 import { parseArgv } from "../../cli/argvHelper.js"
-import { runCommand } from "../../cli/runCommand.js"
-import Chat from "../../llm/Chat.js"
+import { runCommand, Progress, Alert, Suite, testingProgress } from "../../cli/index.js"
+import { Chat } from "../../llm/Chat.js"
 import { InfoCommand } from "./info.js"
-import FileSystem from "../../utils/FileSystem.js"
-import { Progress, Alert } from "../../cli/components/index.js"
-import { Suite } from "../../cli/testing/node.js"
-import { testingProgress } from "../../cli/testing/progress.js"
+import { FileSystem } from "../../utils/FileSystem.js"
 
 /**
  * @param {string} str
@@ -13,7 +10,7 @@ import { testingProgress } from "../../cli/testing/progress.js"
  */
 function DebuggerFilter(str) {
 	return !str.startsWith("Error: Debugger") &&
-				!str.startsWith("Error: Waiting for the debugger")
+		!str.startsWith("Error: Waiting for the debugger")
 }
 
 /**

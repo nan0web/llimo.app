@@ -3,10 +3,10 @@ import { createCerebras } from '@ai-sdk/cerebras'
 import { createHuggingFace } from '@ai-sdk/huggingface'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { streamText, generateText } from 'ai'
-import ModelProvider from "./ModelProvider.js"
-import ModelInfo from './ModelInfo.js'
+import { ModelProvider } from "./ModelProvider.js"
+import { ModelInfo } from './ModelInfo.js'
 import { validateApiKey } from './ProviderConfig.js'
-import Usage from './Usage.js'
+import { Usage } from './Usage.js'
 
 /**
  * @typedef {Object} StreamOptions callbacks and abort signal
@@ -18,7 +18,7 @@ import Usage from './Usage.js'
  * @property {()=>void} [onAbort] called when the stream is aborted
  */
 
-export class AiStrategy {
+class AiStrategy {
 	/**
 	 * @param {ModelInfo} model
 	 * @param {number} tokens
@@ -60,7 +60,8 @@ export class AiStrategy {
  *
  * @class
  */
-export default class AI {
+export class AI {
+	static Strategy = AiStrategy
 
 	/** @type {Map<string, ModelInfo>} */
 	#models = new Map()
@@ -81,7 +82,7 @@ export default class AI {
 		const {
 			models = [],
 			selectedModel = this.selectedModel,
-			strategy = new AiStrategy()
+			strategy = new AI.Strategy()
 		} = input
 		this.setModels(models)
 		this.selectedModel = selectedModel
@@ -280,7 +281,7 @@ export default class AI {
 	 *
 	 * @param {ModelInfo} model
 	 * @param {import('ai').ModelMessage[]} messages
-	 * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage>} [options={}]
+	 * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage> & StreamOptions} [options={}]
 	 * @returns {import('ai').StreamTextResult<import('ai').ToolSet>}
 	 */
 	streamText(model, messages, options = {}) {
@@ -320,20 +321,17 @@ export default class AI {
 	/**
 	 * Generate text from a model (non‑streaming).
 	 *
-	 * @param {string} modelId
+	 * @param {ModelInfo} model
 	 * @param {import('ai').ModelMessage[]} messages
 	 * @returns {Promise<{text: string, usage: Usage}>}
 	 */
-	async generateText(modelId, messages) {
-		const model = this.getModel(modelId)
-		if (!model) throw new Error(`Model not found: ${modelId}`)
-
+	async generateText(model, messages) {
 		const provider = this.getProvider(model.provider)
 		const { text, usage } = await generateText({
 			model: provider(model.id),
 			messages,
 		})
-		return { text, usage }
+		return { text, usage: new Usage(usage) }
 	}
 
 	/**

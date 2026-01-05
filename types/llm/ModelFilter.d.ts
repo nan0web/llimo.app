@@ -9,4 +9,4 @@ declare namespace _default {
     export { filterModels };
 }
 export default _default;
-import ModelInfo from './ModelInfo.js';
+import { ModelInfo } from './ModelInfo.js';

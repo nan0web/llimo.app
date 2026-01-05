@@ -1,6 +1,6 @@
 /** @typedef {"success" | "info" | "warn" | "error" | "debug"} AlertVariant */
 
-import UiOutput from "../UiOutput.js"
+import { UiOutput } from "../UiOutput.js"
 
 /**
  * Simple wrapper for displaying a line in the console.
@@ -48,5 +48,3 @@ export class Alert extends UiOutput {
 		return new Alert({ variant: "info", text })
 	}
 }
-
-export default Alert

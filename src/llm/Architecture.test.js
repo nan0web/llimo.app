@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import Architecture from "./Architecture.js"
+import { Architecture } from "./Architecture.js"
 
 describe("Architecture", () => {
 	it("creates with defaults", () => {

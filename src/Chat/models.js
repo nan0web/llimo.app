@@ -1,6 +1,6 @@
 import { Ui } from "../cli/Ui.js"
-import ModelInfo from "../llm/ModelInfo.js"
-import ModelProvider from "../llm/ModelProvider.js"
+import { ModelInfo } from "../llm/ModelInfo.js"
+import { ModelProvider } from "../llm/ModelProvider.js"
 
 /**
  * @param {{ noCache?: boolean, ui?: Ui }} [opts={}]

@@ -2,7 +2,7 @@ import process from "node:process"
 
 import { RESET, Ui, parseArgv } from "../../../src/cli/index.js"
 import { testingProgress } from "../../../src/cli/testing/progress.js"
-import FileSystem from "../../../src/utils/FileSystem.js"
+import { FileSystem } from "../../../src/utils/FileSystem.js"
 
 const ui = new Ui({ debugMode: process.argv.includes("--debug") })
 const fs = new FileSystem()

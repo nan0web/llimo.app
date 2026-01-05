@@ -29,5 +29,3 @@ export class Limits {
 		this.tpm = Number(tpm)
 	}
 }
-
-export default Limits

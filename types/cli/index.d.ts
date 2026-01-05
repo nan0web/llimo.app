@@ -5,3 +5,4 @@ export * from "./components/index.js";
 export * from "./selectModel.js";
 export * from "./Ui.js";
 export * from "./ANSI.js";
+export * from "./testing/index.js";

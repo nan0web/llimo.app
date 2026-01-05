@@ -16,5 +16,4 @@ export class ModelsOptions {
      */
     getFilters(): Array<(model: ModelInfo) => boolean>;
 }
-export default ModelsOptions;
-import ModelInfo from "../llm/ModelInfo.js";
+import { ModelInfo } from "../llm/ModelInfo.js";

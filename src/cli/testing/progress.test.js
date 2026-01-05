@@ -2,7 +2,7 @@ import { before, describe, it } from "node:test"
 import assert from "node:assert/strict"
 
 import { testingProgress } from "./progress.js"
-import Ui from "../Ui.js"
+import { Ui }from "../Ui.js"
 
 describe("testingProgress", () => {
 	/**

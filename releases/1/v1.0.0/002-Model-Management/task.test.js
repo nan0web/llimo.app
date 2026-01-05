@@ -1,7 +1,7 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 
-import ModelProvider from "../../../../src/llm/ModelProvider.js"
+import { ModelProvider } from "../../../../src/llm/ModelProvider.js"
 
 describe("002-Model-Management – src/llm/AI.js, ModelProvider.js", () => {
 	describe("2.1 Load models with caching/progress", () => {

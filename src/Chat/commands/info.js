@@ -1,16 +1,16 @@
 import { Alert, Table } from "../../cli/components/index.js"
 import { Ui, UiCommand } from "../../cli/Ui.js"
 import { parseArgv } from "../../cli/argvHelper.js"
-import Chat from "../../llm/Chat.js"
-import Markdown from "../../utils/Markdown.js"
-import UiOutput from "../../cli/UiOutput.js"
-import ModelInfo from "../../llm/ModelInfo.js"
-import FileSystem from "../../utils/FileSystem.js"
+import { Chat } from "../../llm/Chat.js"
+import { MarkdownProtocol } from "../../utils/Markdown.js"
+import { UiOutput } from "../../cli/UiOutput.js"
+import { ModelInfo } from "../../llm/ModelInfo.js"
+import { FileSystem } from "../../utils/FileSystem.js"
 
 /**
  * Options for the `info` command.
  */
-export class InfoOptions {
+class InfoOptions {
 	/** @type {string} */
 	id
 	static id = {
@@ -93,7 +93,7 @@ export class InfoCommand extends UiCommand {
 			const tokens = await this.chat.calcTokens(content)
 
 			// Count attached files (markdown checklist)
-			const parsed = await Markdown.parse(content)
+			const parsed = await MarkdownProtocol.parse(content)
 			const files = parsed.files?.size ?? 0
 
 			// Load usage.json if present next to the message file
@@ -153,7 +153,7 @@ export class InfoCommand extends UiCommand {
 	/**
 	 * @param {object} [input]
 	 * @param {string[]} [input.argv=[]]
-	 * @param {Partial<Chat>} [input.chat]
+	 * @param {Chat} [input.chat]
 	 * @returns {InfoCommand}
 	 */
 	static create(input = {}) {

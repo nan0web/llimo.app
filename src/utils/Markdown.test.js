@@ -3,13 +3,13 @@ import assert from "node:assert"
 import { Readable } from "node:stream"
 import readline from "node:readline"
 
-import Markdown from "./Markdown.js"
-import FileSystem from "./FileSystem.js"
+import { MarkdownProtocol } from "./Markdown.js"
+import { FileSystem } from "./FileSystem.js"
 import { FileEntry } from "../FileProtocol.js"
 
 const fs = new FileSystem()
 
-describe.skip("Markdown.parseStream", () => {
+describe.skip("MarkdownProtocol.parseStream", () => {
 	const rows = [
 		'# Solution',
 		'The content beyond files produces errors',
@@ -79,9 +79,9 @@ describe.skip("Markdown.parseStream", () => {
 	]
 	const stream = readline.createInterface(Readable.from(rows.join("\n")))
 	it("should parse with new lines", async () => {
-		const result = await Markdown.parseStream(stream)
-		assert.deepStrictEqual(result.correct, entries, result.failed)
-		assert.deepStrictEqual(result.failed.map(err => [err.line, err.content, err.error]), [
+		const result = await MarkdownProtocol.parseStream(stream)
+		assert.deepStrictEqual(result.correct, entries)
+		assert.deepStrictEqual(result.failed?.map(err => [err.line, err.content, err.error]), [
 			[19, "#### [incorrect](file)](file.txt)", "Incorrect file header"],
 		])
 		for (const { filename, content } of result.correct) {
@@ -91,9 +91,9 @@ describe.skip("Markdown.parseStream", () => {
 	})
 
 	it("should parse content beyond file", async () => {
-		const result = await Markdown.parse(rows.join("\n"))
-		assert.deepStrictEqual(result.correct, entries, result.failed)
-		assert.deepStrictEqual(result.failed.map(err => [err.line, err.content, err.error]), [
+		const result = await MarkdownProtocol.parse(rows.join("\n"))
+		assert.deepStrictEqual(result.correct, entries)
+		assert.deepStrictEqual(result.failed?.map(err => [err.line, err.content, err.error]), [
 			[19, "#### [incorrect](file)](file.txt)", "Incorrect file header"],
 		])
 		assert.ok(
@@ -107,8 +107,8 @@ describe.skip("Markdown.parseStream", () => {
 	})
 
 	it("should correctly read → parse → save file", async () => {
-		const content = await fs.readFile("src/utils/Markdown.test.inject.md", "utf-8")
-		const parsed = await Markdown.parse(content)
+		const content = await fs.readFile("src/utils/MarkdownProtocol.test.inject.md", "utf-8")
+		const parsed = await MarkdownProtocol.parse(content)
 		assert.equal(parsed.isValid, false)
 		assert.deepStrictEqual(parsed.requested, new Map([
 			["bin/llimo-pack.js", "llimo-pack.js"],
@@ -123,7 +123,7 @@ describe.skip("Markdown.parseStream", () => {
 			["src/utils/FileSystem.js", "src/utils/FileSystem.js"],
 			["src/llm/commands/InjectFilesCommand.js", "src/llm/commands/InjectFilesCommand.js"],
 		]))
-		for (const { filename, content } of parsed.correct) {
+		for (const { filename, content } of (parsed.correct ?? [])) {
 			if (filename.startsWith("@")) continue
 			await fs.save(`dist/markdown-parse.test/${filename}`, content)
 		}
@@ -132,25 +132,25 @@ describe.skip("Markdown.parseStream", () => {
 })
 
 
-describe("Markdown.extractPath", () => {
+describe("MarkdownProtocol.extractPath", () => {
 	describe("extractPath helper", () => {
 		it("returns null for non‑checklist lines", () => {
-			assert.strictEqual(Markdown.extractPath("# Title"), null)
-			assert.strictEqual(Markdown.extractPath("- not a checklist"), null)
+			assert.strictEqual(MarkdownProtocol.extractPath("# Title"), null)
+			assert.strictEqual(MarkdownProtocol.extractPath("- not a checklist"), null)
 		})
 
 		it("parses empty name correctly", () => {
-			const res = Markdown.extractPath("- [](path/to/file.js)")
+			const res = MarkdownProtocol.extractPath("- [](path/to/file.js)")
 			assert.deepStrictEqual(res, { name: "", path: "path/to/file.js" })
 		})
 
 		it("parses explicit name correctly", () => {
-			const res = Markdown.extractPath("- [MyFile](src/file.js)")
+			const res = MarkdownProtocol.extractPath("- [MyFile](src/file.js)")
 			assert.deepStrictEqual(res, { name: "MyFile", path: "src/file.js" })
 		})
 
 		it("rejects malformed headers", () => {
-			assert.strictEqual(Markdown.extractPath("- [MissingParen]src/file.js"), null)
+			assert.strictEqual(MarkdownProtocol.extractPath("- [MissingParen]src/file.js"), null)
 		})
 	})
 })

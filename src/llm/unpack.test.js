@@ -2,7 +2,7 @@ import { describe, it, afterEach, beforeEach, mock } from "node:test"
 import assert from "node:assert/strict"
 import { unpackAnswer } from "./unpack.js"
 
-import FileSystem from "../utils/FileSystem.js"
+import { FileSystem } from "../utils/FileSystem.js"
 
 describe("unpackAnswer", () => {
 	let mockFs
@@ -31,8 +31,8 @@ describe("unpackAnswer", () => {
 			lines.push(line)
 		}
 		assert.ok(lines.length > 0, "Should generate output lines")
-		assert.ok(lines.some(l => l.includes("example.js")), "Should process JS file")
-		assert.ok(lines.some(l => l.includes("dry mode")), "Should indicate dry run")
+		assert.ok(lines.some(l => String(l).includes("example.js")), "Should process JS file")
+		assert.ok(lines.some(l => String(l).includes("dry mode")), "Should indicate dry run")
 	})
 
 	it("saves files and generates save messages", async () => {
@@ -52,8 +52,8 @@ describe("unpackAnswer", () => {
 			lines.push(line)
 		}
 		assert.strictEqual(saveSpy.mock.callCount(), 1, "Should save one file")
-		assert.ok(lines.some(l => l.includes("test.js")), "Should log save")
-		assert.ok(lines.some(l => l.includes("bytes")), "Should log size")
+		assert.ok(lines.some(l => String(l).includes("test.js")), "Should log save")
+		assert.ok(lines.some(l => String(l).includes("bytes")), "Should log size")
 	})
 
 	it("handles empty file content without saving", async () => {
@@ -66,7 +66,7 @@ describe("unpackAnswer", () => {
 			lines.push(line)
 		}
 		assert.strictEqual(saveSpy.mock.callCount(), 0, "Should not save empty file")
-		assert.ok(lines.some(l => l.includes("empty content")), "Should log empty warning")
+		assert.ok(lines.some(l => String(l).includes("empty content")), "Should log empty warning")
 	})
 
 	it("processes command entries (@ prefixed)", async () => {
@@ -79,7 +79,7 @@ describe("unpackAnswer", () => {
 			lines.push(line)
 		}
 		assert.ok(lines.length > 0, "Should process command")
-		assert.ok(lines.some(l => l.includes("@summary")), "Should handle @ command")
+		assert.ok(lines.some(l => String(l).includes("@summary")), "Should handle @ command")
 	})
 
 	it("groups and reports parse errors from failed entries", async () => {
@@ -102,8 +102,8 @@ describe("unpackAnswer", () => {
 		for await (const line of unpackAnswer(parsed)) {
 			lines.push(line)
 		}
-		assert.strictEqual(lines.filter(l => l.includes("Error")).length >= 1, true, "Should report errors")
-		assert.ok(lines.some(l => l.includes("Syntax error")), "Should include first error")
-		assert.ok(lines.some(l => l.includes("Missing field")), "Should include second error")
+		assert.strictEqual(lines.filter(l => String(l).includes("Error")).length >= 1, true, "Should report errors")
+		assert.ok(lines.some(l => String(l).includes("Syntax error")), "Should include first error")
+		assert.ok(lines.some(l => String(l).includes("Missing field")), "Should include second error")
 	})
 })

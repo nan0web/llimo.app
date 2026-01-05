@@ -5,15 +5,15 @@
  *
  * @module utils/chatSteps
  */
-import Chat from "./Chat.js"
-import AI from "./AI.js"
+import { Chat } from "./Chat.js"
+import { AI } from "./AI.js"
 import { generateSystemPrompt } from "./system.js"
 import { unpackAnswer } from "./unpack.js"
 import { BOLD, GREEN, ITALIC, MAGENTA, RED, RESET, YELLOW } from "../cli/ANSI.js"
-import FileSystem from "../utils/FileSystem.js"
-import Markdown from "../utils/Markdown.js"
-import Ui, { UiStyle } from "../cli/Ui.js"
-import ModelInfo from './ModelInfo.js'
+import { FileSystem } from "../utils/FileSystem.js"
+import { MarkdownProtocol } from "../utils/Markdown.js"
+import { Ui, UiStyle } from "../cli/Ui.js"
+import { ModelInfo } from './ModelInfo.js'
 import ChatOptions from '../Chat/Options.js'
 import { Suite } from '../cli/testing/node.js'
 import { testingProgress, testingStatus } from '../cli/testing/progress.js'
@@ -119,7 +119,7 @@ export async function initialiseChat(input) {
  * @param {string|null} inputFile absolute path of the source file (or null)
  * @param {string} input raw text (used when `inputFile` is null)
  * @param {Chat} chat Chat instance (used for paths)
- * @param {import("../cli/Ui.js").default} ui User interface instance
+ * @param {import("../cli/Ui.js").Ui} ui User interface instance
  * @param {number} [step=1]
  * @returns {Promise<void>}
  */
@@ -218,7 +218,7 @@ export async function decodeAnswer({ ui, chat, options, logs = [] }) {
 	/** @type {string} */
 	const fullResponse = String(answer.content)
 
-	const parsed = await Markdown.parse(fullResponse)
+	const parsed = await MarkdownProtocol.parse(fullResponse)
 
 	logs.push("#### llimo-unpack")
 	logs.push("```bash")
@@ -249,9 +249,9 @@ export async function decodeAnswer({ ui, chat, options, logs = [] }) {
 
 	// Actual unpack
 	const stream = unpackAnswer(parsed)
-	for await (const str of stream) {
-		ui.console.info(str)
-		logs.push(str)
+	for await (const uiElement of stream) {
+		ui.console.info(uiElement)
+		logs.push(String(uiElement))
 	}
 	logs.push("```")
 	const prompt = logs.join("\n")
@@ -330,7 +330,7 @@ export async function printAnswer(input) {
  * tests, if they are.
  *
  * @param {Object} input
- * @param {import("../cli/Ui.js").default} input.ui User interface instance
+ * @param {import("../cli/Ui.js").Ui} input.ui User interface instance
  * @param {FileSystem} [input.fs]
  * @param {Chat} input.chat Chat instance (used for paths)
  * @param {import('../cli/runCommand.js').runCommandFn} input.runCommand Function to execute shell commands
@@ -392,7 +392,7 @@ export async function runTests(input) {
 		ui,
 		fs,
 		chat,
-		runCommand = () => {},
+		runCommand = () => { },
 		logs = [],
 		options = {},
 		step = 1,

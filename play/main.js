@@ -4,11 +4,19 @@ import { AlertDemo } from './alert-demo.js'
 import { TableDemo } from './table-demo.js'
 import { ProgressDemo } from './progress-demo.js'
 import { ConsoleDemo } from './console-demo.js'
-import Ui from '../src/cli/Ui.js'
+import { ProgressTestingDemo } from './progress-testing-demo.js'
+import { Ui }from '../src/cli/Ui.js'
 
-const ui = new Ui()
+const ui = new Ui({ debugMode: process.argv.slice(2) })
 
-console.info('Select UI Component to Demo:\n1. Ui (Full UI Helper)\n2. Alert (Console Alert)\n3. Table (Data Table)\n4. Progress (Progress Bar)\n5. UiConsole (Console Wrapper)\n6. All (Run all demos)')
+ui.console.info('Select UI Component to Demo:')
+ui.console.info('1. Ui (Full UI Helper')
+ui.console.info('2. Alert (Console Alert')
+ui.console.info('3. Table (Data Table')
+ui.console.info('4. Progress (Progress Bar')
+ui.console.info('5. UiConsole (Console Wrapper')
+ui.console.info('6. Progress Testing (CLI Output')
+ui.console.info('7. All (Run all demos)')
 
 ui.ask('Enter number: ').then(async (choice) => {
 	const demos = {
@@ -17,13 +25,16 @@ ui.ask('Enter number: ').then(async (choice) => {
 		3: () => TableDemo,
 		4: () => ProgressDemo,
 		5: () => ConsoleDemo,
-		6: async () => ({
+		6: () => ProgressTestingDemo,
+		7: async () => ({
 			run: async () => {
 				await UiDemo.run()
 				await AlertDemo.run()
 				await TableDemo.run()
 				await ProgressDemo.run()
 				await ConsoleDemo.run()
+				await ReadLineDemo.run()
+				await ProgressTestingDemo.run()
 			}
 		})
 	}
@@ -31,11 +42,11 @@ ui.ask('Enter number: ').then(async (choice) => {
 		try {
 			await (await demos[choice]()).run()
 		} catch (error) {
-			console.error('Demo error:', error.message)
-			console.debug(error.stack)
+			ui.console.error('Demo error:', error.message)
+			ui.console.debug(error.stack)
 		}
 	} else {
-		console.info('Invalid choice. Exiting.')
+		ui.console.info('Invalid choice. Exiting.')
 	}
 	process.exit(0)
 })

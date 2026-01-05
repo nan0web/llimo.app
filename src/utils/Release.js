@@ -15,7 +15,7 @@
  *
  * @class
  */
-export default class ReleaseProtocol {
+export class ReleaseProtocol {
 	/** @type {string} */
 	version = ""
 	/** @param {Partial<ReleaseProtocol>} [input={}] */

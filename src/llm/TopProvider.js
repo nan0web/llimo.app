@@ -1,7 +1,7 @@
 /**
  * Represents top provider information for a model.
  */
-export default class TopProvider {
+export class TopProvider {
 	/** @type {number} - Context length */
 	context_length = -1
 	/** @type {boolean} - Whether the model is moderated */

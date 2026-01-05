@@ -24,5 +24,5 @@
  * @returns {Promise<ModelInfo | undefined>}
  */
 export function selectModel(models: Map<string, ModelInfo>, modelPartial: string, providerPartial: string | undefined, ui: Ui, onSelect?: (chosen: ModelInfo) => void): Promise<ModelInfo | undefined>;
-import ModelInfo from "./ModelInfo.js";
-import Ui from "../cli/Ui.js";
+import { ModelInfo } from "./ModelInfo.js";
+import { Ui } from "../cli/Ui.js";

@@ -4,7 +4,7 @@
 import micromatch from "micromatch"
 import { RED, GREEN, RESET, YELLOW, ITALIC, MAGENTA } from "../cli/ANSI.js"
 import { FileSystem, Path } from "../utils/index.js"
-import Markdown from "../utils/Markdown.js"
+import { MarkdownProtocol } from "../utils/Markdown.js"
 
 const numberFormat = new Intl.NumberFormat("en-US").format
 const format = no => {
@@ -37,7 +37,7 @@ export async function packMarkdown(options = {}) {
 	const added = new Set()
 
 	for (const line of lines) {
-		const extracted = Markdown.extractPath(line)
+		const extracted = MarkdownProtocol.extractPath(line)
 		if (extracted) {
 			const { name, path: relativePath } = extracted
 			let params = name.split(";")

@@ -7,10 +7,10 @@ import { rm, mkdtemp } from "node:fs/promises"
 import { tmpdir } from "node:os"
 
 import { formatChatProgress } from "../../../../src/llm/chatProgress.js"
-import TestAI from "../../../../src/llm/TestAI.js"
-import Chat from "../../../../src/llm/Chat.js"
-import Usage from "../../../../src/llm/Usage.js"
-import ModelInfo from "../../../../src/llm/ModelInfo.js"
+import { TestAI } from "../../../../src/llm/TestAI.js"
+import { Chat } from "../../../../src/llm/Chat.js"
+import { Usage } from "../../../../src/llm/Usage.js"
+import { ModelInfo } from "../../../../src/llm/ModelInfo.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const rootDir = resolve(__dirname, "../../../..")

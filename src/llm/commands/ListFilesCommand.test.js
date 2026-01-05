@@ -3,7 +3,7 @@ import assert from "node:assert"
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
-import Markdown from "../../utils/Markdown.js"
+import { MarkdownProtocol } from "../../utils/Markdown.js"
 import ListFilesCommand from "./ListFilesCommand.js"
 
 describe("ListFilesCommand", () => {
@@ -34,8 +34,8 @@ describe("ListFilesCommand", () => {
 src/**
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@ls")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@ls")
 		assert.ok(file, "Expected @ls entry")
 
 		const cmd = new ListFilesCommand({ cwd: workdir, file, parsed })
@@ -56,8 +56,8 @@ src/**
 **/*
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@ls")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@ls")
 		assert.ok(file, "Expected @ls entry")
 
 		const cmd = new ListFilesCommand({ cwd: workdir, file, parsed })

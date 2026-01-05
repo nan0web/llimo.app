@@ -5,10 +5,10 @@
  */
 
 import { randomUUID } from "node:crypto"
-import AI from "./AI.js"
-import FileSystem from "../utils/FileSystem.js"
-import Usage from "./Usage.js"
-import Chat from "./Chat.js"
+import { AI } from "./AI.js"
+import { FileSystem } from "../utils/FileSystem.js"
+import { Usage } from "./Usage.js"
+import { Chat } from "./Chat.js"
 
 /**
  * TestAI extends AI to simulate chat responses using pre-recorded files from chat directory.
@@ -38,7 +38,7 @@ import Chat from "./Chat.js"
  *
  * Supports per-step simulation by prefixing files with `step${options.step}/`
  */
-export default class TestAI extends AI {
+export class TestAI extends AI {
 	/**
 	 * Simulates streaming by reading chunks from files and yielding them with delays.
 	 * Loads chat state from files if available. Handles all specified chat files.
@@ -46,7 +46,7 @@ export default class TestAI extends AI {
 	 * but since it's test, use the full content as original (but simulate filtering if needed).
 	 * @param {any} modelId
 	 * @param {ModelMessage[]} messages
-	 * @param {UIMessageStreamOptions} [options={}]
+	 * @param {UIMessageStreamOptions & } [options={}]
 	 * @returns {Promise<import('ai').StreamTextResult<import('ai').ToolSet>>}
 	 */
 	async streamText(modelId, messages, options = {}) {
@@ -201,6 +201,24 @@ export default class TestAI extends AI {
 	 */
 	async simulateChat() {
 		const chat = new Chat()
+	}
+
+	/**
+	 * Runs the chat loop.
+	 *
+	 * Workflow
+	 * 1. load current chat --chat-dir or start new if --new.
+	 * 2. start the chat.
+	 * 2.1. Run tests if --fix provided.
+	 * 2.2. Pack input > prompt.
+	 * 2.3. Send chat messages to API.
+	 * 2.4. Unpack the response.
+	 * 2.5. Run tests.
+	 * 2.6. Continue the chat if any test fail (exitCode !== 0).
+	 * 3. complete the chat.
+	 */
+	async chat() {
+
 	}
 
 	async simulateRelease() {

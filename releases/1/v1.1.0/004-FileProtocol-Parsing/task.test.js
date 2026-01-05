@@ -10,12 +10,15 @@
 import { describe, it } from "node:test"
 import { strictEqual, deepStrictEqual, ok } from "node:assert/strict"
 import path from "node:path"
-import { mkdtemp, rm, writeFile, readFile } from "node:fs/promises"
+import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
-import FileProtocol, { FileEntry, FileError, validate } from "../../../src/FileProtocol.js"
-import Markdown from "../../../src/utils/Markdown.js"
-import FileSystem from "../../../src/utils/FileSystem.js"
-import JSONL from "../../../src/utils/JSONL.js"  // Assume created for task
+import { FileEntry, FileError, validate } from "../../../../src/FileProtocol.js"
+import Markdown from "../../../../src/utils/Markdown.js"
+import { FileSystem } from "../../../../src/utils/FileSystem.js"
+// import { JSONL } from "../../../../src/utils/JSONL.js"  // Assume created for task
+const JSONL = {
+	parse: text => text.split("\n").map(r => JSON.parse(r))
+}
 
 describe("004-FileProtocol-Parsing – src/FileProtocol.js & src/utils/Markdown.js", () => {
 	describe("4.1 Parse markdown source into ParsedFile: correct files, failed errors, @validate", () => {

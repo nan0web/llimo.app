@@ -22,7 +22,7 @@ export function handleTestMode(options: {
     model: ModelInfo;
     fps: number;
 }): Promise<void>;
-import AI from "./AI.js";
-import Ui from "../cli/Ui.js";
-import Chat from "./Chat.js";
-import ModelInfo from "./ModelInfo.js";
+import { AI } from "./AI.js";
+import { Ui } from "../cli/Ui.js";
+import { Chat } from "./Chat.js";
+import { ModelInfo } from "./ModelInfo.js";

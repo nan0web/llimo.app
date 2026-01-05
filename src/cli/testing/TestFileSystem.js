@@ -1,4 +1,4 @@
-import FileSystem from "../../utils/FileSystem.js"
+import { FileSystem } from "../../utils/FileSystem.js"
 
 /**
  * Mock FileSystem for testing purposes.
@@ -155,5 +155,3 @@ export class TestFileSystem extends FileSystem {
 		return this.#data.has(rel)
 	}
 }
-
-export default TestFileSystem

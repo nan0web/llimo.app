@@ -1,7 +1,7 @@
 /**
  * Path operations wrapper
  */
-export default class Path {
+export class Path {
     /**
      * @param {Partial<Path>} [input={}]
      */

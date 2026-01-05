@@ -10,7 +10,7 @@ import { sep } from 'node:path'
 
 import micromatch from 'micromatch'
 
-import Path from './Path.js'
+import { Path } from './Path.js'
 
 /**
  * @typedef {import('node:fs').Mode | import('node:fs').MakeDirectoryOptions | null} MkDirOptions
@@ -19,7 +19,7 @@ import Path from './Path.js'
 /**
  * File system operations wrapper to allow testing
  */
-export default class FileSystem {
+export class FileSystem {
 	/** @type {string} */
 	cwd
 	/** @type {Path} */
@@ -240,7 +240,7 @@ export default class FileSystem {
 				let rel = this.path.relative(startPath, fullPath)
 				if (entry.isDirectory()) rel += '/'
 
-				 if (!this.#shouldIgnore(rel, fullPath, ignore)) {
+				if (!this.#shouldIgnore(rel, fullPath, ignore)) {
 					results.push(rel)
 				}
 

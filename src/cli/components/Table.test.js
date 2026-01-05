@@ -1,18 +1,16 @@
 import { describe, it } from "node:test"
 import assert from "node:assert"
-import Table, { TableOptions } from "./Table.js"
-import Ui from "../Ui.js"
+import { Table } from "./Table.js"
+import { Ui, UiConsole } from "../Ui.js"
 
 class TestUi extends Ui {
 	calls = []
 	constructor(options = {}) {
 		super(options)
-		this.console = {
-			table: this.table.bind(this),
+		this.console = new UiConsole()
+		this.console.table = (rows = [], options = {}) => {
+			this.calls.push([rows, options])
 		}
-	}
-	table(rows = [], options = {}) {
-		this.calls.push([rows, options])
 	}
 }
 
@@ -28,7 +26,7 @@ describe("UiTable", () => {
 		const ui = new TestUi()
 		ui.render(table)
 		assert.deepStrictEqual(ui.calls, [
-			[rows, new TableOptions()]
+			[rows, new Table.Options()]
 		])
 	})
 
@@ -47,7 +45,7 @@ describe("UiTable", () => {
 		const ui = new TestUi()
 		ui.render(table)
 		assert.deepStrictEqual(ui.calls, [
-			[rows, new TableOptions({})]
+			[rows, new Table.Options({})]
 		])
 	})
 })

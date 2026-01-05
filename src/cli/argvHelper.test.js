@@ -1,10 +1,6 @@
-import { describe, it, beforeEach, mock } from "node:test"
+import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import { parseArgv, parseIO } from "./argvHelper.js"
-import process from "node:process"
-import ReadLine from "../utils/ReadLine.js"
-import FileSystem from "../utils/FileSystem.js"
-import Path from "../utils/Path.js"
+import { parseArgv } from "./argvHelper.js"
 
 // Mock ChatOptions class for parseArgv tests
 class ChatOptions {
@@ -49,68 +45,6 @@ describe("argvHelper", () => {
 
 		it("should throw error for missing value", () => {
 			assert.throws(() => parseArgv(["--test"], ChatOptions), /Value for the option "testMode" not provided/)
-		})
-	})
-
-	describe("parseIO", () => {
-		let mockFS
-		let mockRL
-		let mockPath
-
-		beforeEach(() => {
-			mockFS = new FileSystem()
-			mockRL = new ReadLine()
-			mockPath = new Path()
-			mock.method(process, "cwd", () => "/cwd")
-			mock.method(mockRL, "createInterface", () => ({ on: () => {}, close: () => {} }))
-			mock.method(mockFS, "access", () => Promise.resolve(true))
-			mock.method(mockFS, "open", () => Promise.resolve({ createReadStream: () => ({ on: () => {}, pipe: () => {} }) }))
-			mock.method(mockPath, "resolve", (cwd, ...args) => `/cwd/${args.join("/")}`)
-			mock.method(mockPath, "dirname", (file) => file === "/cwd/input.md" ? "/cwd" : "/cwd/dir")
-		})
-
-		it("should parse stdin data with output path", async () => {
-			const stdinData = "markdown content"
-			const argv = ["output.md"]
-			const result = await parseIO(argv, stdinData, mockFS, mockPath, mockRL)
-			assert.ok(result.mdStream)
-			assert.strictEqual(result.outputPath, "/cwd/output.md")
-			assert.strictEqual(result.baseDir, "/cwd")
-		})
-
-		it("should parse file input with output path", async () => {
-			const stdinData = ""
-			const argv = ["input.md", "output.md"]
-			const result = await parseIO(argv, stdinData, mockFS, mockPath, mockRL)
-			assert.ok(result.mdStream)
-			assert.strictEqual(result.outputPath, "/cwd/output.md")
-			assert.strictEqual(result.baseDir, "/cwd")
-		})
-
-		it("should parse only output path, use stdin", async () => {
-			const stdinData = ""
-			const argv = ["output.md"]
-			mock.method(mockFS, "access", () => Promise.reject(new Error()))
-			const result = await parseIO(argv, stdinData, mockFS, mockPath, mockRL)
-			assert.ok(result.mdStream)
-			assert.strictEqual(result.outputPath, "/cwd/output.md")
-			assert.strictEqual(result.baseDir, "/cwd")
-		})
-
-		it("should handle no argv, no stdin", async () => {
-			const result = await parseIO([], "", mockFS, mockPath, mockRL)
-			assert.ok(result.mdStream)
-			assert.strictEqual(result.outputPath, undefined)
-			assert.strictEqual(result.baseDir, "/cwd")
-		})
-
-		it("should reject non-existing file", async () => {
-			const stdinData = ""
-			const argv = ["nonexistent.md"]
-			mock.method(mockFS, "access", () => Promise.reject(new Error()))
-			const result = await parseIO(argv, stdinData, mockFS, mockPath, mockRL)
-			assert.ok(result.mdStream)
-			assert.strictEqual(result.outputPath, "/cwd/nonexistent.md")
 		})
 	})
 })

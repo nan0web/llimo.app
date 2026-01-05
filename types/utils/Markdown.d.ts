@@ -2,7 +2,7 @@
 /**
  * MarkdownProtocol – parses markdown with file blocks into a structured format.
  */
-export default class MarkdownProtocol extends FileProtocol {
+export class MarkdownProtocol extends FileProtocol {
     /**
      * Process a single line of markdown input.
      * @param {string} rawLine - The raw line to process
@@ -39,5 +39,5 @@ export default class MarkdownProtocol extends FileProtocol {
     } | null;
 }
 export type ParsedFile = import("../FileProtocol.js").ParsedFile;
-import FileProtocol from "../FileProtocol.js";
+import { FileProtocol } from "../FileProtocol.js";
 import { FileEntry } from "../FileProtocol.js";

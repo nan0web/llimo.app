@@ -1,9 +1,9 @@
 import { describe, it, before, after } from "node:test"
 import assert from "node:assert"
-import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises"
+import { access, mkdtemp, rm, writeFile, mkdir } from "node:fs/promises"
 import { resolve } from "node:path"
 import { tmpdir } from "node:os"
-import Markdown from "../../utils/Markdown.js"
+import { MarkdownProtocol } from "../../utils/Markdown.js"
 import RemoveCommand from "./RemoveCommand.js"
 
 describe("RemoveCommand", () => {
@@ -33,8 +33,8 @@ temp.txt
 subdir/another.txt
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@rm")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@rm")
 		assert.ok(file, "Expected @rm entry")
 
 		const cmd = new RemoveCommand({ cwd: workdir, file, parsed })
@@ -48,7 +48,7 @@ subdir/another.txt
 
 		// Verify files are actually gone
 		try {
-			await fs.access(resolve(workdir, "temp.txt"))
+			await access(resolve(workdir, "temp.txt"))
 			assert.fail("File should have been removed")
 		} catch {
 			assert.ok(true, "File was successfully removed")
@@ -62,8 +62,8 @@ subdir/another.txt
 does-not-exist.txt
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@rm")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@rm")
 		assert.ok(file, "Expected @rm entry")
 
 		const cmd = new RemoveCommand({ cwd: workdir, file, parsed })

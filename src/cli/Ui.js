@@ -4,10 +4,8 @@ import { appendFileSync, existsSync, mkdirSync } from "node:fs"
 import { dirname } from "node:path"
 
 import { YELLOW, RED, RESET, GREEN, overwriteLine, DIM, stripANSI, ITALIC } from "./ANSI.js"
-import UiOutput from "./UiOutput.js"
-import Alert from "./components/Alert.js"
-import Table from "./components/Table.js"
-import Progress from "./components/Progress.js"
+import { UiOutput } from "./UiOutput.js"
+import { Alert, Table, Progress } from "./components/index.js"
 
 /** @typedef {"success" | "info" | "warn" | "error" | "debug" | "log"} LogTarget */
 
@@ -143,7 +141,6 @@ export class UiConsole {
 	/**
 	 * Append a message to the log file if logging is enabled.
 	 *
-	 * @private
 	 * @param {LogTarget} target
 	 * @param {string} msg
 	 */
@@ -565,5 +562,3 @@ export class Ui {
 		}
 	}
 }
-
-export default Ui

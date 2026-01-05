@@ -31,12 +31,10 @@ export default class TestRunner {
      */
     simulateStep(chat: any): Promise<{
         fullResponse: any;
-        parsed: import("../FileProtocol.js").ParsedFile;
+        parsed: any;
         simResult: import("ai").StreamTextResult<import("ai").ToolSet, any>;
     }>;
     #private;
 }
 export type Unit = "byte" | "token";
-import Ui from "../cli/Ui.js";
-import FileSystem from "../utils/FileSystem.js";
-import Chat from "./Chat.js";
+import { Ui } from "../cli/Ui.js";

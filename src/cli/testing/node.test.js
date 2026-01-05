@@ -47,6 +47,6 @@ describe("Suite", () => {
 		assert.fail()
 	})
 	it.todo("should be cancelled", async () => {
-		await new Promise(resolve => setTimeout(() => resolve(), 999))
+		await new Promise(resolve => setTimeout(() => resolve(0), 999))
 	})
 })

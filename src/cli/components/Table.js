@@ -1,10 +1,10 @@
-import UiOutput from "../UiOutput.js"
+import { UiOutput } from "../UiOutput.js"
 
 /**
  * @typedef {"left" | "center" | "right"} TableAlign
  */
 
-export class TableOptions {
+class TableOptions {
 	/** @type {string} */
 	divider
 	static divider = {
@@ -33,6 +33,7 @@ export class TableOptions {
 }
 
 export class Table extends UiOutput {
+	static Options = TableOptions
 	/** @type {any[][] | object[]} */
 	rows = []
 	/** @type {Partial<TableOptions>} */
@@ -71,5 +72,3 @@ export class Table extends UiOutput {
 		return result
 	}
 }
-
-export default Table

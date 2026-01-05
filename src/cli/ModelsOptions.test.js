@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
 import { strict as assert } from "node:assert"
-import ModelsOptions from "./ModelsOptions.js"
+import { ModelsOptions } from "./ModelsOptions.js"
 
 describe("ModelsOptions – filter parsing", () => {
 	it("equality filter on price with precision", () => {

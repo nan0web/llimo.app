@@ -14,4 +14,3 @@ export class Limits {
     /** @type {number} - Tokens per minute */
     tpm: number;
 }
-export default Limits;

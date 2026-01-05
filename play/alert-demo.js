@@ -1,5 +1,5 @@
 import { Alert } from '../src/cli/components/Alert.js'
-import Ui from '../src/cli/Ui.js'
+import { Ui }from '../src/cli/Ui.js'
 
 export class AlertDemo {
 	static async run() {

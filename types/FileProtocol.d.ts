@@ -38,7 +38,7 @@ export class FileError {
     /** @type {number} */
     line: number;
 }
-export default class FileProtocol {
+export class FileProtocol {
     /**
      * Validates the correct array of file entries with the `@validate` filename.
      * @param {FileEntry[]} correct
@@ -52,10 +52,10 @@ export default class FileProtocol {
      */
     static parse(source: any): Promise<ParsedFile>;
     /**
-     * @param {AsyncGenerator<string>} stream – an async iterator yielding one line per call.
+     * @param {AsyncGenerator<string> | import("node:readline").Interface} stream – an async iterator yielding one line per call.
      * @returns {Promise<ParsedFile>}
      */
-    static parseStream(stream: AsyncGenerator<string>): Promise<ParsedFile>;
+    static parseStream(stream: AsyncGenerator<string> | import("node:readline").Interface): Promise<ParsedFile>;
 }
 export type ParsedFile = {
     /**

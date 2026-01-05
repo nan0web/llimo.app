@@ -1,12 +1,12 @@
 import { formatChatProgress } from "./chatProgress.js"
-import FileSystem from "../utils/FileSystem.js"
+import { FileSystem } from "../utils/FileSystem.js"
 import { GREEN, RESET } from "../cli/ANSI.js"
-import Usage from "./Usage.js"
-import Ui from "../cli/Ui.js"
-import Chat from "./Chat.js"
-import ModelInfo from "./ModelInfo.js"
+import { Usage } from "./Usage.js"
+import { Ui } from "../cli/Ui.js"
+import { Chat } from "./Chat.js"
+import { ModelInfo } from "./ModelInfo.js"
 import { startStreaming } from "./chatSteps.js"
-import AI from "./AI.js"
+import { AI } from "./AI.js"
 
 /**
  * Handles the test mode simulation for llimo-chat.

@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
-import FileSystem from './FileSystem.js'
+import { FileSystem } from './FileSystem.js'
 
 describe('FileSystem.browse', () => {
 	let tempDir
@@ -50,7 +50,7 @@ describe('FileSystem.browse', () => {
 
 	it('should list all entries recursively', async () => {
 		const map = new Map()
-		const onRead = (dir, entries) => {
+		const onRead = async (dir, entries) => {
 			map.set(dir, entries)
 		}
 		const results = await fileSystem.browse('.', { recursive: true, onRead })
@@ -111,7 +111,7 @@ describe('FileSystem.browse', () => {
 
 	it('should call onRead for each traversed directory', async () => {
 		const readDirs = []
-		const onRead = (dir, entries) => {
+		const onRead = async (dir, entries) => {
 			readDirs.push({ dir, count: entries.length })
 		}
 

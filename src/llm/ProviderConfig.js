@@ -47,6 +47,3 @@ export function validateApiKey(provider) {
 		throw new Error(config.errorMsg)
 	}
 }
-
-export default { validateApiKey }
-

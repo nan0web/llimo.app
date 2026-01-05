@@ -11,12 +11,12 @@ import { strictEqual, deepStrictEqual, ok } from "node:assert/strict"
 import { spawn } from "node:child_process"
 import { promisify } from "node:util"
 import path from "node:path"
-import { mkdtemp, rm, writeFile, mkdir, readFile } from "node:fs/promises"
+import { mkdtemp, rm, mkdir } from "node:fs/promises"
 import { tmpdir } from "node:os"
-import { FileSystem } from "../../../src/utils/FileSystem.js"
-import { Chat } from "../../../src/llm/Chat.js"
-import { packMarkdown } from "../../../src/llm/pack.js"
-import Markdown from "../../../src/utils/Markdown.js"
+import { FileSystem } from "../../../../src/utils/FileSystem.js"
+import { Chat } from "../../../../src/llm/Chat.js"
+import { packMarkdown } from "../../../../src/llm/pack.js"
+import Markdown from "../../../../src/utils/Markdown.js"
 
 const spawnAsync = promisify(spawn)
 

@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
 
-import FileSystem from '../utils/FileSystem.js'
+import { FileSystem } from '../utils/FileSystem.js'
 
 /**
  * Returns the system instructions.

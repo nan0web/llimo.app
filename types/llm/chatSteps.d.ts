@@ -38,11 +38,11 @@ export function initialiseChat(input: {
  * @param {string|null} inputFile absolute path of the source file (or null)
  * @param {string} input raw text (used when `inputFile` is null)
  * @param {Chat} chat Chat instance (used for paths)
- * @param {import("../cli/Ui.js").default} ui User interface instance
+ * @param {import("../cli/Ui.js").Ui} ui User interface instance
  * @param {number} [step=1]
  * @returns {Promise<void>}
  */
-export function copyInputToChat(inputFile: string | null, input: string, chat: Chat, ui: import("../cli/Ui.js").default, step?: number): Promise<void>;
+export function copyInputToChat(inputFile: string | null, input: string, chat: Chat, ui: import("../cli/Ui.js").Ui, step?: number): Promise<void>;
 /**
  * Pack the input into the LLM prompt, store it and return statistics.
  *
@@ -114,7 +114,7 @@ export function renderTests(tests: import("../cli/testing/node.js").TestInfo[], 
  */
 export function printAnswer(input: {
     ui: Ui;
-    type?: "todo" | "fail" | "skip" | undefined;
+    type?: "todo" | "skip" | "fail" | undefined;
     tests?: import("../cli/testing/node.js").TestInfo[] | undefined;
     content?: string[] | undefined;
 }): Promise<boolean>;
@@ -124,7 +124,7 @@ export function printAnswer(input: {
  * tests, if they are.
  *
  * @param {Object} input
- * @param {import("../cli/Ui.js").default} input.ui User interface instance
+ * @param {import("../cli/Ui.js").Ui} input.ui User interface instance
  * @param {FileSystem} [input.fs]
  * @param {Chat} input.chat Chat instance (used for paths)
  * @param {import('../cli/runCommand.js').runCommandFn} input.runCommand Function to execute shell commands
@@ -133,7 +133,7 @@ export function printAnswer(input: {
  * @returns {Promise<{pass?: boolean, shouldContinue: boolean, test?: import('../cli/testing/node.js').TapParseResult}>}
  */
 export function decodeAnswerAndRunTests(input: {
-    ui: import("../cli/Ui.js").default;
+    ui: import("../cli/Ui.js").Ui;
     fs?: FileSystem | undefined;
     chat: Chat;
     runCommand: import("../cli/runCommand.js").runCommandFn;
@@ -174,9 +174,9 @@ export type runTestsResult = {
     shouldContinue: boolean;
     test?: import("../cli/testing/node.js").SuiteParseResult | undefined;
 };
-import FileSystem from "../utils/FileSystem.js";
-import Ui from "../cli/Ui.js";
-import Chat from "./Chat.js";
-import AI from "./AI.js";
-import ModelInfo from './ModelInfo.js';
+import { FileSystem } from "../utils/FileSystem.js";
+import { Ui } from "../cli/Ui.js";
+import { Chat } from "./Chat.js";
+import { AI } from "./AI.js";
+import { ModelInfo } from './ModelInfo.js';
 import ChatOptions from '../Chat/Options.js';

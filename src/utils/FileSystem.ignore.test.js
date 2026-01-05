@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
-import FileSystem from './FileSystem.js'
+import { FileSystem } from './FileSystem.js'
 
 describe('FileSystem.browse – default ignore handling (bug fix)', () => {
 	let tempDir

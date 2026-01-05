@@ -73,11 +73,10 @@ export class UiConsole {
     /**
      * Append a message to the log file if logging is enabled.
      *
-     * @private
      * @param {LogTarget} target
      * @param {string} msg
      */
-    private appendFile;
+    appendFile(target: LogTarget, msg: string): void;
     /**
      * Set's the prefix such as color before every message in .info method.
      * @param {string} prefix
@@ -291,8 +290,7 @@ export class Ui {
      */
     render(element: UiOutput): void;
 }
-export default Ui;
 export type LogTarget = "success" | "info" | "warn" | "error" | "debug" | "log";
-import Alert from "./components/Alert.js";
-import Table from "./components/Table.js";
-import UiOutput from "./UiOutput.js";
+import { Alert } from "./components/index.js";
+import { Table } from "./components/index.js";
+import { UiOutput } from "./UiOutput.js";

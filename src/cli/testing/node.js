@@ -1,5 +1,5 @@
 import yaml from "yaml"
-import FileSystem from "../../utils/FileSystem.js"
+import { FileSystem } from "../../utils/FileSystem.js"
 
 /**
  * @typedef {Object} TapParseResult

@@ -1,7 +1,7 @@
 import { UiCommand } from "../../cli/Ui.js"
 import { Alert, Table } from "../../cli/components/index.js"
 import { FileEntry } from "../../FileProtocol.js"
-import FileSystem from "../../utils/FileSystem.js"
+import { FileSystem } from "../../utils/FileSystem.js"
 
 export default class Command extends UiCommand {
 	static help = "Command description for user"

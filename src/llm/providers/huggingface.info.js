@@ -1,11 +1,11 @@
-import Architecture from "../Architecture.js"
-import ModelInfo from "../ModelInfo.js"
-import Pricing from "../Pricing.js"
+import { Architecture } from "../Architecture.js"
+import { ModelInfo } from "../ModelInfo.js"
+import { Pricing } from "../Pricing.js"
 
 /**
  * @returns {{ models: readonly Array<[string, object]> }}
  */
-export function getModels() {
+function getModels() {
 	return {
 		models: [
 			["zai-org/GLM-4.6", { providers: [{ provider: "cerebras", context_length: 200_000 }] }],
@@ -53,7 +53,7 @@ export function getModels() {
  * @param {HuggingFaceModelInfo[]} models
  * @returns {ModelInfo[]}
  */
-export function makeFlat(models) {
+function makeFlat(models) {
 	const predefined = getModels()
 	const map = new Map(predefined.models)
 	const result = []

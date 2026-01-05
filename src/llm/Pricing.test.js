@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import Pricing from "./Pricing.js"
+import { Pricing } from "./Pricing.js"
 
 describe("Pricing", () => {
 	it("creates with defaults", () => {

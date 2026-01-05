@@ -2,22 +2,12 @@ import { describe, it, mock } from "node:test"
 import assert from "node:assert/strict"
 import { EventEmitter } from "node:events"
 
-import {
-	modelRows,
-	formatContext,
-	highlightCell,
-	parseFieldFilter,
-	filterModels,
-	renderTable,
-	clearLines,
-	interactive,
-	pipeOutput,
-} from "./autocomplete.js"
+import { autocomplete } from "./autocomplete.js"
 
-import ModelInfo from "../llm/ModelInfo.js"
-import Pricing from "../llm/Pricing.js"
-import Architecture from "../llm/Architecture.js"
-import Ui, { UiConsole, UiFormats } from "./Ui.js"
+import { ModelInfo } from "../llm/ModelInfo.js"
+import { Pricing } from "../llm/Pricing.js"
+import { Architecture } from "../llm/Architecture.js"
+import { Ui, UiConsole } from "./Ui.js"
 
 // -----------------------------------------------------
 // helpers
@@ -54,7 +44,7 @@ function createTestModelMap() {
 // -----------------------------------------------------
 describe("autocomplete – core utilities", () => {
 	it("modelRows flattens map correctly", () => {
-		const rows = modelRows(createTestModelMap())
+		const rows = autocomplete.modelRows(createTestModelMap())
 		assert.strictEqual(rows.length, 2)
 		const grok = rows.find(r => r.id === "x-ai/grok-3")
 		assert.ok(grok)
@@ -65,36 +55,36 @@ describe("autocomplete – core utilities", () => {
 	})
 
 	it("formatContext handles units", () => {
-		assert.strictEqual(formatContext(123), "123t")
-		assert.strictEqual(formatContext(12_345), "12Kt")
-		assert.strictEqual(formatContext(123_456), "123Kt")
-		assert.strictEqual(formatContext(1_200_000), "1.2Mt")
+		assert.strictEqual(autocomplete.formatContext(123), "123t")
+		assert.strictEqual(autocomplete.formatContext(12_345), "12Kt")
+		assert.strictEqual(autocomplete.formatContext(123_456), "123Kt")
+		assert.strictEqual(autocomplete.formatContext(1_200_000), "1.2Mt")
 	})
 
 	it("highlightCell highlights correctly", () => {
 		const text = "grok-3-mini"
-		const highlighted = highlightCell(text, "3")
+		const highlighted = autocomplete.highlightCell(text, "3")
 		assert.ok(highlighted.includes("3"))
 		// @todo it does not work in test mode where isTTY is fales
 		// assert.ok(highlighted.includes("\x1b[33m"))
 		// no highlight when search empty
-		assert.strictEqual(highlightCell(text, ""), text)
+		assert.strictEqual(autocomplete.highlightCell(text, ""), text)
 		// no highlight on command search
-		assert.strictEqual(highlightCell(text, "/help"), text)
+		assert.strictEqual(autocomplete.highlightCell(text, "/help"), text)
 	})
 
 	it("parseFieldFilter parses all variants", () => {
-		assert.deepStrictEqual(parseFieldFilter("provider=novita"), {
+		assert.deepStrictEqual(autocomplete.parseFieldFilter("provider=novita"), {
 			field: "provider",
 			op: "=",
 			value: "novita",
 		})
-		assert.deepStrictEqual(parseFieldFilter("context>8K"), {
+		assert.deepStrictEqual(autocomplete.parseFieldFilter("context>8K"), {
 			field: "context",
 			op: ">",
 			value: "8K",
 		})
-		assert.deepStrictEqual(parseFieldFilter("grok"), {
+		assert.deepStrictEqual(autocomplete.parseFieldFilter("grok"), {
 			field: "",
 			op: "",
 			value: "grok",
@@ -102,9 +92,9 @@ describe("autocomplete – core utilities", () => {
 	})
 
 	it("filterModels matches by id *or* provider (partial match via includes)", () => {
-		const rows = modelRows(createTestModelMap())
+		const rows = autocomplete.modelRows(createTestModelMap())
 		// search for "grok" should return grok and meta-llama (provider contains "groq")
-		const filtered = filterModels(rows, "grok")
+		const filtered = autocomplete.filterModels(rows, "grok")
 		assert.deepStrictEqual(filtered, [
 			{
 				id: "x-ai/grok-3",
@@ -123,39 +113,35 @@ describe("autocomplete – core utilities", () => {
 	})
 
 	it("filterModels supports field filters and numeric comparisons", () => {
-		const rows = modelRows(createTestModelMap())
+		const rows = autocomplete.modelRows(createTestModelMap())
 		// exact id match using id=
-		const byId = filterModels(rows, "@id=x-ai/grok-3")
+		const byId = autocomplete.filterModels(rows, "@id=x-ai/grok-3")
 		assert.strictEqual(byId.length, 1)
 		assert.strictEqual(byId[0].id, "x-ai/grok-3")
 
 		// provider regex via @provider~
-		const byProv = filterModels(rows, "@provider~groq")
+		const byProv = autocomplete.filterModels(rows, "@provider~groq")
 		assert.strictEqual(byProv.length, 1)
 		assert.strictEqual(byProv[0].provider, "huggingface/groq")
 
 		// numeric greater than
-		const byCtx = filterModels(rows, "@context>120K")
+		const byCtx = autocomplete.filterModels(rows, "@context>120K")
 		assert.strictEqual(byCtx.length, 1)
 		assert.strictEqual(byCtx[0].context, 131_000)
 
 		// suffix K handling
-		const byCtxK = filterModels(rows, "@context>130K")
+		const byCtxK = autocomplete.filterModels(rows, "@context>130K")
 		assert.strictEqual(byCtxK.length, 1)
 		assert.strictEqual(byCtxK[0].context, 131_000)
 	})
 
 	it("renderTable produces a table and respects highlighting", () => {
-		const rows = modelRows(createTestModelMap())
-		const filtered = filterModels(rows, "grok")
-		const mockUi = {
-			console: {
-				table: mock.fn(),
-				info: () => { }
-			},
-			formats: new UiFormats(),
-		}
-		renderTable(filtered, "grok", 0, 10, mockUi)
+		const rows = autocomplete.modelRows(createTestModelMap())
+		const filtered = autocomplete.filterModels(rows, "grok")
+		const mockUi = new Ui()
+		mockUi.console.table = mock.fn()
+		mockUi.console.info = () => {}
+		autocomplete.renderTable(filtered, "grok", 0, 10, mockUi)
 		assert.strictEqual(mockUi.console.table.mock.callCount(), 1)
 		const args = mockUi.console.table.mock.calls[0].arguments
 		// first argument must be an array with headers
@@ -170,7 +156,7 @@ describe("autocomplete – core utilities", () => {
 		const originalWrite = process.stdout.write
 		try {
 			process.stdout.write = writeMock
-			clearLines(5)
+			autocomplete.clearLines(5)
 			assert.strictEqual(writeMock.mock.callCount(), 1)
 			const s = writeMock.mock.calls[0].arguments[0]
 			assert.ok(s.includes("\x1b[5A"))
@@ -186,13 +172,13 @@ describe("autocomplete – core utilities", () => {
 		mockStdin.setRawMode = mock.fn()
 		mockStdin.pause = mock.fn()
 		try {
-			const rows = modelRows(createTestModelMap())
+			const rows = autocomplete.modelRows(createTestModelMap())
 			const mockUi = new Ui({
 				stdin: mockStdin,
 				console: { info: () => { }, table: () => { } },
 			})
 
-			const promise = interactive(new Map([["x-ai/grok-3", rows]]), mockUi)
+			const promise = autocomplete.interactive(new Map([["x-ai/grok-3", rows]]), mockUi)
 
 			// Simulate Ctrl+C after a short delay
 			setTimeout(() => {
@@ -208,11 +194,11 @@ describe("autocomplete – core utilities", () => {
 	})
 
 	it("pipeOutput produces correct rows", () => {
-		const rows = modelRows(createTestModelMap())
+		const rows = autocomplete.modelRows(createTestModelMap())
 		const console = new UiConsole()
 		console.table = mock.fn()
 		const mockUi = new Ui({ console })
-		pipeOutput(rows, mockUi)
+		autocomplete.pipeOutput(rows, mockUi)
 		const call = mockUi.console.table.mock.calls[0].arguments
 		assert.ok(Array.isArray(call[0]))
 		// header row

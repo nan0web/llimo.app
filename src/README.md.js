@@ -4,14 +4,15 @@ import assert from "node:assert/strict"
 import { DocsParser, DatasetParser } from "@nan0web/test"
 
 import { FileSystem } from "./utils/index.js"
-import TestAI from "./llm/TestAI.js"
-import Chat from "./llm/Chat.js"
-import AI from "./llm/AI.js"
-import ModelInfo from "./llm/ModelInfo.js"
-import ModelProvider from "./llm/ModelProvider.js"
-import Usage from "./llm/Usage.js"
-import Architecture from "./llm/Architecture.js"
-import Pricing from "./llm/Pricing.js"
+import { TestAI, Chat, AI, Usage, ModelInfo, ModelProvider, Architecture, Pricing } from "./llm/index.js"
+import { UiConsole } from "./cli/Ui.js"
+
+class TestUiConsole extends UiConsole {
+	output = []
+	appendFile(target, args) {
+		this.output.push([target, args])
+	}
+}
 
 /**
  * Core test suite that also serves as the source for README generation.
@@ -22,6 +23,7 @@ import Pricing from "./llm/Pricing.js"
  */
 function testRender() {
 	let pkg
+	const console = new TestUiConsole()
 	before(async () => {
 		const fs = new FileSystem()
 		pkg = await fs.load("package.json") ?? {}
@@ -103,7 +105,7 @@ function testRender() {
 		for await (const chunk of stream) {
 			// @todo extend the ModelInfo specially for the README.md tests to provide predefined
 		}
-		assert.equal(console.output()[0][1], "Chat started with model: gpt-4")
+		assert.equal(console.output[0][1], "Chat started with model: gpt-4")
 	})
 	/**
 	 * @docs
@@ -122,7 +124,7 @@ function testRender() {
 		for await (const chunk of result) {
 			console.info(String(chunk))
 		}
-		assert.equal(console.output()[0][1], "Simulation mode using test files")
+		assert.equal(console.output[0][1], "Simulation mode using test files")
 	})
 
 	/**

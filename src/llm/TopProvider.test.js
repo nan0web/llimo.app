@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import TopProvider from "./TopProvider.js"
+import { TopProvider } from "./TopProvider.js"
 
 describe("TopProvider", () => {
 	it("creates with defaults", () => {
@@ -27,6 +27,7 @@ describe("TopProvider", () => {
 			context_length: "1000",
 			is_moderated: 1,
 		}
+		// @ts-ignore provokes incorrect types
 		const tp = new TopProvider(input)
 		assert.strictEqual(tp.context_length, 1000)
 		assert.strictEqual(tp.is_moderated, true)

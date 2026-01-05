@@ -14,6 +14,5 @@ export class Alert extends UiOutput {
     /** @type {AlertVariant} */
     variant: AlertVariant;
 }
-export default Alert;
 export type AlertVariant = "success" | "info" | "warn" | "error" | "debug";
-import UiOutput from "../UiOutput.js";
+import { UiOutput } from "../UiOutput.js";

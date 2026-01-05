@@ -3,9 +3,9 @@ import { spawn } from "node:child_process"
 import { parseArgv } from "../../cli/argvHelper.js"
 import { Alert } from "../../cli/components/index.js"
 import { UiCommand } from "../../cli/Ui.js"
-import FileSystem from "../../utils/FileSystem.js"
-import ReleaseProtocol from "../../utils/Release.js"
-import Chat from "../../llm/Chat.js"
+import { FileSystem } from "../../utils/FileSystem.js"
+import { ReleaseProtocol } from "../../utils/Release.js"
+import { Chat } from "../../llm/Chat.js"
 
 /**
  * @typedef {"pending" | "waiting" | "working" | "complete" | "fail"} TaskStatus
@@ -166,7 +166,7 @@ export class ReleaseCommand extends UiCommand {
 			await pause()
 			return
 		}
-		yield new Alert(`Available versions:\n- ${versions.join("\n- ")}`, { variant: "debug" })
+		yield new Alert({ text: `Available versions:\n- ${versions.join("\n- ")}`, variant: "debug" })
 		await pause()
 
 		const relative = (rel) => baseDir + "/" + release.x + "/" + release.version + "/" + rel
@@ -214,7 +214,7 @@ export class ReleaseCommand extends UiCommand {
 						pause,
 					})
 					completed.set(task.link.split("/")[0], result)
-				} catch (err) {
+				} catch (/** @type {any} */ err) {
 					completed.set(task.link.split("/")[0], {
 						status: "fail",
 						attempts: this.options.attempts,
@@ -377,7 +377,7 @@ export class ReleaseCommand extends UiCommand {
 	/**
 	 * @param {object} [input]
 	 * @param {string[]} [input.argv=[]]
-	 * @param {Partial<Chat>} [input.chat]
+	 * @param {Chat} [input.chat]
 	 * @returns {ReleaseCommand}
 	 */
 	static create(input = {}) {
@@ -389,5 +389,3 @@ export class ReleaseCommand extends UiCommand {
 		return new ReleaseCommand({ options, chat })
 	}
 }
-
-export { STAGE_DETAILS, STAGE_LABELS }

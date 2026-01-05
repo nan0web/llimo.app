@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
 import assert from "node:assert"
-import Markdown from "../../utils/Markdown.js"
+import { MarkdownProtocol } from "../../utils/Markdown.js"
 import SummaryCommand from "./SummaryCommand.js"
 
 describe("SummaryCommand", () => {
@@ -13,8 +13,8 @@ Key updates:
 - Added new commands
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@summary")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@summary")
 		assert.ok(file, "Expected @summary entry")
 
 		const cmd = new SummaryCommand({ file, parsed })
@@ -36,8 +36,8 @@ Key updates:
 
 \`\`\`
 `
-		const parsed = await Markdown.parse(markdown)
-		const file = parsed.correct.find((e) => e.filename === "@summary")
+		const parsed = await MarkdownProtocol.parse(markdown)
+		const file = parsed.correct?.find((e) => e.filename === "@summary")
 		assert.ok(file, "Expected @summary entry")
 
 		const cmd = new SummaryCommand({ file, parsed })
