@@ -15,7 +15,7 @@ describe("node.failure.txt handling", () => {
 		txt = await fs.load("node.failure.txt")
 	})
 
-	it.skip("should parse a failing TAP run from node.failure.txt", () => {
+	it.todo("should parse a failing TAP run from node.failure.txt", () => {
 		const tap = new Tap({ rows: txt.split("\n"), fs })
 		const parsedTap = tap.parse()
 		// ensure we have at least one test entry

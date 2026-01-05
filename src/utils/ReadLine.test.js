@@ -6,19 +6,14 @@ import ReadLine from "./ReadLine.js"
 
 describe("ReadLine", () => {
 	describe("createInterface", () => {
-		it.skip("creates and returns a readline Interface", () => {
-			const rl = new ReadLine()
-			const options = { input: process.stdin, output: process.stdout }
-			const result = rl.createInterface(options)
-			assert.ok(result instanceof readline.Interface)
-		})
+		it.todo("creates and returns a readline Interface")
 	})
 
 	describe("interactive", () => {
 		it("handles stopWord without errors", async () => {
 			// Mock streams to avoid interacting with real stdin/stdout
 			const mockStdin = new Readable({
-				read() {}, // We'll push data manually
+				read() { }, // We'll push data manually
 			})
 			const mockStdout = new Writable({
 				write(chunk, encoding, callback) {
@@ -39,17 +34,8 @@ describe("ReadLine", () => {
 			assert.strictEqual(result, "Hello!\n")
 		})
 
-		it.skip("handles stopKeys without errors", async () => {
-			const rl = new ReadLine()
-			const result = await rl.interactive({ stopKeys: "ctrl" })
-			assert.strictEqual(typeof result, "string")
-		})
+		it.todo("handles stopKeys without errors")
 
-		it.skip("handles question parameter", async () => {
-			const mockOutput = { write: () => {} }
-			const rl = new ReadLine({ output: mockOutput })
-			const result = await rl.interactive({ question: "Query?" })
-			assert.strictEqual(typeof result, "string")
-		})
+		it.todo("handles question parameter")
 	})
 })

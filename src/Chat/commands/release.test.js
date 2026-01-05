@@ -11,7 +11,7 @@ class StubReleaseCommand extends ReleaseCommand {
 }
 
 describe("ReleaseCommand", () => {
-	it.skip("emits every stage event and a completion status", async () => {
+	it.todo("emits every stage event and a completion status", async () => {
 		const options = new ReleaseOptions({ release: "v1.0.0" })
 		const cmd = new StubReleaseCommand({ options })
 		cmd.fs = {
