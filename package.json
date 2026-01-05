@@ -31,7 +31,8 @@
 		"test:reproduce": "node bin/llimo.js chat --test-dir=/path/to/chat/archive --input test-prompt.md",
 		"test:releases": "node --test --test-timeout=3333 'releases/**/task.test.js' && node --test --test-timeout=3333 'releases/*/*/index.test.js'",
 		"test:release:v1.0.0": "node --test --test-timeout=3333 'releases/1/v1.0.0/*/task.test.js'",
-		"prepare": "husky"
+		"prepare": "husky",
+		"initKey": "dotenv node bin/llimo chat --fast"
 	},
 	"keywords": [],
 	"author": "",
