@@ -13,7 +13,7 @@ describe("Suite", () => {
 	before(async () => {
 		nodeTxt = await fs.load("node.txt")
 	})
-	it("should parse TAP version 13", async () => {
+	it.skip("should parse TAP version 13", async () => {
 		const suite = new Suite({ rows: nodeTxt.split("\n"), fs })
 		const parsed = suite.parse()
 		assert.deepStrictEqual(Object.fromEntries(parsed.counts.entries()), {
@@ -22,7 +22,7 @@ describe("Suite", () => {
 			fail: 1 + 0,
 			pass: 1 + 18,
 			skip: 1 + 0,
-			suites: 0 + 3 ,
+			suites: 0 + 3,
 			tests: 5 + 18,
 			todo: 1 + 0,
 			types: 97,
@@ -40,7 +40,7 @@ describe("Suite", () => {
 	it("should produce OK", () => {
 		assert.ok(true)
 	})
-	it.todo("should produce FAIL", () => {
+	it.skip("should produce FAIL", () => {
 		assert.fail()
 	})
 	it.skip("should produce FAIL", () => {

@@ -108,7 +108,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 			'step 1 | 0:01 | $0.1478 | reason | 0:00 | 1T | 10T/s | 130,579T of 131,000T',
 		])
 	})
-	it.todo("should draw third progress (read + reason + asnwer)", () => {
+	it.skip("should draw third progress (read + reason + asnwer)", () => {
 		// @todo fix the calculation in formatChatProgress, because it works for isTiny: false above.
 		const usage = new Usage({ inputTokens: 420, reasoningTokens: 1, outputTokens: 30_000 })
 		const clock = { startTime: now - 31_600, reasonTime: now - 24_100, answerTime: now - 23_000 }
@@ -118,7 +118,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 		])
 	})
 
-	it.todo("produces single line for tiny mode", () => {
+	it.skip("produces single line for tiny mode", () => {
 		// @todo fix the calculation in formatChatProgress, because it works for isTiny: false above.
 		const usage = new Usage({ inputTokens: 1_000, outputTokens: 100 })
 		const clock = { startTime: now - 120_000, answerTime: now - 100_000 }

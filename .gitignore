@@ -12,3 +12,7 @@ me.md
 
 cache/
 .env
+
+test-step*.txt
+prompt.md
+pnpm-lock.yaml

@@ -8,7 +8,7 @@ describe("testingProgress", () => {
 	/**
 	 * @todo fix 1s delay after the Ui update with Math.round for ms.
 	 */
-	it.todo("should print some progress", async () => {
+	it.skip("should print some progress", async () => {
 		const out = []
 		const stdout = {
 			getWindowSize: () => [66, 33],

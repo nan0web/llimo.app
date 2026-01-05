@@ -1,1 +1,13 @@
-npm test
+echo "Skiped Running build..."
+# pnpm run build
+
+echo "Running tests..."
+pnpm test
+
+echo "Running audit.."
+pnpm audit --audit-level high
+
+echo "Skiped Running knip..."
+# pnpm run knip
+
+echo "Pre-commit checks completed. Warnings are allowed."

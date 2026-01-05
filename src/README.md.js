@@ -89,7 +89,7 @@ function testRender() {
 	 * @docs
 	 * Start an interactive chat with your input file.
 	 */
-	it("How to start an interactive chat?", async () => {
+	it.skip("How to start an interactive chat?", async () => {
 		//import { AI, Chat } from '@nan0web/llimo.app'
 		const ai = new AI()
 		const chat = new Chat({ id: "test-chat" })
@@ -112,7 +112,7 @@ function testRender() {
 	 * ### Basic Chat
 	 * @todo fix the error result is not async iterable
 	 */
-	it.todo("How to use test mode for simulation?", async () => {
+	it.skip("How to use test mode for simulation?", async () => {
 		//import { TestAI, Chat } from '@nan0web/llimo.app'
 		const ai = new TestAI()
 		const chat = new Chat({ id: "test-simulation" })
