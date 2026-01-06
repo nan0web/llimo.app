@@ -13,28 +13,6 @@ class StubReleaseCommand extends ReleaseCommand {
 }
 
 describe("ReleaseCommand", () => {
-	it.todo("emits every stage event and a completion status", async () => {
-		const options = new ReleaseOptions({ release: "v1.0.0" })
-		const cmd = new StubReleaseCommand({ options })
-		cmd.fs = new FileSystem({ cwd: "/tmp" })
-		cmd.fs.exists = async () => false
-		cmd.fs.save = async () => {}
-		const events = []
-		const task = { link: "001-Task/task.md", label: "Task 1", text: "This is test task text" }
-		const release = { version: "v1.0.0" }
-		const result = await cmd.processTask(task, {
-			release: new ReleaseProtocol({ ...release }),
-			onData: (payload) => events.push(payload),
-			pause: async () => { },
-		})
-		assert.strictEqual(result.status, "complete")
-		const stages = events.filter(e => e.chunk?.type === "stage").map(e => e.chunk.stage)
-		assert.deepStrictEqual(stages, ReleaseCommand.STAGE_DETAILS.map(stage => stage.key))
-		const statusEvent = events.find(e => e.chunk?.type === "status")
-		assert.ok(statusEvent)
-		assert.strictEqual(statusEvent.chunk.status, "complete")
-	})
-
 	it("task status transitions from pending to working to complete", async () => {
 		const options = new ReleaseOptions({ release: "v1.0.0" })
 		const cmd = new StubReleaseCommand({ options })
@@ -65,7 +43,6 @@ describe("ReleaseCommand", () => {
 				["releases/1/v1.0.0/NOTES.md", "- [Task 1](001/task.md)\n- [Task 2](002/task.md)\n- [Task 3](003/task.md)"],
 			]
 		})
-		// Mock browse to return version directory
 		fs.browse = async () => ["releases/1/v1.0.0/NOTES.md"]
 		const cmd = new StubReleaseCommand({ options, fs })
 		const concurrent = []
@@ -122,4 +99,3 @@ describe("ReleaseCommand", () => {
 		assert.strictEqual(lastStage.stageIndex, ReleaseCommand.STAGE_DETAILS.length - 1)
 	})
 })
-

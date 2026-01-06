@@ -41,17 +41,15 @@ yarn add @nan0web/llimo.app
 
 Start an interactive chat with your input file.
 
-How to start an interactive chat?
-```js
+it.todo("How to start an interactive chat?", async () => {
 import { AI, Chat } from '@nan0web/llimo.app'
 const ai = new AI()
 const chat = new Chat({ id: "test-chat" })
 // Simulate loading existing chat or initializing new
 chat.add({ role: "user", content: "Hello, AI!" })
-const model = new ModelInfo({ id: "openai/gpt-4.1", provider: "openrouter" })
+const model = new ModelInfo({ id: "openai/gpt-4o", provider: "openrouter" })
 // Stream response (in real use, handle async iteration)
-const { stream } = ai.streamText(model, chat.messages)
-```
+const result = await ai.streamText(model, chat.messages)
 ## Usage
 
 ### Basic Chat
@@ -62,9 +60,10 @@ import { TestAI, Chat } from '@nan0web/llimo.app'
 const ai = new TestAI()
 const chat = new Chat({ id: "test-simulation" })
 // Load from test files - result is not async iterable
-const result = ai.streamText("test-model", chat.messages, { cwd: ".", step: 1 })
+const result = await ai.streamText("test-model", chat.messages, { cwd: ".", step: 1 })
 console.info("Simulation mode using test files")
-for await (const chunk of result) {
+const stream = result.textStream
+for await (const chunk of stream) {
 console.info(String(chunk))
 }
 ### CLI Commands
@@ -191,3 +190,10 @@ All exported classes should pass basic test to ensure API examples work
 ```js
 import { AI, Chat, ModelProvider, ModelInfo, Usage, Architecture, Pricing } from '@nan0web/llimo.app'
 ```
+## Contributing
+
+How to contribute? - [check here]($pkgURL/blob/main/CONTRIBUTING.md)
+
+## License
+
+How to license? - [ISC LICENSE]($pkgURL/blob/main/LICENSE) file.

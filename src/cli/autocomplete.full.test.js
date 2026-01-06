@@ -139,11 +139,15 @@ describe("autocomplete – core utilities", () => {
 		const rows = autocomplete.modelRows(createTestModelMap())
 		const filtered = autocomplete.filterModels(rows, "grok")
 		const mockUi = new Ui()
-		mockUi.console.table = mock.fn()
+		const calls = []
+		mockUi.console.table = (...args) => {
+			calls.push(args)
+			return []
+		}
 		mockUi.console.info = () => {}
 		autocomplete.renderTable(filtered, "grok", 0, 10, mockUi)
-		assert.strictEqual(mockUi.console.table.mock.callCount(), 1)
-		const args = mockUi.console.table.mock.calls[0].arguments
+		assert.strictEqual(calls.length, 1)
+		const args = calls[0]
 		// first argument must be an array with headers
 		assert.ok(Array.isArray(args[0]))
 		assert.strictEqual(args[0][0][0], "Model.ID")
@@ -152,13 +156,16 @@ describe("autocomplete – core utilities", () => {
 	})
 
 	it("clearLines writes correct escape sequence", () => {
-		const writeMock = mock.fn()
+		const calls = []
 		const originalWrite = process.stdout.write
 		try {
-			process.stdout.write = writeMock
+			process.stdout.write = (...args) => {
+				calls.push(args)
+				return true
+			}
 			autocomplete.clearLines(5)
-			assert.strictEqual(writeMock.mock.callCount(), 1)
-			const s = writeMock.mock.calls[0].arguments[0]
+			assert.strictEqual(calls.length, 1)
+			const s = calls[0][0]
 			assert.ok(s.includes("\x1b[5A"))
 		} finally {
 			process.stdout.write = originalWrite
@@ -167,18 +174,27 @@ describe("autocomplete – core utilities", () => {
 
 	it("interactive resolves on Ctrl+C", async () => {
 		// Mock stdin / stdout
-		const mockStdin = new EventEmitter()
-		mockStdin.isTTY = true
-		mockStdin.setRawMode = mock.fn()
-		mockStdin.pause = mock.fn()
+		class ExEmitter extends EventEmitter {
+			isTTY = true
+			setRawMode = mock.fn()
+			pause() {
+				mock.fn()
+				return this
+			}
+		}
+		const mockStdin = new ExEmitter()
 		try {
-			const rows = autocomplete.modelRows(createTestModelMap())
+			const modelMap = createTestModelMap()
+			const console = new UiConsole()
+			console.info = () => {}
+			console.table = () => []
 			const mockUi = new Ui({
+				// @ts-expect-error - mock stdin for testing, ExEmitter extends EventEmitter not ReadStream
 				stdin: mockStdin,
-				console: { info: () => { }, table: () => { } },
+				console,
 			})
 
-			const promise = autocomplete.interactive(new Map([["x-ai/grok-3", rows]]), mockUi)
+			const promise = autocomplete.interactive(modelMap, mockUi)
 
 			// Simulate Ctrl+C after a short delay
 			setTimeout(() => {
@@ -195,11 +211,15 @@ describe("autocomplete – core utilities", () => {
 
 	it("pipeOutput produces correct rows", () => {
 		const rows = autocomplete.modelRows(createTestModelMap())
+		const calls = []
 		const console = new UiConsole()
-		console.table = mock.fn()
+		console.table = (...args) => {
+			calls.push(args)
+			return []
+		}
 		const mockUi = new Ui({ console })
 		autocomplete.pipeOutput(rows, mockUi)
-		const call = mockUi.console.table.mock.calls[0].arguments
+		const call = calls[0]
 		assert.ok(Array.isArray(call[0]))
 		// header row
 		assert.deepStrictEqual(call[0][0], ["Model.id", "Context", "Max.out", "Provider", "Modality", "Speed T/s", "Input", "Output", "Mod"])

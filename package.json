@@ -27,7 +27,7 @@
 		"clean:modules": "rm -rf node_modules/",
 		"play": "node play/main.js",
 		"test": "node --test --test-timeout=3333 --test-reporter=tap 'src/**/*.test.js'",
-		"test:all": "npm run test && npm run build",
+		"test:all": "npm run test && npm run build && npm run test:docs && npm run knip:production",
 		"test:chat": "node bin/llimo.js chat --test=chat-dir",
 		"test:docs": "node --test --test-timeout=3333 --test-reporter=tap src/README.md.js",
 		"test:coverage": "node --experimental-test-coverage --test-reporter=tap --test-coverage-include=\"src/**/*.js\" --test-coverage-exclude=\"src/**/*.test.js\" --test \"src/**/*.test.js\"",

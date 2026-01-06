@@ -8,13 +8,25 @@ import * as chatSteps from "./chatSteps.js"
 import { FileSystem } from "../utils/FileSystem.js"
 import { Chat } from "./Chat.js"
 import { Ui, UiFormats } from "../cli/Ui.js"
-import { AI } from "./index.js"
+import { AI, ModelInfo } from "./index.js"
 
 /* -------------------------------------------------
 	 Helper mocks
 	 ------------------------------------------------- */
 class DummyAI extends AI {
-	streamText() {
+	/**
+	 * Stream text from a model.
+	 *
+	 * The method forwards the call to `ai.streamText` while providing a set of
+	 * optional hooks that can be used by monitor or control the streaming
+	 * lifecycle.
+	 *
+	 * @param {ModelInfo} model
+	 * @param {import('ai').ModelMessage[]} messages
+	 * @param {import('ai').UIMessageStreamOptions<import('ai').UIMessage> & import("./AI.js").StreamOptions} [options={}]
+	 * @returns {import('ai').StreamTextResult<import('ai').ToolSet>}
+	 */
+	streamText(model, messages, options) {
 		// mimic the shape used by `startStreaming`
 		const asyncIter = (async function* () {
 			yield { type: "text-delta", text: "Hello" }
@@ -23,7 +35,15 @@ class DummyAI extends AI {
 				usage: { promptTokens: 10, completionTokens: 5, totalTokens: 15 },
 			}
 		})()
-		return { textStream: asyncIter }
+		// Make result itself iterable (not textStream) so startStreaming uses result directly
+		// @ts-expect-error - mock result for testing, making it iterable instead of providing textStream
+		return Object.assign(asyncIter, {
+			text: "Hello",
+			content: "Hello",
+			reasoning: undefined,
+			reasoningText: undefined,
+			usage: { promptTokens: 10, completionTokens: 5, totalTokens: 15 },
+		})
 	}
 }
 
@@ -63,10 +83,13 @@ describe("chatSteps – readInput", () => {
 describe("chatSteps – startStreaming", () => {
 	it("returns a stream that yields expected parts", async () => {
 		const ai = new DummyAI()
-		const mockChat = { messages: [], add: () => { }, getTokensCount: () => 0 }
+		const mockChat = new Chat()
+		mockChat.messages = []
+		mockChat.add = () => { }
+		mockChat.getTokensCount = () => 0
 		const { stream } = chatSteps.startStreaming(
 			ai,
-			"model",
+			new ModelInfo(),
 			mockChat,
 			{ onChunk: () => { } }
 		)
@@ -105,35 +128,13 @@ describe("chatSteps – packPrompt (integration with mock)", () => {
 	})
 
 	it("packs prompt and writes file", async () => {
-		/**
-		 * @todo це має працювати по іншому, наприклад у мене є me.md, де Я пишу запити,
-		 * їх потім потрібно разбити по блоках --- і зробити trim() і вже ці блоки
-		 * перевіряти, чи є вони у попередніх повідомленнях.
-		 * для кожної історії повідомлень у inputs.jsonl потрібно записувати всі user
-		 * повідомлення, які були в чаті, так само як і files.jsonl куди потрібно
-		 * записувати всі файли на кожне повідомлення, тобто повне логування кожного
-		 * request/response щоб було легко перевіряти, яка інформація і файли змінились.
-		 *
-		 * Виправ помилки:
-		 * ```bash
-		 * pnpm test
-		 * ...
-		 * ```
-		 *
-		 * - [](src/**)
-		 * - [](package.json)
-		 *
-		 * ---
-		 *
-		 * А тепер така помилка: File not found
-		 */
 		const fakePack = async ({ input }) => ({
 			text: `<<${input}>>`,
 			injected: ["a.js", "b.js"],
 		})
 		const {
 			packedPrompt, injected
-		} = await chatSteps.packPrompt(fakePack, "sample", chatInstance, mockUi)
+		} = await chatSteps.packPrompt(fakePack, "sample", chatInstance)
 
 		assert.equal(packedPrompt, "<<sample>>")
 		assert.deepEqual(injected, ["a.js", "b.js"])
@@ -177,6 +178,7 @@ describe("chatSteps – initialiseChat", () => {
 		assert.ok(chat.id)
 		assert.ok(await fsInstance.exists("chat/current"))
 		assert.strictEqual(chat.messages.length, 1) // System message
-		assert.ok(chat.messages[0].content.includes("<!--TOOLS_LIST-->") === false)
+		const content = chat.messages[0].content
+		assert.ok(typeof content === "string" && content.includes("\ntools: "))
 	})
 })

@@ -180,15 +180,19 @@ describe("autocomplete – core functions", () => {
 
 describe("renderTable", () => {
 	const mockUi = new Ui()
+	const calls = []
 	mockUi.console.info = () => { }
-	mockUi.console.table = mock.fn()
+	mockUi.console.table = (...args) => {
+		calls.push(args)
+		return []
+	}
 	const mockRows = [
 		{ id: "long-model-id-123456789", context: 8192, provider: "test/novita", modality: "text", inputPrice: -1, outputPrice: 0.004, tools: true, json: false, maxOut: 8192, speed: 0, isModerated: false }
 	]
 
 	it("renders table with highlighting in ID and provider", () => {
 		autocomplete.renderTable(mockRows, "novita", 0, 10, mockUi)
-		assert.strictEqual(mockUi.console.table.mock.callCount(), 1)
+		assert.strictEqual(calls.length, 1)
 	})
 
 	it("handles negative pricing as '-'", () => {

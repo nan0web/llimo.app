@@ -1,8 +1,8 @@
 import { describe, it, afterEach, beforeEach, mock } from "node:test"
 import assert from "node:assert/strict"
 import { unpackAnswer } from "./unpack.js"
-
 import { FileSystem } from "../utils/FileSystem.js"
+import { FileEntry } from "../FileProtocol.js"
 
 describe("unpackAnswer", () => {
 	let mockFs
@@ -21,8 +21,8 @@ describe("unpackAnswer", () => {
 	it("processes file entries in dry mode", async () => {
 		const parsed = {
 			correct: [
-				{ filename: "example.js", content: "console.info('test')" },
-				{ filename: "example.txt", content: "hello world" }
+				new FileEntry({ filename: "example.js", content: "console.info('test')" }),
+				new FileEntry({ filename: "example.txt", content: "hello world" })
 			],
 			failed: []
 		}
@@ -43,7 +43,7 @@ describe("unpackAnswer", () => {
 		mock.method(mockFs, "save", saveSpy)
 
 		const parsed = {
-			correct: [{ filename: "test.js", content: "// code" }],
+			correct: [new FileEntry({ filename: "test.js", content: "// code" })],
 			failed: []
 		}
 
@@ -57,7 +57,7 @@ describe("unpackAnswer", () => {
 	})
 
 	it("handles empty file content without saving", async () => {
-		const parsed = { correct: [{ filename: "empty.md", content: "" }], failed: [] }
+		const parsed = { correct: [new FileEntry({ filename: "empty.md", content: "" })], failed: [] }
 		const lines = []
 		const saveSpy = mock.fn()
 		mock.method(mockFs, "save", saveSpy)
@@ -71,7 +71,7 @@ describe("unpackAnswer", () => {
 
 	it("processes command entries (@ prefixed)", async () => {
 		const parsed = {
-			correct: [{ filename: "@summary", content: "Test summary", label: "Summary" }],
+			correct: [new FileEntry({ filename: "@summary", content: "Test summary", label: "Summary" })],
 			failed: []
 		}
 		const lines = []

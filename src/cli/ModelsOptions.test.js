@@ -20,25 +20,25 @@ describe("ModelsOptions – filter parsing", () => {
 
 	it("regex filter on id", () => {
 		const opts = new ModelsOptions({ filter: "id~gpt" })
-		const m = { id: "gpt-oss-120b", provider: "", context_length: 0, pricing: { completion: 0 } }
+		const m = new ModelInfo({ id: "gpt-oss-120b", provider: "", context_length: 0 })
 		assert.ok(opts.getFilters()[0](m))
 	})
 
 	it("exact id filter", () => {
 		const opts = new ModelsOptions({ filter: "id=gpt-oss-120b" })
-		const m = { id: "gpt-oss-120b", provider: "", context_length: 0, pricing: { completion: 0 } }
+		const m = new ModelInfo({ id: "gpt-oss-120b", provider: "", context_length: 0 })
 		assert.ok(opts.getFilters()[0](m))
 	})
 
 	it("context length greater than", () => {
 		const opts = new ModelsOptions({ filter: "context>100K" })
-		const m = { id: "", provider: "", context_length: 150_000, pricing: { completion: 0 } }
+		const m = new ModelInfo({ id: "", provider: "", context_length: 150_000 })
 		assert.ok(opts.getFilters()[0](m))
 	})
 
 	it("provider regex filter", () => {
 		const opts = new ModelsOptions({ filter: "provider~bra" })
-		const m = { id: "", provider: "cerebras", context_length: 0, pricing: { completion: 0 } }
+		const m = new ModelInfo({ id: "", provider: "cerebras", context_length: 0 })
 		assert.ok(opts.getFilters()[0](m))
 	})
 

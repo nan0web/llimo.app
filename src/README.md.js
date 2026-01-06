@@ -97,15 +97,16 @@ function testRender() {
 		const chat = new Chat({ id: "test-chat" })
 		// Simulate loading existing chat or initializing new
 		chat.add({ role: "user", content: "Hello, AI!" })
-		const model = new ModelInfo({ id: "openai/gpt-4.1", provider: "openrouter" })
+		const model = new ModelInfo({ id: "openai/gpt-4o", provider: "openrouter" })
 		// Stream response (in real use, handle async iteration)
-		const { stream } = ai.streamText(model, chat.messages)
-		assert.ok(stream)
+		const result = await ai.streamText(model, chat.messages)
+		assert.ok(result)
 		console.info("Chat started with model:", model.id)
+		const stream = result.textStream
 		for await (const chunk of stream) {
 			// @todo extend the ModelInfo specially for the README.md tests to provide predefined
 		}
-		assert.equal(console.output[0][1], "Chat started with model: gpt-4")
+		assert.equal(console.output[0][1], "Chat started with model: gpt-4o")
 	})
 	/**
 	 * @docs
@@ -119,9 +120,10 @@ function testRender() {
 		const ai = new TestAI()
 		const chat = new Chat({ id: "test-simulation" })
 		// Load from test files - result is not async iterable
-		const result = ai.streamText("test-model", chat.messages, { cwd: ".", step: 1 })
+		const result = await ai.streamText("test-model", chat.messages, { cwd: ".", step: 1 })
 		console.info("Simulation mode using test files")
-		for await (const chunk of result) {
+		const stream = result.textStream
+		for await (const chunk of stream) {
 			console.info(String(chunk))
 		}
 		assert.equal(console.output[0][1], "Simulation mode using test files")
@@ -277,6 +279,30 @@ function testRender() {
 		assert.ok(Architecture)
 		assert.ok(Pricing)
 	})
+
+	/**
+	 * @docs
+	 * ## Contributing
+	 */
+	it("How to contribute? - [check here]($pkgURL/blob/main/CONTRIBUTING.md)", async () => {
+		assert.equal(pkg.scripts?.prepare, "husky")
+
+		const fs = new FileSystem()
+		const text = await fs.load("CONTRIBUTING.md")
+		const str = String(text)
+		assert.ok(str.includes('# Contributing'))
+	})
+
+	/**
+	 * @docs
+	 * ## License
+	 */
+	it("How to license? - [ISC LICENSE]($pkgURL/blob/main/LICENSE) file.", async () => {
+		/** @docs */
+		const fs = new FileSystem()
+		const text = await fs.load('LICENSE')
+		assert.ok(String(text).includes('ISC'))
+	})
 }
 
 describe("README.md testing", testRender)
@@ -297,3 +323,4 @@ describe("Rendering README.md", async () => {
 		assert.ok(saved.includes("## License"), "README was not generated")
 	})
 })
+
