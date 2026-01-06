@@ -1,11 +1,20 @@
 {
 	"name": "@nan0web/llimo.app",
 	"version": "1.0.0",
-	"description": "",
+	"description": "LLiMo: Language Living Models for software development",
 	"engines": {
 		"node": ">=25"
 	},
-	"main": "bin/llimo-chat.js",
+	"main": "src/index.js",
+	"bin": {
+		"llimo": "bin/llimo.js",
+		"llimo-chat": "bin/llimo-chat.js",
+		"llimo-models": "bin/llimo-models.js",
+		"llimo-release": "bin/llimo-release.js",
+		"llimo-system": "bin/llimo-system.js",
+		"llimo-pack": "bin/llimo-pack.js",
+		"llimo-unpack": "bin/llimo-unpack.js"
+	},
 	"type": "module",
 	"types": "./types/index.d.ts",
 	"exports": {
@@ -41,9 +50,16 @@
 		"demo:readline": "node play/readline-demo.js",
 		"demo:progress-testing": "node play/progress-testing-demo.js"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"llm",
+		"ai",
+		"chat",
+		"release",
+		"testing"
+	],
+	"author": "nan0web",
 	"license": "ISC",
+	"repository": "git+https://github.com/nan0web/llimo.app.git",
 	"packageManager": "pnpm@10.11.0",
 	"devDependencies": {
 		"@nan0web/test": "^1.1.3",
@@ -61,12 +77,11 @@
 		"micromatch": "^4.0.8",
 		"yaml": "^2.8.2"
 	},
-	"bin": {
-		"llimo": "bin/llimo.js",
-		"llimo-models": "bin/llimo-models.js",
-		"llimo-release": "bin/llimo-release.js",
-		"llimo-system": "bin/llimo-system.js",
-		"llimo-pack": "bin/llimo-pack.js",
-		"llimo-unpack": "bin/llimo-unpack.js"
-	}
+	"files": [
+		"bin",
+		"src",
+		"README.md",
+		"CHANGELOG.md",
+		"LICENSE"
+	]
 }

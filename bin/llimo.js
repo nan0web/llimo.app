@@ -43,7 +43,9 @@ if (subcmd === "chat") {
 } else if (subcmd === "release") {
 	import("./llimo-release.js").then(({ main }) => main(args))
 } else if (subcmd === "unpack") {
-	// import("./llimo-unpack.js").then(({ main }) => main(args))
+	import("./llimo-unpack.js").then(({ main }) => main(args))
+} else if (subcmd === "system") {
+	import("./llimo-system.js").then(({ main }) => main(args))
 } else {
 	ui.console.error(`Unknown command: ${subcmd}`)
 	ui.console.info("Available commands: chat, models, pack, unpack")
