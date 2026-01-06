@@ -192,7 +192,7 @@ export class ModelProvider {
 		if (!resp.ok) {
 			throw new Error(`Failed to fetch ${url}: ${resp.status} ${resp.statusText}`)
 		}
-		const json = await resp.json()
+		const json = /** @type {any} */ (await resp.json())
 		// Providers may return an array directly or wrap it in a property.
 		if (Array.isArray(json)) return json
 		if (Array.isArray(json.data)) return json.data

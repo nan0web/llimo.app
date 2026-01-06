@@ -458,7 +458,7 @@ export class Ui {
 	/**
 	 * Writes to stdout.
 	 * @param {Buffer | DataView | Error | string} buffer
-	 * @param {(err?: Error | undefined) => void} [cb]
+	 * @param {(err?: Error | null | undefined) => void} [cb]
 	 */
 	write(buffer, cb = () => { }) {
 		if (buffer instanceof Error) buffer = (this.isDebug ? buffer.stack ?? buffer.message : buffer.message) || ""

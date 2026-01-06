@@ -57,6 +57,9 @@ export async function selectAndShowModel(ai, ui, modelStr, providerStr, onSelect
 	}
 
 	if (!model) {
+		if (ai.getModelsMap().size === 0) {
+			throw new Error("No models loaded. This usually means no API keys were valid. check your .env file for CEREBRAS_API_KEY, HF_TOKEN, or OPENROUTER_API_KEY. All providers failed to return models.")
+		}
 		throw new Error("No model matching your criteria")
 	}
 

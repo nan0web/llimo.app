@@ -7,7 +7,10 @@ pnpm test
 echo "Running audit.."
 pnpm audit --audit-level high
 
-echo "Skiped Running knip..."
-# pnpm run knip
+echo "Running knip..."
+pnpm run knip
+
+echo "Running build..."
+pnpm run build
 
 echo "Pre-commit checks completed. Warnings are allowed."

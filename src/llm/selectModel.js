@@ -1,4 +1,4 @@
-import { Ui }from "../cli/Ui.js"
+import { Ui } from "../cli/Ui.js"
 import { ModelInfo } from "./ModelInfo.js"
 import { model2row } from "../cli/autocomplete.js"
 import { DIM, RESET } from "../cli/ANSI.js"
@@ -59,6 +59,10 @@ export async function selectModel(models, modelPartial, providerPartial, ui, onS
 		ui.console.warn(`! No models match the criteria – model:${modelPartial ?? "*"} provider:${providerPartial ?? "*"}`)
 		ui.console.warn(`  Looking for the same model pattern in all providers`)
 		candidates = findCandidates(modelPartial)
+	}
+
+	if (candidates.length === 0) {
+		return
 	}
 
 	if (candidates.length === 1) {

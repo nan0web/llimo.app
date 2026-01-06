@@ -230,9 +230,9 @@ export class Ui {
     /**
      * Writes to stdout.
      * @param {Buffer | DataView | Error | string} buffer
-     * @param {(err?: Error | undefined) => void} [cb]
+     * @param {(err?: Error | null | undefined) => void} [cb]
      */
-    write(buffer: Buffer | DataView | Error | string, cb?: (err?: Error | undefined) => void): void;
+    write(buffer: Buffer | DataView | Error | string, cb?: (err?: Error | null | undefined) => void): void;
     /**
      * Prompt the user with a question and resolve with the answer.
      *

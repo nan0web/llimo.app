@@ -29,7 +29,11 @@ import { Pricing } from "../Pricing.js"
  * @returns {ModelInfo[]}
  */
 function makeFlat(models) {
-	return models.map(m => new ModelInfo({ ...m, provider: "cerebras", pricing: new Pricing({ prompt: 0, completion: 0 }) }))
+	return models.map(m => new ModelInfo({
+		...m,
+		provider: "cerebras",
+		pricing: new Pricing(m.pricing || { prompt: 0, completion: 0 })
+	}))
 }
 
 export default {
