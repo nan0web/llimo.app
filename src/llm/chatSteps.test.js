@@ -141,18 +141,6 @@ describe("chatSteps – packPrompt (integration with mock)", () => {
 	})
 })
 
-describe("chatSteps – decodeAnswer (mocked)", () => {
-	it.todo("should decode formatted llm response", async () => {
-		assert.fail("mock the answer and decode it")
-	})
-})
-
-describe("chatSteps – runTests (mocked)", () => {
-	it.todo("should run sequence of tests", async () => {
-		assert.fail("mock the answer and decode it")
-	})
-})
-
 describe("chatSteps – initialiseChat", () => {
 	let tempDir
 	let fsInstance

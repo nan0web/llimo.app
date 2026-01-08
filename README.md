@@ -3,8 +3,6 @@
 LLiMo is a language model‑powered CLI assistant for software development and content generation.
 It uses the AI SDK to integrate with models from OpenAI, Cerebras, Hugging Face, and OpenRouter.
 
-<!-- %PACKAGE_STATUS% -->
-
 ## Description
 
 LLiMo provides a seamless way to:
@@ -41,7 +39,8 @@ yarn add @nan0web/llimo.app
 
 Start an interactive chat with your input file.
 
-it.todo("How to start an interactive chat?", async () => {
+How to start an interactive chat?
+```js
 import { AI, Chat } from '@nan0web/llimo.app'
 const ai = new AI()
 const chat = new Chat({ id: "test-chat" })
@@ -49,13 +48,15 @@ const chat = new Chat({ id: "test-chat" })
 chat.add({ role: "user", content: "Hello, AI!" })
 const model = new ModelInfo({ id: "openai/gpt-4o", provider: "openrouter" })
 // Stream response (in real use, handle async iteration)
-const result = await ai.streamText(model, chat.messages)
+const result = ai.streamText(model, chat.messages)
+```
 ## Usage
 
 ### Basic Chat
 @todo fix the error result is not async iterable
 
-it.todo("How to use test mode for simulation?", async () => {
+How to use test mode for simulation?
+```js
 import { TestAI, Chat } from '@nan0web/llimo.app'
 const ai = new TestAI()
 const chat = new Chat({ id: "test-simulation" })
@@ -64,8 +65,9 @@ const result = await ai.streamText("test-model", chat.messages, { cwd: ".", step
 console.info("Simulation mode using test files")
 const stream = result.textStream
 for await (const chunk of stream) {
-console.info(String(chunk))
+	console.info(String(chunk))
 }
+```
 ### CLI Commands
 
 LLiMo provides several CLI entry points.

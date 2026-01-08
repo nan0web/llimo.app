@@ -111,18 +111,16 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 			'step 1 | 0:01 | $0.1478 | reason | 0:00 | 1T | 10T/s | 130,579T of 131,000T',
 		])
 	})
-	it.todo("should draw third progress (read + reason + asnwer)", () => {
-		// @todo fix the calculation in formatChatProgress, because it works for isTiny: false above.
+	it("should draw third progress (read + reason + asnwer)", () => {
 		const usage = new Usage({ inputTokens: 420, reasoningTokens: 1, outputTokens: 30_000 })
 		const clock = { startTime: now - 31_600, reasonTime: now - 24_100, answerTime: now - 23_000 }
 		const lines = formatChatProgress({ ui, usage, clock, model, now, isTiny: true })
 		assert.deepStrictEqual(lines, [
-			'step 1 | 0:31 | $22.6478 | answer | 0:23 | 30,000T | 963T/s | 100,579T of 131,000T',
+			'step 1 | 0:32 | $22.6478 | answer | 0:23 | 30,000T | 1,304T/s | 100,579T of 131,000T',
 		])
 	})
 
-	it.todo("produces single line for tiny mode", () => {
-		// @todo fix the calculation in formatChatProgress, because it works for isTiny: false above.
+	it("produces single line for tiny mode", () => {
 		const usage = new Usage({ inputTokens: 1_000, outputTokens: 100 })
 		const clock = { startTime: now - 120_000, answerTime: now - 100_000 }
 		const model = new ModelInfo({ pricing: new Pricing({ prompt: 0.1, completion: 0.2 }), context_length: 128_000 })
@@ -136,7 +134,7 @@ describe("chatProgress - One‑line format (--tiny mode)", () => {
 			isTiny: true,
 		})
 		assert.deepStrictEqual(lines, [
-			"step 1 | 2:00 | $0.0001 | answer | 1:40 | 100T | 9T/s | 126,900T of 128,000T"
+			"step 1 | 2:00 | $0.0001 | answer | 1:40 | 100T | 1T/s | 126,900T of 128,000T"
 		])
 	})
 

@@ -43,33 +43,36 @@ export function formatChatProgress(input) {
 	let totalPrice = 0, totalTime = 0
 	/** @type {Array<"read" | "reason" | "answer">} */
 	const PHASES = ["read", "reason", "answer"]
-	/** @type {Map<"read" | "reason" | "answer", { endAt: number, elapsed: number, tokens: number, speed: number, price: number }>} */
+	/** @type {Map<"read" | "reason" | "answer", { startAt: number, endAt: number, elapsed: number, tokens: number, speed: number, price: number }>} */
 	const map = new Map()
 	const costs = { input: 0, reason: 0, output: 0 }
 	model.pricing.calc(usage, costs)
 
 	/* READ */
 	if (usage.inputTokens) {
+		const startAt = now
 		const endAt = clock.reasonTime || clock.answerTime || now
 		const elapsed = safe(endAt - clock.startTime)
 		const speed = elapsed > 0 ? Math.round(1e3 * usage.inputTokens / elapsed) : 0
-		map.set("read", { endAt, elapsed, speed, price: costs.input, tokens: usage.inputTokens })
+		map.set("read", { startAt, endAt, elapsed, speed, price: costs.input, tokens: usage.inputTokens })
 	}
 
 	/* REASON */
 	if (usage.reasoningTokens && clock.reasonTime) {
+		const startAt = map.get("read")?.endAt || 0
 		const endAt = clock.answerTime || now
 		const elapsed = safe(endAt - clock.reasonTime)
 		const speed = elapsed > 0 ? Math.round(1e3 * usage.reasoningTokens / elapsed) : 0
-		map.set("reason", { endAt, elapsed, speed, price: costs.reason, tokens: usage.reasoningTokens })
+		map.set("reason", { startAt, endAt, elapsed, speed, price: costs.reason, tokens: usage.reasoningTokens })
 	}
 
 	/* ANSWER */
 	if (usage.outputTokens && clock.answerTime) {
+		const startAt = map.get("reason")?.endAt || map.get("read")?.endAt || 0
 		const endAt = now
 		const elapsed = safe(endAt - clock.answerTime)
 		const speed = elapsed > 0 ? Math.round(1e3 * usage.outputTokens / elapsed) : 0
-		map.set("answer", { endAt, elapsed, speed, price: costs.output, tokens: usage.outputTokens })
+		map.set("answer", { startAt, endAt, elapsed, speed, price: costs.output, tokens: usage.outputTokens })
 	}
 
 	/* --------------------------------------------------------------- */
@@ -85,7 +88,7 @@ export function formatChatProgress(input) {
 		const value = map.get(phase)
 		const count = value?.tokens || 0
 		const phaseTokens = ui.formats.weight("T", count || 0)
-		const time = value?.endAt || now
+		const time = value?.startAt || now
 		const phaseTime = ui.formats.timer(safe(now - time))
 
 		const phaseSpeed = value?.speed ? `${ui.formats.count(value.speed)}T/s` : "∞T/s"

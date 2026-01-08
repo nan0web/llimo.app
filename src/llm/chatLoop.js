@@ -5,7 +5,7 @@ import { AI } from "./AI.js"
 import { Chat } from "./Chat.js"
 import { Ui } from "../cli/Ui.js"
 import { ModelInfo } from "./ModelInfo.js"
-import { Usage } from "./Usage.js"
+import { Limits, Usage } from "./Usage.js"
 
 function isWindowLimit(err) {
 	return [err?.status, err?.statusCode].includes(400) && err?.data?.code === "context_length_exceeded"
@@ -99,6 +99,7 @@ export async function sendAndStream(options) {
 		prevLines = lines.length
 	}, fps)
 
+	/** @type {{ completion_time: number, created: number, prompt_time: number, queue_time: number, total_time: number } | undefined} */
 	let timeInfo
 	let error = mockError
 	try {
@@ -159,10 +160,12 @@ export async function sendAndStream(options) {
 			if (step0?.usage) usage = new Usage(step0.usage)
 			// keep header‑rate‑limit information for future use
 			if (step0?.response?.headers) {
-				const limits = Object.entries(step0.response.headers).filter(([k]) =>
-					k.startsWith("x-ratelimit-")
+				const limits = Object.fromEntries(
+					Object.entries(step0.response.headers).filter(([k]) =>
+						k.startsWith("x-ratelimit-")
+					)
 				)
-				// @todo future: apply limits to show them in the progress table.
+				usage.limits = new Limits(limits)
 			}
 		} else {
 			unknowns.push(["Unknowns _steps.status type", result._steps?.status?.type])
@@ -184,7 +187,21 @@ export async function sendAndStream(options) {
 			isTiny
 		})
 		if (timeInfo) {
-			ui.console.info(timeInfo)
+			const table = [
+				["queue", timeInfo.queue_time],
+				["prompt", timeInfo.prompt_time],
+				["completion", timeInfo.completion_time],
+				["total", timeInfo.total_time],
+			]
+			// @todo should be moved to the output table as addon to measured timings
+			ui.console.debug(`- Timings: ${table.map(([t, v]) => `${t} - ${ui.formats.timer(1e3 * Number(v))}`).join(" | ")}`)
+		}
+		if (!usage.limits.empty) {
+			// @todo should be moved to the output table as addon to the end with the timeout
+			// in seconds (MM:SS) to next refresh if already in the queue and waiting time
+			// is less than ALLOW_WAIT = 15_000
+			const table = Object.entries(usage.limits).map(([t, v]) => `${t} - ${ui.formats.count(v)}`).join(" | ")
+			ui.console.debug(`@ Limits: ${table}`)
 		}
 
 		return { answer, reason, usage, unknowns }

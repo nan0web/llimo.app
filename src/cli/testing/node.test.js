@@ -13,7 +13,7 @@ describe("Suite", () => {
 	before(async () => {
 		nodeTxt = await fs.load("node.txt")
 	})
-	it.todo("should parse TAP version 13", async () => {
+	it("should parse TAP version 13", async () => {
 		const suite = new Suite({ rows: nodeTxt.split("\n"), fs })
 		const parsed = suite.parse()
 		assert.deepStrictEqual(Object.fromEntries(parsed.counts.entries()), {
@@ -39,14 +39,5 @@ describe("Suite", () => {
 	})
 	it("should produce OK", () => {
 		assert.ok(true)
-	})
-	it.todo("should produce FAIL", () => {
-		assert.fail()
-	})
-	it.todo("should produce FAIL", () => {
-		assert.fail()
-	})
-	it.todo("should be cancelled", async () => {
-		await new Promise(resolve => setTimeout(() => resolve(0), 999))
 	})
 })

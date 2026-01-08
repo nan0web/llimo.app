@@ -44,33 +44,35 @@ export default class ValidateCommand extends Command {
 		const requested = Array.from(this.parsed.requested ?? []).map(([file]) => file)
 		const debug = this.createAlerter("debug")
 		if (JSON.stringify(realLabel) !== JSON.stringify(validateLabel)) {
-			yield debug(`! LLiMo following format errors ------------------------------`)
-			yield debug(`  Unexpected response "${this.parsed.validate?.label}"`)
-			yield debug(`  but provided (parsed response): ${realLabel.files} file(s), ${realLabel.commands} command(s)`)
-			yield debug(`  ------------------------------------------------------------`)
-			yield debug(`  ℹ label format for @validate is "#### [N file(s), M command(s)](@validate)"`)
-			yield debug(`    where:`)
-			yield debug(`      N - amount of file(s) minus command(s)`)
-			yield debug(`      M - amount of commands(s) minus validate command (-1)`)
-			yield debug(`    if amount is zero part with its number might be skipped`)
-			yield debug(`  ------------------------------------------------------------`)
+			yield `! LLiMo following format errors ------------------------------`
+			yield `  Unexpected response "${this.parsed.validate?.label}"`
+			yield `  but provided (parsed response): ${realLabel.files} file(s), ${realLabel.commands} command(s)`
+			yield `  ------------------------------------------------------------`
+			yield `  ℹ label format for @validate is "#### [N file(s), M command(s)](@validate)"`
+			yield `    where:`
+			yield `      N - amount of file(s) minus command(s)`
+			yield `      M - amount of commands(s) minus validate command (-1)`
+			yield `    if amount is zero part with its number might be skipped`
+			yield `  ------------------------------------------------------------`
 		}
 		if (this.parsed.isValid) {
 			yield `${GREEN}+${RESET} Expected validation of files ${GREEN}100% valid${RESET}`
 		} else {
-			yield debug(`! Validation of responses files fail`)
+			yield `! Validation of responses files fail`
 			const PASS = `+`
 			const FAIL = `-`
 			if (requested.length) {
-				yield debug(`   Files to validate (LLiMo version):`)
+				yield `   Files to validate (LLiMo version):`
 				for (const filename of requested) {
-					yield debug(`    ${files.includes(filename) ? PASS : FAIL} ${filename}`)
+					yield `    ${files.includes(filename) ? PASS : FAIL} ${filename}`
 				}
 			}
 			if (files?.length) {
 				yield `   Files parsed from the answer:`
 				for (const filename of files) {
-					yield `    ${requested.includes(filename) ? PASS : FAIL} ${filename}`
+					const icon = `${requested.includes(filename) ? PASS : FAIL}`
+					yield `    ${icon} ${filename}`
+					yield new Alert({ text: `${icon} ${filename}` })
 				}
 			}
 		}

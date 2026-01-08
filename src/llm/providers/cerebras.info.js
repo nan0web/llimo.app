@@ -31,6 +31,8 @@ import { Pricing } from "../Pricing.js"
 function makeFlat(models) {
 	return models.map(m => new ModelInfo({
 		...m,
+		context_length: 65_000,
+		maximum_output: 65_000,
 		provider: "cerebras",
 		pricing: new Pricing(m.pricing || { prompt: 0, completion: 0 })
 	}))
