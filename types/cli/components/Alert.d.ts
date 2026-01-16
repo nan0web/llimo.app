@@ -4,7 +4,10 @@
  */
 export class Alert extends UiOutput {
     static error(text?: string): Alert;
+    static warn(text?: string): Alert;
     static info(text?: string): Alert;
+    static success(text?: string): Alert;
+    static debug(text?: string): Alert;
     /**
      * @param {Partial<Alert>} input
      */

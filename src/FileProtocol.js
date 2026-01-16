@@ -67,6 +67,17 @@ export class FileError {
 	}
 }
 
+export class FileSize {
+	/** @type {string} */
+	file = ""
+	/** @type {number} */
+	size = 0
+	/** @param {Partial<FileSize>} [input] */
+	constructor(input = {}) {
+		Object.assign(this, input)
+	}
+}
+
 export class FileProtocol {
 	/**
 	 * Validates the correct array of file entries with the `@validate` filename.

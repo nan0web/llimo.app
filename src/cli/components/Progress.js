@@ -5,7 +5,7 @@ import { RESET, GREEN, YELLOW } from "../ANSI.js"
  * Simple progress indicator component.
  */
 export class Progress extends UiOutput {
-	/** @type {number} */
+	/** @type {number} The percent in a natural form from 0 to 1 where is 1 = 100% */
 	value = 0
 	/** @type {string} */
 	text = ""
@@ -40,7 +40,7 @@ export class Progress extends UiOutput {
 			fill = "█",
 			space = "░",
 		} = options
-		const percent = Math.round(this.value)
+		const percent = Math.round(100 * this.value)
 		const bar = GREEN + fill.repeat(percent / 5) + YELLOW + space.repeat((100 - percent) / 5) + RESET
 		return `${this.prefix}${bar} ${this.text}`
 	}

@@ -44,6 +44,17 @@ export class Tap {
         parent?: number;
         errors?: string[];
     }): number;
+    /**
+     * Collects test information from a {not ok|ok} block.
+     *
+     * @param {{ i: number, errors?: string[], ok?: boolean }} input
+     * @returns {number} new index (position right after the processed block)
+     */
+    collectOk(input: {
+        i: number;
+        errors?: string[];
+        ok?: boolean;
+    }): number;
 }
 export class DeclarationTS extends Tap {
     /**
@@ -84,7 +95,10 @@ export type TestInfo = {
     parent?: number | undefined;
     file?: string | undefined;
     doc?: object;
-    position?: [number, number] | undefined;
+    /**
+     * Row x Column position.
+     */
+    position?: number[] | undefined;
 };
 export type TestOutputLogEntry = {
     i: number;

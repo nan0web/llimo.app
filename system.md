@@ -1,5 +1,6 @@
 ---
 inputFile: dev.md
+maxFails: 9
 ---
 # LLiMo application
 
@@ -41,10 +42,3 @@ Release is complete when all the tasks are passing release `task.test.js` tests.
 - Якщо використовується умови `true === value` не потрібно їх замінювати на `value === true`, залишай як є.
 - Typescript лише для d.ts, які автоматично генеруються з js.
 
-## Файли проєкта
-
-- [](package.json)
-
-Список:
-- [@ls](**)
----

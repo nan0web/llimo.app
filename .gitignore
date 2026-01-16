@@ -7,10 +7,9 @@ node_modules
 
 # Chat
 /chat/
-answer.jsonl
+agent.md
 me.md
 
-cache/
 .env
 
 test-step*.txt

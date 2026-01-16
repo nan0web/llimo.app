@@ -5,6 +5,7 @@ import { resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { MarkdownProtocol } from "../../utils/Markdown.js"
 import GetFilesCommand from "./GetFilesCommand.js"
+import { Alert } from "../../cli/index.js"
 
 describe("GetFilesCommand", () => {
 	let workdir
@@ -53,8 +54,8 @@ src/**
 
 		// We expect the two non-test files to be emitted.
 		assert.deepStrictEqual(out, [
-			"- [](src/app.js)",
-			"- [](src/readme.txt)",
+			new Alert("- [](src/app.js)"),
+			new Alert("- [](src/readme.txt)"),
 		])
 	})
 
@@ -75,10 +76,10 @@ src/**
 
 		// Should not contain node_modules or .git files
 		assert.deepStrictEqual(out, [
-			'- [](src/app.js)',
-			'- [](src/extra.test.jsx)',
-			'- [](src/readme.txt)',
-			'- [](src/util.test.js)'
+			new Alert('- [](src/app.js)'),
+			new Alert('- [](src/extra.test.jsx)'),
+			new Alert('- [](src/readme.txt)'),
+			new Alert('- [](src/util.test.js)'),
 		])
 	})
 
@@ -99,8 +100,8 @@ src/readme.txt
 		for await (const line of cmd.run()) out.push(line)
 
 		assert.deepStrictEqual(out, [
-			"- [](src/app.js)",
-			"- [](src/readme.txt)",
+			new Alert("- [](src/app.js)"),
+			new Alert("- [](src/readme.txt)"),
 		])
 	})
 })

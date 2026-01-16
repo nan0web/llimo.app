@@ -36,9 +36,6 @@ export function formatChatProgress(input) {
 
 	const totalElapsed = safe(now - clock.startTime)
 
-	/* --------------------------------------------------------------- */
-	/* Phase rows (read, reason, answer)                               */
-	/* --------------------------------------------------------------- */
 	const rawRows = []
 	let totalPrice = 0, totalTime = 0
 	/** @type {Array<"read" | "reason" | "answer">} */
@@ -75,9 +72,6 @@ export function formatChatProgress(input) {
 		map.set("answer", { startAt, endAt, elapsed, speed, price: costs.output, tokens: usage.outputTokens })
 	}
 
-	/* --------------------------------------------------------------- */
-	/* Tiny‑mode (single‑line)                                         */
-	/* --------------------------------------------------------------- */
 	if (isTiny) {
 		const arr = Array.from(map.entries())
 		const tinyPrice = arr.reduce((acc, [, item]) => acc + item.price, 0)
@@ -95,7 +89,7 @@ export function formatChatProgress(input) {
 
 		const totalTokensStr = [
 			ui.formats.used(totalTokens, model.context_length, "T"),
-			ui.bar(totalTokens, model.context_length, 3, "=", "-"),
+			ui.bar(totalTokens / model.context_length, 3, "=", "-"),
 			Math.round(100 * totalTokens / model.context_length) + "%"
 		].join(" ")
 
@@ -123,10 +117,6 @@ export function formatChatProgress(input) {
 		}
 	}
 
-	/* --------------------------------------------------------------- */
-	/* Chat summary row                                               */
-	/* --------------------------------------------------------------- */
-
 	// Sum of *display* elapsed times (read uses the 30 s offset)
 	const totalSpeed = totalTime > 0 ? Math.round(1e3 * totalTokens / totalTime) : 0
 	const totalSpeedStr = `${ui.formats.count(totalSpeed)}T/s`
@@ -134,7 +124,7 @@ export function formatChatProgress(input) {
 	const extraTokens = Math.max(0, (model.context_length || 0) - totalTokens)
 	const extraStr = [
 		ui.formats.weight("T", extraTokens),
-		ui.bar(totalTokens, model.context_length, 3, "=", "-"),
+		ui.bar(totalTokens / model.context_length, 3, "=", "-"),
 		Math.round(100 * totalTokens / model.context_length) + "%"
 	].join(" ")
 
@@ -147,18 +137,12 @@ export function formatChatProgress(input) {
 		extraStr,
 	]
 
-	/* --------------------------------------------------------------- */
-	/* Empty usage – fallback line                                     */
-	/* --------------------------------------------------------------- */
 	if (rawRows.length === 0) {
 		return [
 			`chat | ${ui.formats.timer(totalElapsed)} | ${ui.formats.money(0)} | 0T | 0T/s | ${extraStr}`,
 		]
 	}
 
-	/* --------------------------------------------------------------- */
-	/* Regular multi‑line output                                       */
-	/* --------------------------------------------------------------- */
 	const allRows = [...rawRows, chatRow]
 
 	return ui.console.table(allRows, { silent: true, aligns: ["right", "right", "right", "right", "right"] })

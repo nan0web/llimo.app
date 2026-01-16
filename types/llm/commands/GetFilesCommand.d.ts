@@ -30,7 +30,8 @@ export default class GetFilesCommand extends Command {
      * @returns {Promise<string[]>} - Array of relative file paths
      */
     _recursiveList(dir?: string, ignorePatterns?: string[]): Promise<string[]>;
-    run(): AsyncGenerator<string, void, unknown>;
+    run(): AsyncGenerator<Alert, void, unknown>;
 }
 export type ParsedFile = import("../../FileProtocol.js").ParsedFile;
 import Command from "./Command.js";
+import { Alert } from "../../cli/components/index.js";

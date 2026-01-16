@@ -34,8 +34,8 @@ describe("Suite", () => {
 		assert.deepStrictEqual(parsed.tests[4].doc?.failureType, "testTimeoutFailure")
 		assert.deepStrictEqual(parsed.tests[6].type, "pass")
 		assert.deepStrictEqual(parsed.tests[6].doc?.type, "test")
-		assert.ok(parsed.tests[119].file?.endsWith("src/strategies/fastest.js"))
-		assert.deepStrictEqual(parsed.tests[119].position, [75, 11])
+		assert.ok(parsed.tests[120].file?.endsWith("src/strategies/fastest.js"))
+		assert.deepStrictEqual(parsed.tests[120].position, [21, 11])
 	})
 	it("should produce OK", () => {
 		assert.ok(true)

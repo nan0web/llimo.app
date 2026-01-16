@@ -38,6 +38,14 @@ export class FileError {
     /** @type {number} */
     line: number;
 }
+export class FileSize {
+    /** @param {Partial<FileSize>} [input] */
+    constructor(input?: Partial<FileSize>);
+    /** @type {string} */
+    file: string;
+    /** @type {number} */
+    size: number;
+}
 export class FileProtocol {
     /**
      * Validates the correct array of file entries with the `@validate` filename.

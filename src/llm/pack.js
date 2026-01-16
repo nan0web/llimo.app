@@ -100,7 +100,7 @@ export async function packMarkdown(options = {}) {
 							const type = path.extname(file).slice(1) || "txt"
 
 							// Use plain size without colour codes.
-							injected.push(`  - ${relativeFilePath} ${format(size)} bytes`)
+							injected.push(`  - ${relativeFilePath} ${(size)} bytes`)
 							output.push(`#### [${filename}](${relativeFilePath})`)
 							output.push(`\`\`\`${type}`)
 							output.push(content)

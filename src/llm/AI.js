@@ -8,6 +8,11 @@ import { ModelInfo } from './ModelInfo.js'
 import { validateApiKey } from './ProviderConfig.js'
 import { Usage } from './Usage.js'
 
+/** @typedef {"free" | "cheap" | "expensive"} AiStrategyFinance - mighe be available from the ModelInfo */
+/** @typedef {"low" | "mid" | "high"} AiStrategyVolume - might be extracted from hugging_face_id */
+/** @typedef {"slow" | "fast"} AiStrategySpeed - might be calculated by stats */
+/** @typedef {"simple" | "smart" | "expert"} AiStrategyLevel - might be calculated by stats */
+
 /**
  * @typedef {Object} StreamOptions callbacks and abort signal
  * @property {AbortSignal} [abortSignal] aborts the request when signaled
@@ -19,6 +24,84 @@ import { Usage } from './Usage.js'
  */
 
 class AiStrategy {
+	static finance = {
+		help: `A finance limit that is calculated by prompt, completion cost per token.
+  - free - for models with prompt and completion prices = 0
+  - cheap - for models with prompt and completion prices below medium of all available
+  - expensive - for models with prompt and completion prices equal and above the medium of all available
+`,
+		/** @type {AiStrategyFinance[]} */
+		enum: ["free", "cheap", "expensive"],
+		/** @type {AiStrategyFinance} */
+		default: "free"
+	}
+	/**
+	 * A finance limit that is calculated by prompt, completion cost per token.
+	 * - `free` - for models with prompt and completion prices = 0
+	 * - `cheap` - for models with prompt and completion prices below medium of all available
+	 * - `expensive` - for models with prompt and completion prices equal and above the medium of all available
+	 * @type {"free" | "cheap" | "expensive"}
+	 */
+	finance = AiStrategy.finance.default
+	static speed = {
+		help: `The response speed.
+  - slow - for models with the response speed above the medium of all available
+  - fast - for models with the response speed below the medium of all available`,
+	/** @type {AiStrategySpeed[]} */
+		enum: ["slow", "fast"],
+		/** @type {AiStrategySpeed} */
+		default: "fast",
+	}
+	/**
+	 * The response speed.
+	 * - `slow` - for models with the response speed above the medium of all available
+	 * - `fast` - for models with the response speed below the medium of all available
+	 * @type {AiStrategySpeed}
+	 */
+	speed = AiStrategy.speed.default
+	static volume = {
+		help: `The total parameters amount of the model divided into 3 medium ranges to select from: A, B, C.
+  - low - from 0 to billions of parameters depending on A range,
+  - mod - B range
+  - high - C range`,
+		/** @type {AiStrategyVolume[]} */
+		enum: ["low", "mid", "high"],
+		/** @type {AiStrategyVolume} */
+		default: "mid",
+	}
+	/**
+	 * The total parameters amount of the model divided into 3 medium ranges to select from: A, B, C.
+	 * - `low` - from 0 to billions of parameters depending on A range,
+	 * - `mod` - B range
+	 * - `high` - C range
+	 * @type {AiStrategyVolume}
+	 */
+	volume = "mid"
+	/**
+	 * Solving issues level measured with a statistics.
+	 * - `simple` - more than 20% fails
+	 * - `smart` - equal or less than 20% fails
+	 * - `expert` - equal or less than 2% fails
+	 */
+	static level = {
+		help: `Solving issues level measured with a statistics.
+  - simple - more than 20% fails
+  - smart - equal or less than 20% fails
+  - expert - equal or less than 2% fails`,
+	/** @type {AiStrategyLevel[]} */
+	enum: ["simple", "smart", "expert"],
+	/** @type {AiStrategyLevel} */
+		default: "smart",
+	}
+	/** @type {AiStrategyLevel} */
+	level = "smart"
+	static budget = {
+		help: "A budget for the current chat",
+		default: 0,
+	}
+	/** @type {number | string} A budget for the current chat */
+	budget = AiStrategy.budget.default
+
 	/**
 	 * @param {ModelInfo} model
 	 * @param {number} tokens

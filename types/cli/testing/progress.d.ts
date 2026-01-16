@@ -24,5 +24,27 @@ export function testingProgress({ ui, fs, output, rows, prefix, startTime, fps }
     startTime?: number | undefined;
     fps?: number | undefined;
 }): NodeJS.Timeout;
+/**
+ * Creates progress for commands to run in a window.
+ * @param {object} param0
+ * @param {Ui} param0.ui
+ * @param {string[]} [param0.output]
+ * @param {number} [param0.rows=0] The window height
+ * @param {string} [param0.prefix=""]
+ * @param {number} [param0.startTime]
+ * @param {number} [param0.fps=33]
+ * @param {AfterProgressFn} [param0.after]
+ * @returns {NodeJS.Timeout}
+ */
+export function runningProgress({ ui, output, rows, prefix, startTime, fps, after }: {
+    ui: Ui;
+    output?: string[] | undefined;
+    rows?: number | undefined;
+    prefix?: string | undefined;
+    startTime?: number | undefined;
+    fps?: number | undefined;
+    after?: AfterProgressFn | undefined;
+}): NodeJS.Timeout;
+export type AfterProgressFn = (input: import("../Ui.js").ProgressFnInput, printed?: number, frame?: string) => void;
 import { Ui } from "../Ui.js";
 import { FileSystem } from "../../utils/FileSystem.js";

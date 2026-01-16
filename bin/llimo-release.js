@@ -83,7 +83,7 @@ export async function main(argv = process.argv.slice(2)) {
 			pending: Array.from(taskStates.values()).filter(s => s.status === "pending").length,
 		}
 		const completed = byStatus.complete + byStatus.fail
-		const globalBar = ui.bar(completed, totalTasks, 30, "■", " ")
+		const globalBar = ui.bar(completed / totalTasks, 30, "■", " ")
 		const globalStatus = [
 			`${GREEN}${byStatus.complete} complete${RESET}`,
 			`${RED}${byStatus.fail} fail${RESET}`,
@@ -104,7 +104,7 @@ export async function main(argv = process.argv.slice(2)) {
 					chunks: [],
 					start: null,
 				}
-				const taskBar = ui.bar(state.stagePercent, 100, 20, "■", " ")
+				const taskBar = ui.bar(state.stagePercent / 100, 20, "■", " ")
 				const duration = state.start ? ui.formats.timer(Date.now() - state.start) : "00:00"
 				const statusLabel = state.status === "complete" ? `${GREEN}done${RESET}`
 					: state.status === "fail" ? `${RED}fail${RESET}`

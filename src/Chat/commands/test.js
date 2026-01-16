@@ -1,5 +1,7 @@
 import { parseArgv } from "../../cli/argvHelper.js"
-import { runCommand, Progress, Alert, Suite, testingProgress } from "../../cli/index.js"
+import { Alert, Progress } from "../../cli/components/index.js"
+import { Suite, testingProgress } from "../../cli/testing/index.js"
+import { runCommand } from "../../cli/runCommand.js"
 import { Chat } from "../../llm/Chat.js"
 import { InfoCommand } from "./info.js"
 import { FileSystem } from "../../utils/FileSystem.js"

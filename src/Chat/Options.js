@@ -7,87 +7,118 @@ export default class ChatOptions {
 		help: "Free arguments: text (markdown) file location as input file (pre-prompt) with attachments as markdown - [ignore-rules](location-as-glob)",
 		default: []
 	}
-	/** @type {string[]} */
-	argv = ChatOptions.argv.default
+	/** @type {string[]} Free arguments: text (markdown) file location as input file (pre-prompt) with attachments as markdown - [ignore-rules](location-as-glob) */
+	argv = ChatOptions.argv.default.slice()
 	static isDebug = {
 		alias: "debug",
 		help: "Debug mode to show more information",
 		default: false,
 	}
-	/** @type {boolean} */
+	/** @type {boolean} Debug mode to show more information */
 	isDebug = ChatOptions.isDebug.default
 	static isNew = {
 		alias: "new",
 		help: "New chat",
 		default: false
 	}
-	/** @type {boolean} */
+	/** @type {boolean} New chat */
 	isNew = ChatOptions.isNew.default
 	static isYes = {
 		help: "Automatically answer yes to all questions",
 		alias: "yes",
 		default: false
 	}
-	/** @type {boolean} */
+	/** @type {boolean} Automatically answer yes to all questions */
 	isYes = ChatOptions.isYes.default
 	static isTest = {
 		help: "Run in test mode",
 		alias: "test",
 		default: false,
 	}
-	/** @type {boolean} @deprecated Changed with the command test */
+	/**
+	 * @type {boolean} Run in test mode
+	 * @deprecated Changed with the command test
+	 */
 	isTest = ChatOptions.isTest.default
 	static isTiny = {
 		alias: "tiny",
 		help: "Tiny view in one row that is useful as subtask usage",
 		default: false,
 	}
-	/** @type {boolean} */
+	/** @type {boolean} Tiny view in one row that is useful as subtask usage */
 	isTiny = ChatOptions.isTiny.default
 	static isFix = {
 		alias: "fix",
 		help: "Fix the current project (starts with tests)",
 		default: false
 	}
-	/** @type {boolean} */
+	/** @type {boolean} Fix the current project (starts with tests) */
 	isFix = ChatOptions.isFix.default
 	static testDir = {
 		alias: "test-dir",
+		help: "Directory for the testing chat with packing/unpacking chat messages",
 		default: ""
 	}
-	/** @type {string} @deprecated Moved to the command test */
+	/**
+	 * @type {string} Directory for the testing chat with packing/unpacking chat messages
+	 * @deprecated Moved to the command test
+	 */
 	testDir = ChatOptions.testDir.default
 	static model = {
 		alias: "model",
-		default: ""
+		help: "LLM id or it's unique part, default is 'gpt-oss-120b'",
+		default: "gpt-oss-120b"
 	}
 	/** @type {string} */
 	model = ChatOptions.model.default
 	static provider = {
 		alias: "provider",
-		help: "Ai provider, use / for subproviders such as huggingface/cerebras",
-		default: ""
+		help: "Ai provider, use slash / for subproviders such as huggingface/cerebras, default is 'cerebras'",
+		default: "cerebras"
 	}
-	/** @type {string} */
+	/** @type {string} Ai provider, use / for subproviders such as huggingface/cerebras */
 	provider = ChatOptions.provider.default
 	static maxFails = {
 		alias: "max-fails",
 		help: "Maximum number of failed iterations in a row",
 		default: 3,
 	}
-	/** @type {number} */
+	/** @type {number} Maximum number of failed iterations in a row */
 	maxFails = ChatOptions.maxFails.default
 	static isHelp = {
 		alias: "help",
 		help: "Show help",
 		default: false
 	}
-	/** @type {boolean} */
+	/** @type {boolean} Show help */
 	isHelp = ChatOptions.isHelp.default
+	static ignore = {
+		help: "Ignored patterns for the injected or listed files",
+		default: [".git", "node_modules"]
+	}
+	/** @type {string[]} Ignored patterns for the injected or listed files */
+	ignore = ChatOptions.ignore.default.slice()
 	/**
 	 * Constructs options instance from partial input.
 	 * @param {Partial<ChatOptions>} [input] - Partial options.
-	 */
+	*/
+	static inputFile = {
+		help: "Input file path (relative to cwd)",
+		stack: "argv",
+		default: "me.md"
+	}
+	/** @type {string} Input file path (relative to cwd) */
+	inputFile = ChatOptions.inputFile.default
+	static strategyFinance = {
+		alias: "strategy-finance",
+		help: "LLM communication strategy financing: free, cheap, medium, rich",
+		/** @type {"free" | "cheap" | "medium" | "rich"} */
+		default: "free",
+	}
+	/** @type {"free" | "cheap" | "medium" | "rich"} LLM communication strategy financing: free, cheap, medium, rich */
+	strategyFinance = ChatOptions.strategyFinance.default
+	// @todo add all the strategy options
+
 	constructor(input = {}) {
 		Object.assign(this, input)
 	}

@@ -1,0 +1,16 @@
+TAP version 13
+1..2
+not ok 1 - src/react/App.test.jsx
+    ---
+    error:
+        name: "ReferenceError"
+        message: "expect is not defined"
+    at: "/Users/i/src/nan.web/node_modules/.pnpm/@testing-library+jest-dom@6.9.1/node_modules/@testing-library/jest-dom/dist/index.mjs:9:1"
+    ...
+not ok 2 - src/react/Form.test.jsx
+    ---
+    error:
+        name: "ReferenceError"
+        message: "expect is not defined"
+    at: "/Users/i/src/nan.web/node_modules/.pnpm/@testing-library+jest-dom@6.9.1/node_modules/@testing-library/jest-dom/dist/index.mjs:9:1"
+    ...

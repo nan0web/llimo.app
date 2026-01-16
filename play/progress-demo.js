@@ -1,45 +1,48 @@
+import process from "node:process"
+
 import { Progress } from '../src/cli/components/Progress.js'
 import { Ui } from '../src/cli/Ui.js'
 
 export class ProgressDemo {
 	static async run() {
+		const DELAY = parseInt(process.env.DELAY ?? "200")
 		const ui = new Ui()
 
-		console.info('=== Progress Component Demo ===')
+		ui.console.info('=== Progress Component Demo ===')
 
 		// Basic progress
-		const basicProgress = new Progress({ value: 50, text: 'Basic Progress', prefix: 'D ' })
-		console.info('Basic (50%)')
+		const basicProgress = new Progress({ value: 0.5, text: 'Basic Progress', prefix: 'D ' })
+		ui.console.info('Basic (50%)')
 		ui.render(basicProgress)
-		console.info('')
+		ui.console.info('')
 
 		// Custom options
 		const customProgress = new Progress({
-			value: 75,
+			value: 0.75,
 			text: 'Downloading...',
 			prefix: '⬇ '
 		})
 		ui.overwriteLine(customProgress.toString({ fill: '█', space: '░' }))
-		await new Promise(resolve => setTimeout(resolve, 500)) // Pause to show
-		console.info('Custom (75%) with options')
-		console.info('')
+		await new Promise(resolve => setTimeout(resolve, 2 * DELAY)) // Pause to show
+		ui.console.info('Custom (75%) with options')
+		ui.console.info('')
 
 		// Simulate updating progress
-		console.info('Simulating progress updates:')
+		ui.console.info('Simulating progress updates:')
 		const totalSteps = 10
 		for (let i = 0; i <= totalSteps; i += 2) {
-			const progress = new Progress({ value: i * 10, text: `Step ${i}/10`, prefix: '⏳ ' })
+			const progress = new Progress({ value: i / totalSteps, text: `Step ${i}/10`, prefix: '⏳ ' })
 			ui.overwriteLine(progress.toString())
-			await new Promise(resolve => setTimeout(resolve, 200))
+			await new Promise(resolve => setTimeout(resolve, DELAY))
 		}
-		console.info('') // New line after simulation
+		ui.console.info('') // New line after simulation
 
 		// Zero progress
 		const zeroProgress = new Progress({ value: 0, text: 'Starting...' })
 		ui.render(zeroProgress)
-		console.info('')
+		ui.console.info('')
 
-		console.info('Demo complete!')
+		ui.console.info('Demo complete!')
 	}
 }
 

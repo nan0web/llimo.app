@@ -1,12 +1,12 @@
 /**
  * Read the input either from STDIN or from the first CLI argument.
  *
- * @param {string[]} argv CLI arguments (already sliced)
+ * @param {string[] | string} argv CLI arguments (already sliced)
  * @param {FileSystem} fs
  * @param {Ui} ui User interface instance, used for input (stdin) stream only.
  * @returns {Promise<{input: string, inputFile: string | null}>}
  */
-export function readInput(argv: string[], fs: FileSystem, ui: Ui): Promise<{
+export function readInput(argv: string[] | string, fs: FileSystem, ui: Ui): Promise<{
     input: string;
     inputFile: string | null;
 }>;
@@ -78,6 +78,7 @@ export function startStreaming(ai: AI, model: ModelInfo, chat: Chat, options: ob
 };
 /**
  * Decodes the answer and return the next prompt
+ * @deprecated use ChatCliApp.decodeAnswer
  * @param {Object} param0
  * @param {Ui} param0.ui
  * @param {Chat} param0.chat
@@ -118,7 +119,7 @@ export function filterTests(tests: import("../cli/testing/node.js").TestInfo[], 
  */
 export function printAnswer(input: {
     ui: Ui;
-    type?: "skip" | "todo" | "fail" | undefined;
+    type?: "skip" | "fail" | "todo" | undefined;
     tests?: import("../cli/testing/node.js").TestInfo[] | undefined;
     content?: string[] | undefined;
 }): Promise<boolean>;

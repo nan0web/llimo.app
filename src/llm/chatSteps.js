@@ -23,7 +23,7 @@ import { packMarkdown } from "./pack.js"
 /**
  * Read the input either from STDIN or from the first CLI argument.
  *
- * @param {string[]} argv CLI arguments (already sliced)
+ * @param {string[] | string} argv CLI arguments (already sliced)
  * @param {FileSystem} fs
  * @param {Ui} ui User interface instance, used for input (stdin) stream only.
  * @returns {Promise<{input: string, inputFile: string | null}>}
@@ -31,12 +31,13 @@ import { packMarkdown } from "./pack.js"
 export async function readInput(argv, fs, ui) {
 	let input = ""
 	let inputFile = null
+	const file = Array.isArray(argv) ? argv[0] : argv
 
 	if (!ui.stdin.isTTY) {
 		// piped stdin
 		for await (const chunk of ui.stdin) input += chunk
-	} else if (argv.length > 0) {
-		inputFile = fs.path.resolve(argv[0])
+	} else if (file) {
+		inputFile = fs.path.resolve(file)
 		try {
 			input = await fs.load(inputFile)
 		} catch (/** @type {any} */err) {
@@ -140,6 +141,7 @@ export async function copyInputToChat(inputFile, input, chat, ui, step = 1) {
 	await chat.save("input", input, step)
 	ui.console.debug(`> preparing ${file} (${inputFile})`)
 	const size = Buffer.byteLength(chat.system.head + chat.system.body)
+	await chat.save("system", chat.system.head + chat.system.body, step)
 	ui.console.success(`+ system.md (${chat.rel("system")}) - ${ui.formats.weight("b", size)}`)
 	ui.console.success(`+ ${file} (${rel})`)
 }
@@ -213,6 +215,7 @@ export function startStreaming(ai, model, chat, options) {
 
 /**
  * Decodes the answer and return the next prompt
+ * @deprecated use ChatCliApp.decodeAnswer
  * @param {Object} param0
  * @param {Ui} param0.ui
  * @param {Chat} param0.chat
@@ -257,7 +260,9 @@ export async function decodeAnswer({ ui, chat, options }) {
 	// Actual unpack
 	const stream = unpackAnswer(parsed)
 	for await (const uiElement of stream) {
-		ui.console.info(uiElement)
+		if (uiElement instanceof UiOutput) {
+			ui.console.info(uiElement)
+		}
 		content.push(String(uiElement))
 	}
 	content.push("```")

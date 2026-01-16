@@ -21,9 +21,9 @@ export async function main(argv = process.argv.slice(2)) {
 	ui.console.info(RESET)
 
 	// Parse arguments
-	const command = parseArgv(argv, ChatOptions)
+	const options = parseArgv(argv, ChatOptions)
 
-	if (command.isHelp) {
+	if (options.isHelp) {
 		ui.console.info(`LLiMo CLI - Language Living Models Chat
 
 Usage: llimo chat [options]
@@ -48,7 +48,7 @@ Examples:
 		process.exit(0)
 	}
 
-	const app = new ChatCLiApp({ fs, git, ui, options: command })
+	const app = new ChatCLiApp({ fs, git, ui, options })
 	// 1. initialise / load chat
 	const shouldContinue = await app.init(argv)
 	if (!shouldContinue) {
@@ -56,9 +56,10 @@ Examples:
 		return false
 	}
 	const input = await app.readInput()
-	if (!input) {
-		ui.console.error(`Cannot read input from stdin or file ${app.inputFile}`)
-		return false
+	if (!input && !app.options.isFix) {
+		ui.console.warn(`Cannot read input from stdin or file ${app.inputFile}`)
+		ui.console.warn(`You can use empty stdin or file only for --fix option`)
+		process.exit(1)
 	}
 	// 2. run the loop from task to solution [input → response → test → repeat until 100% pass]
 	await app.loop()

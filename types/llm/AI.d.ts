@@ -131,6 +131,22 @@ export class AI {
     #private;
 }
 /**
+ * - mighe be available from the ModelInfo
+ */
+export type AiStrategyFinance = "free" | "cheap" | "expensive";
+/**
+ * - might be extracted from hugging_face_id
+ */
+export type AiStrategyVolume = "low" | "mid" | "high";
+/**
+ * - might be calculated by stats
+ */
+export type AiStrategySpeed = "slow" | "fast";
+/**
+ * - might be calculated by stats
+ */
+export type AiStrategyLevel = "simple" | "smart" | "expert";
+/**
  * callbacks and abort signal
  */
 export type StreamOptions = {
@@ -160,6 +176,10 @@ export type StreamOptions = {
     onAbort?: (() => void) | undefined;
 };
 import { ModelInfo } from './ModelInfo.js';
+/** @typedef {"free" | "cheap" | "expensive"} AiStrategyFinance - mighe be available from the ModelInfo */
+/** @typedef {"low" | "mid" | "high"} AiStrategyVolume - might be extracted from hugging_face_id */
+/** @typedef {"slow" | "fast"} AiStrategySpeed - might be calculated by stats */
+/** @typedef {"simple" | "smart" | "expert"} AiStrategyLevel - might be calculated by stats */
 /**
  * @typedef {Object} StreamOptions callbacks and abort signal
  * @property {AbortSignal} [abortSignal] aborts the request when signaled
@@ -170,6 +190,71 @@ import { ModelInfo } from './ModelInfo.js';
  * @property {()=>void} [onAbort] called when the stream is aborted
  */
 declare class AiStrategy {
+    static finance: {
+        help: string;
+        /** @type {AiStrategyFinance[]} */
+        enum: AiStrategyFinance[];
+        /** @type {AiStrategyFinance} */
+        default: AiStrategyFinance;
+    };
+    static speed: {
+        help: string;
+        /** @type {AiStrategySpeed[]} */
+        enum: AiStrategySpeed[];
+        /** @type {AiStrategySpeed} */
+        default: AiStrategySpeed;
+    };
+    static volume: {
+        help: string;
+        /** @type {AiStrategyVolume[]} */
+        enum: AiStrategyVolume[];
+        /** @type {AiStrategyVolume} */
+        default: AiStrategyVolume;
+    };
+    /**
+     * Solving issues level measured with a statistics.
+     * - `simple` - more than 20% fails
+     * - `smart` - equal or less than 20% fails
+     * - `expert` - equal or less than 2% fails
+     */
+    static level: {
+        help: string;
+        /** @type {AiStrategyLevel[]} */
+        enum: AiStrategyLevel[];
+        /** @type {AiStrategyLevel} */
+        default: AiStrategyLevel;
+    };
+    static budget: {
+        help: string;
+        default: number;
+    };
+    /**
+     * A finance limit that is calculated by prompt, completion cost per token.
+     * - `free` - for models with prompt and completion prices = 0
+     * - `cheap` - for models with prompt and completion prices below medium of all available
+     * - `expensive` - for models with prompt and completion prices equal and above the medium of all available
+     * @type {"free" | "cheap" | "expensive"}
+     */
+    finance: "free" | "cheap" | "expensive";
+    /**
+     * The response speed.
+     * - `slow` - for models with the response speed above the medium of all available
+     * - `fast` - for models with the response speed below the medium of all available
+     * @type {AiStrategySpeed}
+     */
+    speed: AiStrategySpeed;
+    /**
+     * The total parameters amount of the model divided into 3 medium ranges to select from: A, B, C.
+     * - `low` - from 0 to billions of parameters depending on A range,
+     * - `mod` - B range
+     * - `high` - C range
+     * @type {AiStrategyVolume}
+     */
+    volume: AiStrategyVolume;
+    /** @type {AiStrategyLevel} */
+    level: AiStrategyLevel;
+    /** @type {number | string} A budget for the current chat */
+    budget: number | string;
     /**
      * @param {ModelInfo} model
      * @param {number} tokens

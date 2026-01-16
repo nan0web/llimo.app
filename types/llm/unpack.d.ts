@@ -1,5 +1,5 @@
 /**
- *
+ * @deprecated use ChatCliApp.unpackAnswer
  * @param {import("../FileProtocol").ParsedFile} parsed
  * @param {boolean} [isDry=false] If true yields messages without saving files
  * @param {string} [cwd] Current working directory

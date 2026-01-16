@@ -1,4 +1,9 @@
 /** @typedef {"success" | "info" | "warn" | "error" | "debug" | "log"} LogTarget */
+/**
+ * @typedef {Object} ProgressFnInput
+ * @property {number} elapsed elapsed seconds
+ * @property {number} startTime start timestamp ms
+ */
 export class UiStyle {
     /**
      * @param {Partial<UiStyle>} input
@@ -133,14 +138,13 @@ export class UiConsole {
     clear(line: string, space?: string, more?: string): string;
     /**
      * Progress bar string.
-     * @param {number} i
-     * @param {number} len
+     * @param {number} value Progress value from 0 to 1
      * @param {number} [width=33]
      * @param {string} [on="="]
      * @param {string} [off=" "]
      * @returns {string}
      */
-    bar(i: number, len: number, width?: number, on?: string, off?: string): string;
+    bar(value: number, width?: number, on?: string, off?: string): string;
     /**
      * @todo cover with tests.
      * @param {any[][]} rows
@@ -148,6 +152,16 @@ export class UiConsole {
      * @returns {string[]}
      */
     table(rows?: any[][], options?: Partial<TableOptions>): string[];
+    /**
+     * Clears the frame to collect the output before the stopFrame().
+     */
+    startFrame(): void;
+    /**
+     * Returns collected output from latests startFrane().
+     * @returns {string}
+     */
+    stopFrame(): string;
+    #private;
 }
 export class UiCommand {
     /**
@@ -214,9 +228,12 @@ export class Ui {
     /**
      * Move the cursor up by a number of lines.
      *
-     * @param {number} [lines=1]
+     * @param {number | string} [lines=1] The lines to clear or string as a frame to
+     *                                    clear the number of new lines inside the
+     *                                    current window frame getWindowSize().
+     * @returns {number} The number of lines cleared up.
      */
-    cursorUp(lines?: number): void;
+    cursorUp(lines?: number | string): number;
     /**
      * Overwrite the current line with the given text.
      *
@@ -226,14 +243,13 @@ export class Ui {
     /**
      * Progress bar helper.
      *
-     * @param {number} i
-     * @param {number} len
+     * @param {number} value Progress value from 0 to 1
      * @param {number} [width=33]
      * @param {string} [on="="]
      * @param {string} [off=" "]
      * @returns {string}
      */
-    bar(i: number, len: number, width?: number, on?: string, off?: string): string;
+    bar(value: number, width?: number, on?: string, off?: string): string;
     /**
      * Writes to stdout.
      * @param {Buffer | DataView | Error | string} buffer
@@ -263,25 +279,12 @@ export class Ui {
     /**
      * Create progress interval to call the fn() with provided fps.
      *
-     * @typedef {Object} ProgressFnInput
-     * @property {number} elapsed elapsed seconds
-     * @property {number} startTime start timestamp ms
-     *
      * @param {(input: ProgressFnInput) => void} fn
      * @param {number} [startTime]
      * @param {number} [fps]
      * @returns {NodeJS.Timeout}
      */
-    createProgress(fn: (input: {
-        /**
-         * elapsed seconds
-         */
-        elapsed: number;
-        /**
-         * start timestamp ms
-         */
-        startTime: number;
-    }) => void, startTime?: number, fps?: number): NodeJS.Timeout;
+    createProgress(fn: (input: ProgressFnInput) => void, startTime?: number, fps?: number): NodeJS.Timeout;
     /**
      * @todo write jsdoc
      * @param {Object} options
@@ -300,6 +303,16 @@ export class Ui {
     render(element: string | any[] | UiOutput, returnOnly?: any): string;
 }
 export type LogTarget = "success" | "info" | "warn" | "error" | "debug" | "log";
+export type ProgressFnInput = {
+    /**
+     * elapsed seconds
+     */
+    elapsed: number;
+    /**
+     * start timestamp ms
+     */
+    startTime: number;
+};
 export type UiWeightType = "b" | "f" | "T";
 import { TableOptions } from "./components/Table.js";
 import { Alert } from "./components/index.js";

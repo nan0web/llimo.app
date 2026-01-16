@@ -123,14 +123,14 @@ describe("UiFormats.money formatting", () => {
 })
 
 describe("Ui.bar", () => {
-	/** @type {Array<[[number, number, number, string | undefined, string | undefined], string]>} */
+	/** @type {Array<[[number, number, string | undefined, string | undefined], string]>} */
 	const examples = [
-		[[0, 10, 10, undefined, undefined], "          "],
-		[[1, 10, 10, undefined, undefined], "=         "],
-		[[4, 10, 10, undefined, undefined], "====      "],
-		[[4, 10, 10, "+", "-"], "++++------"],
-		[[50, 10, 10, undefined, undefined], "=========="],
-		[[50, 10, 10, undefined, undefined], "=========="],
+		[[0, 10, undefined, undefined], "          "],
+		[[0.1, 10, undefined, undefined], "=         "],
+		[[0.4, 10, undefined, undefined], "====      "],
+		[[0.4, 10, "+", "-"], "++++------"],
+		[[0.5, 10, undefined, undefined], "=====     "],
+		[[1, 10, undefined, undefined], "=========="],
 	]
 	examples.forEach(([args, exp]) => {
 		it(`should render bar correctly ${JSON.stringify(args)}`, () => {
@@ -140,3 +140,4 @@ describe("Ui.bar", () => {
 		})
 	})
 })
+

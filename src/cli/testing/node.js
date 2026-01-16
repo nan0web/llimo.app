@@ -67,6 +67,7 @@ export class Tap {
 			this.counts.set(name, 0)
 		})
 
+		let overview = false
 		let errors = []
 
 		for (let i = 0; i < this.rows.length; i++) {
@@ -86,6 +87,7 @@ export class Tap {
 				errors = []
 			}
 			else if (found) {
+				overview = true
 				let [, name] = found.split(" ")
 				if (trans[name]) name = trans[name]
 				const val = str.slice(found.length)
@@ -97,10 +99,28 @@ export class Tap {
 			else if (str.startsWith("# ")) {
 				errors.push(str.slice(2))
 			}
+			else if (str.startsWith("not ok ")) {
+				this.collectOk({ i, errors })
+			}
+			else if (str.startsWith("ok ")) {
+				this.collectOk({ i, errors, ok: true })
+			}
 			else {
 				this.unknowns.set(i, row)
 				errors = []
 			}
+		}
+		if (!overview && this.tests.length) {
+			this.tests.forEach((info) => {
+				const value = Number(this.counts.get(info.type))
+				this.counts.set(info.type, value + 1)
+			})
+			this.counts.set("tests",
+				(this.counts.get("fail") || 0) +
+				(this.counts.get("pass") || 0) +
+				(this.counts.get("skip") || 0) +
+				(this.counts.get("todo") || 0)
+			)
 		}
 		return {
 			version,
@@ -188,9 +208,6 @@ export class Tap {
 			position = [parseInt(x), parseInt(y)]
 			file = this.fs.path.relative(this.fs.path.cwd, this.fs.path.resolve(this.fs.path.cwd, loc))
 		}
-		if (clean.startsWith("not ok")) {
-			const x = 9
-		}
 		this.tests.push({
 			type: "# TODO" === status ? "todo"
 				: "# SKIP" === status ? "skip"
@@ -206,6 +223,62 @@ export class Tap {
 		})
 		// Return index of the line just before the next iteration will increment.
 		return j - 1
+	}
+
+	/**
+	 * Collects test information from a {not ok|ok} block.
+	 *
+	 * @param {{ i: number, errors?: string[], ok?: boolean }} input
+	 * @returns {number} new index (position right after the processed block)
+	 */
+	collectOk(input) {
+		const { i, errors = [], ok = false } = input
+		const row = this.rows[i]
+		const str = row.trim()
+		const text = str.slice(ok ? 3 : 7)
+		const [line, status = ""] = text.split(" # ")
+		const [no, tail = ""] = line.split(" - ")
+		const [file, ...pos] = tail.split(":")
+		const [x, y = ""] = pos.join(":").split(":")
+		const position = [Number(x), Number(y)]
+
+		const yamlLines = []
+		const parent = undefined
+		let indent
+		let j = i + 1
+		for (; j < this.rows.length; j++) {
+			const sub = this.rows[j]
+			const spaces = sub.split("").findIndex(c => " " !== c)
+			if (!indent) indent = spaces
+			if (indent > spaces) {
+				break
+			}
+			if (["...", "---"].includes(sub.slice(indent))) {
+				continue
+			}
+			yamlLines.push(sub.slice(indent))
+		}
+		let doc = {}
+		try {
+			doc = yaml.parse(yamlLines.join("\n"))
+		} catch (/** @type {any} */ err) {
+			this.errors.set(j, err)
+			doc = { errors: [err] }
+		}
+		this.tests.push({
+			type: "# TODO" === status ? "todo"
+				: "# SKIP" === status ? "skip"
+					: "testTimeoutFailure" === doc?.failureType ? "cancelled"
+						: ok ? "pass" : "fail",
+			no: Number(no),
+			text,
+			indent: indent || 0,
+			position,
+			doc,
+			file,
+			parent,
+		})
+		return j
 	}
 }
 
@@ -312,7 +385,7 @@ export class Suite extends Tap {
  * @property {number} [parent]
  * @property {string} [file]
  * @property {object} [doc]
- * @property {[number, number]} [position]
+ * @property {number[]} [position] Row x Column position.
  *
  * @typedef {Object} TestOutputLogEntry
  * @property {number} i

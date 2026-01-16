@@ -44,7 +44,16 @@ export class Alert extends UiOutput {
 	static error(text = "") {
 		return new Alert({ variant: "error", text })
 	}
+	static warn(text = "") {
+		return new Alert({ variant: "warn", text })
+	}
 	static info(text = "") {
 		return new Alert({ variant: "info", text })
+	}
+	static success(text = "") {
+		return new Alert({ variant: "success", text })
+	}
+	static debug(text = "") {
+		return new Alert({ variant: "debug", text })
 	}
 }

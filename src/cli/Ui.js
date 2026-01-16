@@ -9,6 +9,11 @@ import { Alert, Table, Progress } from "./components/index.js"
 import { TableOptions } from "./components/Table.js"
 
 /** @typedef {"success" | "info" | "warn" | "error" | "debug" | "log"} LogTarget */
+/**
+ * @typedef {Object} ProgressFnInput
+ * @property {number} elapsed elapsed seconds
+ * @property {number} startTime start timestamp ms
+ */
 
 export class UiStyle {
 	/** @type {number} */
@@ -122,6 +127,8 @@ export class UiConsole {
 	/** @type {string} Prefix for .info() */
 	prefixedStyle = ""
 	stdout = process.stdout
+	/** @type {Array | null} */
+	#frame = null
 
 	/**
 	 * @param {Partial<UiConsole>} [options={}]
@@ -148,6 +155,7 @@ export class UiConsole {
 	 * @param {string} msg
 	 */
 	appendFile(target, msg) {
+		if (Array.isArray(this.#frame)) this.#frame.push(msg)
 		if (!this.logFile) return
 		const time = new Date().toISOString().slice(0, 16)
 		if (!existsSync(this.logFile)) {
@@ -275,16 +283,14 @@ export class UiConsole {
 
 	/**
 	 * Progress bar string.
-	 * @param {number} i
-	 * @param {number} len
+	 * @param {number} value Progress value from 0 to 1
 	 * @param {number} [width=33]
 	 * @param {string} [on="="]
 	 * @param {string} [off=" "]
 	 * @returns {string}
 	 */
-	bar(i, len, width = 33, on = "=", off = " ") {
-		const total = Math.max(1, Number(len) || 0)
-		const ratio = Math.max(0, Math.min(1, Number(i) / total))
+	bar(value, width = 33, on = "=", off = " ") {
+		const ratio = Math.max(0, Math.min(1, value))
 		const filled = Math.round(width * ratio)
 		return on.repeat(filled) + off.repeat(Math.max(0, width - filled))
 	}
@@ -323,6 +329,21 @@ export class UiConsole {
 			l => this.console.info("hidden" === overflow ? this.full(l) : l)
 		)
 		return lines
+	}
+	/**
+	 * Clears the frame to collect the output before the stopFrame().
+	 */
+	startFrame() {
+		this.#frame = []
+	}
+	/**
+	 * Returns collected output from latests startFrane().
+	 * @returns {string}
+	 */
+	stopFrame() {
+		const arr = this.#frame?.slice()
+		this.#frame = null
+		return arr?.join("\n") ?? ""
 	}
 }
 
@@ -447,10 +468,25 @@ export class Ui {
 	/**
 	 * Move the cursor up by a number of lines.
 	 *
-	 * @param {number} [lines=1]
+	 * @param {number | string} [lines=1] The lines to clear or string as a frame to
+	 *                                    clear the number of new lines inside the
+	 *                                    current window frame getWindowSize().
+	 * @returns {number} The number of lines cleared up.
 	 */
 	cursorUp(lines = 1) {
-		this.stdout.write(`\x1b[${lines}A`)
+		if (!lines) return 0
+		const [w] = this.stdout.getWindowSize?.() ?? [80, 40]
+		let no = 0
+		if ("number" === typeof lines) {
+			no = lines
+		} else {
+			no = lines ? String(lines).split("\n").reduce(
+				(acc, row) => acc += Math.ceil(row.length / w),
+				0
+			) : 0
+		}
+		if (no > 0) this.stdout.write(`\x1b[${no}A`)
+		return no
 	}
 
 	/**
@@ -465,15 +501,14 @@ export class Ui {
 	/**
 	 * Progress bar helper.
 	 *
-	 * @param {number} i
-	 * @param {number} len
+	 * @param {number} value Progress value from 0 to 1
 	 * @param {number} [width=33]
 	 * @param {string} [on="="]
 	 * @param {string} [off=" "]
 	 * @returns {string}
 	 */
-	bar(i, len, width = 33, on = "=", off = " ") {
-		return this.console.bar(i, len, width, on, off)
+	bar(value, width = 33, on = "=", off = " ") {
+		return this.console.bar(value, width, on, off)
 	}
 
 	/**
@@ -543,10 +578,6 @@ export class Ui {
 
 	/**
 	 * Create progress interval to call the fn() with provided fps.
-	 *
-	 * @typedef {Object} ProgressFnInput
-	 * @property {number} elapsed elapsed seconds
-	 * @property {number} startTime start timestamp ms
 	 *
 	 * @param {(input: ProgressFnInput) => void} fn
 	 * @param {number} [startTime]

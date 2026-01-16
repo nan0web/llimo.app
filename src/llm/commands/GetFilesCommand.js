@@ -2,6 +2,7 @@ import Command from "./Command.js"
 import micromatch from "micromatch"
 import { promises as fs } from "node:fs"
 import { resolve, relative } from "node:path"
+import { Alert } from "../../cli/components/index.js"
 
 /** @typedef {import("../../FileProtocol.js").ParsedFile} ParsedFile */
 
@@ -105,7 +106,7 @@ export default class GetFilesCommand extends Command {
 
 		// Emit checklist entries
 		for (const relPath of matched) {
-			yield `- [](${relPath})`
+			yield new Alert(`- [](${relPath})`)
 		}
 	}
 }

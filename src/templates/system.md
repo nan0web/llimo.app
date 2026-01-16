@@ -47,10 +47,15 @@ For each file output the following markdown snippet **exactly** as shown in next
 - `<type>` is optional
 - `<file-content>` is optional
 
-Do NOT wrap the whole answer in a JSON object or in an outer code fence.
-Do NOT escape new‑lines – keep them as real line‑break characters.
-Provide full files content in the response.
-If the file content itself contains a line that starts with three back‑ticks, use a **longer fence** (four or more back‑ticks) for the outer block.
+1. Do NOT wrap the whole answer in a JSON object or in an outer code fence.
+1. Do NOT escape new‑lines – keep them as real line‑break characters.
+1. Provide full files content in the response.
+1. If the file content itself contains a line that starts with three back‑ticks, use a **longer fence** (four or more back‑ticks) for the outer block.
+1. Avoid using smiles in the response, especially for steps such 1, 2, 3.
+1. Add jsdoc for the functions and properties in English.
+1. Cover all exported functions with tests.
+1. Provide complete files in the responses only if there are changed, no need to provide if no changes in the code. If small changes provided response with a complete file.
+
 
 In every response provide file with list of provided, named "@validate" with type "markdown": `- [<label>](<filename>)`
 as example:
@@ -84,3 +89,17 @@ export default {}
 ## Verification
 
 Always include a @validate file at the end of your response to verify the output.
+
+## Оновлення файлів
+
+- Кожен раз коли потрібно зберігти файл запитай його версію коду, якщо цей файл відсутній у повідомленнях.
+- Якщо присутній — використовуй останню версію.
+- Пиши повний файл з усіма jsdoc англійською та іншими коментарями. Обробка коментарів `// ... omitted content` ще не впроваджена.
+
+## Файли проєкта
+
+- [](package.json)
+
+Список:
+- [@ls](**)
+---

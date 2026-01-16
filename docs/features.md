@@ -89,6 +89,8 @@
 - Command: @media audio.mp3 → gen @bash "node batch-transcribe-api audio.mp3" (Whisper-1, lang=uk, env) or through OpenRouter providers or others available models with such modality.
 - Deps: Install @ai-sdk/openai-vision, mock for tests.
 - Autocomplete for cli such as in git with commands and branches.
+- Validate file responses for their final versions (prevent broken files)
+- Implement partial files in response `// ... omitted content ...`
 
 ## Hot-fix requests
 
@@ -359,4 +361,19 @@
 
 	read | 0:33 | $0.0000 | 61,069T | 1,840T/sss
 	chat | 0:33 | $0.0000 | 61,069T | 1,840T/s | 3,931T === 94%
+	```
+- Missing file list in the answer even in the debug mode:
+	```bash
+	? Send prompt to LLiMo? (Y)es, No: 
+
+	  read | 0:01 | $0.0000 | 2,357T | 2,529T/s
+	reason | 0:00 | $0.0000 |   399T | 1,462T/s
+	answer | 0:00 | $0.0000 |   838T | 1,892T/s
+	  chat | 0:02 | $0.0000 | 3,594T | 2,181T/s | 61,406T --- 6%
+	- Timings: queue - 0:00 | prompt - 0:00 | completion - 0:01 | total - 0:01
+	@ Limits: rpd - 14,399 | rph - 899 | rpm - 29 | tpd - 981,260 | tph - 981,260 | tpm - 981,260
+
+	+ reason (chat/f0a57f58-ad01-4500-a3de-ce6d183d8588/steps/001/reason.md)
+	+ answer (chat/f0a57f58-ad01-4500-a3de-ce6d183d8588/steps/001/answer.md)
+	Unpack current package? (Y)es, No, ., <message>: 
 	```
