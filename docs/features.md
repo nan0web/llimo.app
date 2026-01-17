@@ -377,3 +377,34 @@
 	+ answer (chat/f0a57f58-ad01-4500-a3de-ce6d183d8588/steps/001/answer.md)
 	Unpack current package? (Y)es, No, ., <message>: 
 	```
+- Incorrect target UI, must be LLM prompt instead of Ui
+	```bash
+	@ @commit
+	! Unknown command: @commit
+	! Available commands:
+	 - validate - Validate of the response by comparing provided (parsed) files and commands to expected list of files and commands. Label is amount of files provided in the response and commands besides @validate provided in the response.
+	 - ls - List the files inside project one directory or pattern per line (including micromatch patterns)
+	 - get - Get the files from the project one file or pattern per line (including micromatch patterns)
+	 - bash - Run bash commands and save output of stdout & stderr in chat
+	 - rm - Remove files from the project (cwd)
+	 - summary - Show short message in the output to keep important context
+	@ @validate
+	```
+	Ui must show:
+	```bash
+	@ @commit [LLiMo note] ! 1 specification is incorrect
+	@ @validate
+	```
+	LLM prompt for next auto-message must include:
+	```markdown
+	Response error: Unknown command: @commit
+	
+	Available commands:
+	- `validate` - Validate of the response by comparing provided (parsed) files and commands to expected list of files and commands. Label is amount of files provided in the response and commands besides @validate provided in the response.
+	- `ls` - List the files inside project one directory or pattern per line (including micromatch patterns)
+	- `get` - Get the files from the project one file or pattern per line (including micromatch patterns)
+	- `bash` - Run bash commands and save output of stdout & stderr in chat
+	- `rm` - Remove files from the project (cwd)
+	- `summary` - Show short message in the output to keep important context
+	---
+	```
