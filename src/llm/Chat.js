@@ -3,6 +3,7 @@ import { Stats } from "node:fs"
 import { ModelInfo } from "./ModelInfo.js"
 import { FileSystem } from "../utils/FileSystem.js"
 import { Usage } from "./Usage.js"
+import { mergeSystemPrompts, parseSystemPrompt } from "./system.js"
 
 /** @typedef {{ role: string, content: string | { text: string, type: string } }} ChatMessage */
 
@@ -215,6 +216,8 @@ export class Chat {
 					const usage = new Usage(await this.load("usage", step) ?? {})
 					this.steps.push({ model, usage })
 				}
+				const systems = this.systemMessages.map(msg => parseSystemPrompt(String(msg.content)))
+				this.system = mergeSystemPrompts(systems)
 				return true
 			}
 			const arr = await this.db.browse(".", { recursive: true }) ?? []

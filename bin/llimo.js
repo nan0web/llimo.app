@@ -19,38 +19,44 @@ import { Ui } from "../src/cli/index.js"
 
 const ui = new Ui({ debugMode: process.argv.includes("--debug") })
 
-if (process.argv.length < 3) {
-	ui.console.error("Usage: llimo <command> [options]")
-	ui.console.info("\nCommands:")
-	ui.console.info("  chat     – Interactive chat with AI (default)")
-	ui.console.info("  list     – List chats and select current")
-	ui.console.info("  models   – List available models and filter")
-	ui.console.info("  pack     – Pack markdown checklist into prompt")
-	ui.console.info("  unpack   – Unpack files/commands from markdown response")
-	// Add other commands as needed (e.g., release, system)
-	process.exit(1)
+async function main(argv = process.argv.slice(2)) {
+	if (argv.includes("--help")) {
+		ui.console.error("Usage: llimo <command> [options]")
+		ui.console.info("\nCommands:")
+		ui.console.info("  chat     – Interactive chat with AI (default)")
+		ui.console.info("  list     – List chats and select current")
+		ui.console.info("  models   – List available models and filter")
+		ui.console.info("  pack     – Pack markdown checklist into prompt")
+		ui.console.info("  unpack   – Unpack files/commands from markdown response")
+		// Add other commands as needed (e.g., release, system)
+		process.exit(1)
+	}
+
+	const subcmd = argv[0]
+	const args = argv.slice(1)
+
+	if (["list", "ls"].includes(subcmd)) {
+		import("./llimo-list.js").then(({ main }) => main(args))
+	} else if (subcmd === "models") {
+		import("./llimo-models.js").then(({ main }) => main(args))
+	} else if (subcmd === "pack") {
+		import("./llimo-pack.js").then(({ main }) => main(args))
+	} else if (subcmd === "release") {
+		import("./llimo-release.js").then(({ main }) => main(args))
+	} else if (subcmd === "unpack") {
+		import("./llimo-unpack.js").then(({ main }) => main(args))
+	} else if (subcmd === "system") {
+		import("./llimo-system.js").then(({ main }) => main(args))
+	} else {
+		// Delegate to chat main with remaining args
+		const args = argv.slice("chat" === subcmd ? 1 : 0)
+		import("./llimo-chat.js").then(({ main }) => main(args))
+	}
 }
 
-const subcmd = process.argv[2]
-const args = process.argv.slice(3)
-
-if (subcmd === "chat") {
-	// Delegate to chat main with remaining args
-	import("./llimo-chat.js").then(({ main }) => main(args))
-} else if (subcmd === "list") {
-	import("./llimo-list.js").then(({ main }) => main(args))
-} else if (subcmd === "models") {
-	import("./llimo-models.js").then(({ main }) => main(args))
-} else if (subcmd === "pack") {
-	import("./llimo-pack.js").then(({ main }) => main(args))
-} else if (subcmd === "release") {
-	import("./llimo-release.js").then(({ main }) => main(args))
-} else if (subcmd === "unpack") {
-	import("./llimo-unpack.js").then(({ main }) => main(args))
-} else if (subcmd === "system") {
-	import("./llimo-system.js").then(({ main }) => main(args))
-} else {
-	ui.console.error(`Unknown command: ${subcmd}`)
-	ui.console.info("Available commands: chat, models, pack, unpack")
+main().catch(err => {
+	ui.console.error(err.message)
+	if (err.stack) ui.console.debug(err.stack)
 	process.exit(1)
-}
+})
+
