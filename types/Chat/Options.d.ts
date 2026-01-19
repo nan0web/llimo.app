@@ -22,10 +22,12 @@ export default class ChatOptions {
         alias: string;
         default: boolean;
     };
-    static isTest: {
+    static test: {
         help: string;
-        alias: string;
-        default: boolean;
+        default: {
+            command: string;
+            args: string[];
+        };
     };
     static isTiny: {
         alias: string;
@@ -81,7 +83,12 @@ export default class ChatOptions {
         /** @type {"free" | "cheap" | "medium" | "rich"} */
         default: "free" | "cheap" | "medium" | "rich";
     };
-    constructor(input?: {});
+    /**
+     * @param {Partial<ChatOptions> & { test?: Partial<TestOptions> }} [input={}]
+     */
+    constructor(input?: Partial<ChatOptions> & {
+        test?: Partial<TestOptions>;
+    });
     /** @type {string[]} Free arguments: text (markdown) file location as input file (pre-prompt) with attachments as markdown - [ignore-rules](location-as-glob) */
     argv: string[];
     /** @type {boolean} Debug mode to show more information */
@@ -91,10 +98,9 @@ export default class ChatOptions {
     /** @type {boolean} Automatically answer yes to all questions */
     isYes: boolean;
     /**
-     * @type {boolean} Run in test mode
-     * @deprecated Changed with the command test
+     * @type {TestOptions} Run in test mode
      */
-    isTest: boolean;
+    test: TestOptions;
     /** @type {boolean} Tiny view in one row that is useful as subtask usage */
     isTiny: boolean;
     /** @type {boolean} Fix the current project (starts with tests) */
@@ -119,3 +125,23 @@ export default class ChatOptions {
     /** @type {"free" | "cheap" | "medium" | "rich"} LLM communication strategy financing: free, cheap, medium, rich */
     strategyFinance: "free" | "cheap" | "medium" | "rich";
 }
+declare class TestOptions {
+    static command: {
+        help: string;
+        default: string;
+    };
+    static args: {
+        help: string;
+        default: never[];
+    };
+    /**
+     * @param {Partial<TestOptions>} [input={}]
+     */
+    constructor(input?: Partial<TestOptions>);
+    /** @type {string} */
+    command: string;
+    /** @type {string[]} */
+    args: string[];
+    toString(): string;
+}
+export {};

@@ -14,7 +14,7 @@ export function parseSystemPrompt(content: string): {
 };
 /**
  * @param {string[] | Array<{ content: string, vars: object }>} arr
- * @returns {{ head: string, body: string, vars: object }}
+ * @returns {{ head: string, body: string, vars: ChatOptions }}
  */
 export function mergeSystemPrompts(arr: string[] | Array<{
     content: string;
@@ -22,5 +22,6 @@ export function mergeSystemPrompts(arr: string[] | Array<{
 }>): {
     head: string;
     body: string;
-    vars: object;
+    vars: ChatOptions;
 };
+import ChatOptions from "../Chat/Options.js";

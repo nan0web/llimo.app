@@ -2,6 +2,7 @@ import yaml from "yaml"
 import { FileSystem } from "../utils/FileSystem.js"
 import commands from "./commands/index.js"
 import loadSystemInstructions from "../templates/system.js"
+import ChatOptions from "../Chat/Options.js"
 
 /**
  * Generates the system prompt markdown.
@@ -52,7 +53,7 @@ export function parseSystemPrompt(content) {
 
 /**
  * @param {string[] | Array<{ content: string, vars: object }>} arr
- * @returns {{ head: string, body: string, vars: object }}
+ * @returns {{ head: string, body: string, vars: ChatOptions }}
  */
 export function mergeSystemPrompts(arr) {
 	const content = []
@@ -64,5 +65,5 @@ export function mergeSystemPrompts(arr) {
 	}
 	const head = Object.keys(vars).length ? `---\n${yaml.stringify(vars)}---\n` : ""
 	const body = content.join("\n\n---\n\n")
-	return { head, body, vars }
+	return { head, body, vars: new ChatOptions(vars) }
 }

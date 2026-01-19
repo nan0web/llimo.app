@@ -77,6 +77,8 @@
 
 10. **Auto file attachment**: check every file that were injected/returned in chat messages and inject in the prompt updated ones.
 
+11. **TestOptions**: set the test command and its arguments (pnpm test:all by default) to run for the full project testing in CLI with a format `{ command: string, args: string[] }`
+
 ## v1.2.0+ (Future)
 
 - Possible to load strategies to select a proper models based on a context and from `{system|agent|input}.md`, as configuration header in yaml format, for instance:
@@ -412,3 +414,9 @@
 - The calculation of chat cost is incorrect when going throught the loop from next iteration, it is correct for the first one.
 - The answer from the user is not sending with the tests.
 - Виправити правило `1. Кожен раз коли потрібно зберігти файл запитай його версію коду, якщо цей файл відсутній у повідомленнях, якщо присутній — використовуй останню версію. Якщо файл змінесть в процесі розробки, то Я надішлю нову версію у наступному повідомленні.`
+- У базовомій інструкції додається список всіх файлів проєкту, у директоріях з великою кількістю файлів дуже велетенський список, який дуже довго обчислюється. Потрібно встановити обмеження на команду і видавати зауваження про перебільшення ліміту і рухатись далі без списку.
+- для виправлення помилок з `markdown` файлами з блоками коду при валідації уточнюй контрекст для LLM
+
+	```
+	Error: properly escape code blocks in `{filename}.md` triple quote for the .md and quadruple quote for the code blocks inside.
+	```

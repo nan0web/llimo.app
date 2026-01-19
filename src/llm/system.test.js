@@ -5,6 +5,7 @@ import { resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { generateSystemPrompt, parseSystemPrompt, mergeSystemPrompts } from "./system.js"
 import { FileSystem } from "../utils/index.js"
+import ChatOptions from "../Chat/Options.js"
 
 describe("system module", () => {
 	let tempDir
@@ -72,17 +73,19 @@ describe("system module", () => {
 		const p1 = [
 			"---",
 			"inputFile: dev.md",
-			"strategy:",
-			"  finance: free",
-			"  speed: fastest",
+			"test:",
+			"  command: vitest",
 			"---",
 			"# Instructions 1",
 			"Details 1",
 		].join("\n")
 		const p2 = [
 			"---",
-			"strategy:",
-			"  finance: low",
+			"test:",
+			"  command: node",
+			"  args:",
+			"    - --test",
+			"    - --test-timeout=333",
 			"---",
 			"# Instructions 2",
 			"Details 2",
@@ -96,16 +99,16 @@ describe("system module", () => {
 		].join("\n")
 		const system = mergeSystemPrompts([p1, p2, p3])
 		assert.deepStrictEqual(system, {
-			head: "---\ninputFile: what.md\nstrategy:\n  finance: low\n---\n",
+			head: "---\ninputFile: what.md\ntest:\n  command: node\n  args:\n    - --test\n    - --test-timeout=333\n---\n",
 			body: [
 				"# Instructions 1\nDetails 1",
 				"# Instructions 2\nDetails 2",
 				"# Instructions 3\nDetails 3",
 			].join("\n\n---\n\n"),
-			vars: {
+			vars: new ChatOptions({
 				inputFile: "what.md",
-				strategy: { finance: "low" }
-			}
+				test: { command: "node", args: ["--test", "--test-timeout=333"] }
+			})
 		})
 	})
 })

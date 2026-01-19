@@ -189,19 +189,6 @@ export class ChatCLiApp {
 		}
 
 		await this.chat.save("input.md", this.input)
-		const testChatDir = this.options.testDir || this.chat.dir
-		if (this.options.isTest) {
-			const dummyModel = new ModelInfo({
-				id: "test-model",
-				pricing: new Pricing({ prompt: 0, completion: 0 }),
-				architecture: new Architecture({ modality: "text" })
-			})
-			await handleTestMode({
-				ai: this.ai, ui: this.ui, cwd: testChatDir, input: this.input, chat: this.chat,
-				model: dummyModel, fps: 33
-			})
-			return false
-		}
 		return true
 	}
 	/**
@@ -476,8 +463,8 @@ export class ChatCLiApp {
 		// const { stdout: testStdout, stderr: testStderr, exitCode } = await runTests({ ui, chat, runCommand, step, onData })
 
 		this.ui.console.info("@ Running tests")
-		this.ui.console.debug("% pnpm test:all")
-		const result = await runCommand("pnpm", ["test:all"], { onData })
+		this.ui.console.debug(`% ${this.options.test}`)
+		const result = await runCommand(this.options.test.command, this.options.test.args, { onData })
 		clearInterval(testing)
 		if (!result) {
 			return { pass: false, shouldContinue: false }

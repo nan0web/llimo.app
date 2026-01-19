@@ -1,3 +1,27 @@
+class TestOptions {
+	static command = {
+		help: "Command name such as npm or yarn or pnpm or any command of installed cli application",
+		default: ""
+	}
+	/** @type {string} */
+	command = TestOptions.command.default
+	static args = {
+		help: "Arguments to pass to tests command such as [test:all] or [--test, --test-timeout=3333]",
+		default: []
+	}
+	/** @type {string[]} */
+	args = TestOptions.args.default
+	/**
+	 * @param {Partial<TestOptions>} [input={}]
+	 */
+	constructor(input = {}) {
+		Object.assign(this, input)
+	}
+	toString() {
+		return `${this.command} ${this.args.join(" ")}`
+	}
+}
+
 /**
  * Chat command-line options parser configuration.
  * Defines flags with defaults, aliases, help text.
@@ -30,16 +54,14 @@ export default class ChatOptions {
 	}
 	/** @type {boolean} Automatically answer yes to all questions */
 	isYes = ChatOptions.isYes.default
-	static isTest = {
+	static test = {
 		help: "Run in test mode",
-		alias: "test",
-		default: false,
+		default: { command: "pnpm", args: ["test:all"] },
 	}
 	/**
-	 * @type {boolean} Run in test mode
-	 * @deprecated Changed with the command test
+	 * @type {TestOptions} Run in test mode
 	 */
-	isTest = ChatOptions.isTest.default
+	test = new TestOptions(ChatOptions.test.default)
 	static isTiny = {
 		alias: "tiny",
 		help: "Tiny view in one row that is useful as subtask usage",
@@ -119,7 +141,11 @@ export default class ChatOptions {
 	strategyFinance = ChatOptions.strategyFinance.default
 	// @todo add all the strategy options
 
+	/**
+	 * @param {Partial<ChatOptions> & { test?: Partial<TestOptions> }} [input={}]
+	 */
 	constructor(input = {}) {
 		Object.assign(this, input)
+		this.test = new TestOptions(this.test)
 	}
 }
