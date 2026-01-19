@@ -25,6 +25,7 @@ export function testingStatus(parsed, elapsed = "") {
 
 /**
  * Creates progress for testing commands.
+ * @deprecated use ChatCliApp.testingProgress instead
  * @param {object} param0
  * @param {Ui} param0.ui
  * @param {FileSystem} [param0.fs]
@@ -48,6 +49,7 @@ export function testingProgress({ ui, fs = new FileSystem(), output = [], rows =
 
 /**
  * Creates progress for commands to run in a window.
+ * @deprecated use ChatCliApp.runningProgress instead
  * @param {object} param0
  * @param {Ui} param0.ui
  * @param {string[]} [param0.output]

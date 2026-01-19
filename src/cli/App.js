@@ -3,7 +3,7 @@ import yaml from "yaml"
 import micromatch from "micromatch"
 
 import { Git, FileSystem } from "../utils/index.js"
-import { RESET, MAGENTA, YELLOW, ITALIC, RED, BOLD, GREEN } from "./ANSI.js"
+import { RESET, MAGENTA, YELLOW, ITALIC, RED, BOLD, GREEN, DIM } from "./ANSI.js"
 import { Ui } from "./Ui.js"
 import { runCommand } from "./runCommand.js"
 import { selectAndShowModel, showModel } from "./selectModel.js"
@@ -18,7 +18,7 @@ import {
 } from "../llm/index.js"
 import { loadModels, ChatOptions } from "../Chat/index.js"
 import chatCommands from "../Chat/commands/index.js"
-import { runningProgress, testingProgress, testingStatus } from "./testing/progress.js"
+import { runningProgress, testingStatus } from "./testing/progress.js"
 import { Suite } from "./testing/node.js"
 import { MarkdownProtocol } from "../utils/Markdown.js"
 import { UiOutput } from "./UiOutput.js"
@@ -29,6 +29,8 @@ import { parseArgv } from "./argvHelper.js"
 
 const DEFAULT_MODEL = "gpt-oss-120b"
 const DEFAULT_PROVIDER = "cerebras"
+
+/** @typedef {(input: import("./Ui.js").ProgressFnInput, printed?: number, frame?: string) => void} AfterProgressFn */
 
 /**
  * @typedef {Object} SendAndStreamOptions
@@ -450,29 +452,40 @@ export class ChatCLiApp {
 		await this.chat.save("steps.jsonl", this.#steps)
 		return streamed
 	}
+	/**
+	 *
+	 * @param {number} step
+	 * @returns {Promise<{ pass: boolean, shouldContinue: boolean, test?: import("./testing/node.js").SuiteParseResult }>}
+	 */
 	async runTests(step) {
-		const ui = this.ui
-		const fs = this.fs
-		const chat = this.chat
-		const options = this.options
 		const content = []
 		const now = Date.now()
 		const output = []
-		const testing = testingProgress({ ui, fs, output, rows: 12, prefix: "  " })
+		const testing = runningProgress({
+			ui: this.ui, output, rows: 12, prefix: "  ", startTime: Date.now(), fps: 33,
+			after: (input) => {
+				const suite = new Suite({ rows: output, fs: this.fs })
+				const parsed = suite.parse()
+				const str = testingStatus(parsed, this.ui.formats.timer(input.elapsed * 1e3))
+				this.ui.overwriteLine(`  ${str}`)
+			}
+		})
+
+		/** @param {any} chunk */
 		const onData = chunk => output.push(...String(chunk).split("\n"))
 		// const { stdout: testStdout, stderr: testStderr, exitCode } = await runTests({ ui, chat, runCommand, step, onData })
 
-		ui.console.info("@ Running tests")
-		ui.console.debug("% pnpm test:all")
+		this.ui.console.info("@ Running tests")
+		this.ui.console.debug("% pnpm test:all")
 		const result = await runCommand("pnpm", ["test:all"], { onData })
 		clearInterval(testing)
 		if (!result) {
 			return { pass: false, shouldContinue: false }
 		}
-		const suite = new Suite({ rows: [...result.stdout.split("\n"), ...result.stderr.split("\n")], fs })
+		const suite = new Suite({ rows: [...result.stdout.split("\n"), ...result.stderr.split("\n")], fs: this.fs })
 		const parsed = suite.parse()
 
-		await chat.saveTests(parsed, result.stderr, result.stdout, step)
+		await this.chat.saveTests(parsed, result.stderr, result.stdout, step)
 
 		// Parse test results
 		const fail = parsed.counts.get("fail") ?? 0
@@ -481,35 +494,35 @@ export class ChatCLiApp {
 		const todo = parsed.counts.get("todo") ?? 0
 		const skip = parsed.counts.get("skip") ?? 0
 		// const { fail, cancelled, pass, todo, skip, types } = parsed.counts
-		ui.overwriteLine("  " + testingStatus(parsed, ui.formats.timer(Date.now() - now)))
-		ui.console.info("")
+		this.ui.overwriteLine("  " + testingStatus(parsed, this.ui.formats.timer(Date.now() - now)))
+		this.ui.console.info("")
 		// ui.console.info()
 
 		let shouldContinue = true
 
-		if (!options.isYes) {
+		if (!this.options.isYes) {
 			let continuing = false
 			if (fail > 0 || cancelled > 0 || types > 0) {
-				continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "fail" })
+				continuing = await printAnswer({ tests: parsed.tests, ui: this.ui, content, type: "fail" })
 				if (!continuing) {
 					return { pass: false, shouldContinue: false, test: parsed }
 				}
 			}
 			if (shouldContinue && todo > 0) {
-				continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "todo" })
+				continuing = await printAnswer({ tests: parsed.tests, ui: this.ui, content, type: "todo" })
 				if (!continuing) {
 					return { pass: false, shouldContinue: false, test: parsed }
 				}
 			}
 			if (shouldContinue && skip > 0) {
-				continuing = await printAnswer({ tests: parsed.tests, ui, content, type: "skip" })
+				continuing = await printAnswer({ tests: parsed.tests, ui: this.ui, content, type: "skip" })
 				if (!continuing) {
 					return { pass: false, shouldContinue: false, test: parsed }
 				}
 			}
-			chat.add({ role: "user", content: content.join("\n") })
+			this.chat.add({ role: "user", content: content.join("\n") })
 			if (shouldContinue && fail === 0 && cancelled === 0 && types === 0 && todo === 0 && skip === 0) {
-				ui.console.success("All tests passed.")
+				this.ui.console.success("All tests passed.")
 				return { pass: true, shouldContinue: false, test: parsed }
 			}
 		}
@@ -523,7 +536,7 @@ export class ChatCLiApp {
 		}
 
 		if (!testFailed) {
-			ui.console.info("All tests passed, no typed mistakes.")
+			this.ui.console.info("All tests passed, no typed mistakes.")
 		}
 
 		return { pass, shouldContinue, test: parsed }
@@ -859,4 +872,66 @@ export class ChatCLiApp {
 		}
 		await this.chat.save("steps.jsonl", this.#steps)
 	}
+
+	/**
+	 * Creates progress for testing commands.
+	 * @param {object} param0
+	 * @param {Ui} param0.ui
+	 * @param {FileSystem} [param0.fs]
+	 * @param {string[]} [param0.output]
+	 * @param {number} [param0.rows=0]
+	 * @param {string} [param0.prefix=""]
+	 * @param {number} [param0.startTime]
+	 * @param {number} [param0.fps=33]
+	 * @returns {NodeJS.Timeout}
+	 */
+	testingProgress({ output = [], rows = 0, prefix = "", startTime = Date.now(), fps = 33 }) {
+		return this.runningProgress({
+			output, rows, prefix, startTime, fps, after: (input) => {
+				const suite = new Suite({ rows: output, fs: this.fs })
+				const parsed = suite.parse()
+				const str = testingStatus(parsed, this.ui.formats.timer(input.elapsed * 1e3))
+				this.ui.overwriteLine(`  ${str}`)
+			}
+		})
+	}
+
+	/**
+	 * Creates progress for commands to run in a window.
+	 * @param {object} param0
+	 * @param {string[]} [param0.output]
+	 * @param {number} [param0.rows=0] The window height
+	 * @param {string} [param0.prefix=""]
+	 * @param {number} [param0.startTime]
+	 * @param {number} [param0.fps=33]
+	 * @param {AfterProgressFn} [param0.after]
+	 * @returns {NodeJS.Timeout}
+	 */
+	runningProgress({ output = [], rows = 0, prefix = "", startTime = Date.now(), fps = 33, after = () => { } }) {
+		let printed = 0
+		return this.ui.createProgress((input) => {
+			if (printed) this.ui.cursorUp(printed)
+			let arr = output.filter(Boolean).filter(this.noDebugger)
+			if (rows > 0) arr = arr.slice(-rows)
+			this.ui.console.startFrame()
+			const lines = arr.map(r => this.ui.console.clear(prefix + r))
+			lines.forEach(l => this.ui.console.info(`\r${DIM}${l}${RESET}`))
+			if (lines.length < printed) {
+				for (let i = 0; i < printed - lines.length; i++) {
+					this.ui.console.info(this.ui.console.clear(""))
+				}
+			}
+			printed = lines.length
+
+			after(input, printed, this.ui.console.stopFrame())
+		}, startTime, fps)
+	}
+
+	noDebugger(str) {
+		return ![
+			"Error: Waiting for the debugger to disconnect",
+			"Error: Debugger attached",
+		].some(s => str.includes(s))
+	}
+
 }

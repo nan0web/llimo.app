@@ -403,6 +403,7 @@ export async function decodeAnswerAndRunTests(input) {
  * @property {boolean} shouldContinue
  * @property {import("../cli/testing/node.js").SuiteParseResult} [test]
  *
+ * @deprecated use ChatCliApp.runTests instead.
  * @param {Object} input
  * @param {Ui} input.ui
  * @param {FileSystem} input.fs

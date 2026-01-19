@@ -408,3 +408,7 @@
 	- `summary` - Show short message in the output to keep important context
 	---
 	```
+- Incomplete responses must be fixed by validating the response of broken files and automatically resend the request to continue from broken file
+- The calculation of chat cost is incorrect when going throught the loop from next iteration, it is correct for the first one.
+- The answer from the user is not sending with the tests.
+- Виправити правило `1. Кожен раз коли потрібно зберігти файл запитай його версію коду, якщо цей файл відсутній у повідомленнях, якщо присутній — використовуй останню версію. Якщо файл змінесть в процесі розробки, то Я надішлю нову версію у наступному повідомленні.`

@@ -1,3 +1,4 @@
+/** @typedef {(input: import("./Ui.js").ProgressFnInput, printed?: number, frame?: string) => void} AfterProgressFn */
 /**
  * @typedef {Object} SendAndStreamOptions
  * @property {string} answer
@@ -88,14 +89,15 @@ export class ChatCLiApp {
      * @returns {Promise<import("../llm/chatLoop.js").sendAndStreamOptions>}
      */
     send(prompt: string, model: ModelInfo, step?: number): Promise<import("../llm/chatLoop.js").sendAndStreamOptions>;
-    runTests(step: any): Promise<{
+    /**
+     *
+     * @param {number} step
+     * @returns {Promise<{ pass: boolean, shouldContinue: boolean, test?: import("./testing/node.js").SuiteParseResult }>}
+     */
+    runTests(step: number): Promise<{
         pass: boolean;
         shouldContinue: boolean;
-        test?: undefined;
-    } | {
-        pass: boolean;
-        shouldContinue: boolean;
-        test: import("./testing/node.js").SuiteParseResult;
+        test?: import("./testing/node.js").SuiteParseResult;
     }>;
     /**
      *
@@ -179,8 +181,50 @@ export class ChatCLiApp {
      * @returns {Promise<void>}
      */
     loop(): Promise<void>;
+    /**
+     * Creates progress for testing commands.
+     * @param {object} param0
+     * @param {Ui} param0.ui
+     * @param {FileSystem} [param0.fs]
+     * @param {string[]} [param0.output]
+     * @param {number} [param0.rows=0]
+     * @param {string} [param0.prefix=""]
+     * @param {number} [param0.startTime]
+     * @param {number} [param0.fps=33]
+     * @returns {NodeJS.Timeout}
+     */
+    testingProgress({ output, rows, prefix, startTime, fps }: {
+        ui: Ui;
+        fs?: FileSystem | undefined;
+        output?: string[] | undefined;
+        rows?: number | undefined;
+        prefix?: string | undefined;
+        startTime?: number | undefined;
+        fps?: number | undefined;
+    }): NodeJS.Timeout;
+    /**
+     * Creates progress for commands to run in a window.
+     * @param {object} param0
+     * @param {string[]} [param0.output]
+     * @param {number} [param0.rows=0] The window height
+     * @param {string} [param0.prefix=""]
+     * @param {number} [param0.startTime]
+     * @param {number} [param0.fps=33]
+     * @param {AfterProgressFn} [param0.after]
+     * @returns {NodeJS.Timeout}
+     */
+    runningProgress({ output, rows, prefix, startTime, fps, after }: {
+        output?: string[] | undefined;
+        rows?: number | undefined;
+        prefix?: string | undefined;
+        startTime?: number | undefined;
+        fps?: number | undefined;
+        after?: AfterProgressFn | undefined;
+    }): NodeJS.Timeout;
+    noDebugger(str: any): boolean;
     #private;
 }
+export type AfterProgressFn = (input: import("./Ui.js").ProgressFnInput, printed?: number, frame?: string) => void;
 export type SendAndStreamOptions = {
     answer: string;
     reason: string;
