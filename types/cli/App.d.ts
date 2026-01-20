@@ -140,7 +140,7 @@ export class ChatCLiApp {
      * @param {string} input
      * @returns {Promise<{ content: string, injected: FileSize[] }>}
      */
-    packPrompt(input: string): Promise<{
+    packPrompt(input?: string): Promise<{
         content: string;
         injected: FileSize[];
     }>;
