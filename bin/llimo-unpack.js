@@ -12,8 +12,8 @@ import process from "node:process"
 import { Readable } from "node:stream"
 
 import { Ui } from "../src/cli/index.js"
-import { FileSystem, Path, ReadLine } from "../src/utils/index.js"
-import Markdown from "../src/utils/Markdown.js"
+import { FileSystem, Path } from "../src/utils/index.js"
+import { MarkdownProtocol } from "../src/utils/Markdown.js"
 import { unpackAnswer } from "../src/llm/unpack.js"
 
 const ui = new Ui({ debugMode: process.argv.includes("--debug") })
@@ -43,10 +43,9 @@ function usage() {
 /**
  * Main entry point.
  */
-async function main(argv = process.argv.slice(2)) {
+export async function main(argv = process.argv.slice(2)) {
 	const fs = new FileSystem()
 	const path = new Path()
-	const rl = new ReadLine()
 
 	let mdStream = null               // interface that yields markdown lines
 	let baseDir = process.cwd()       // directory used to resolve relative file paths
@@ -87,7 +86,8 @@ async function main(argv = process.argv.slice(2)) {
 	if (stdinData) {
 		// stdin provided – markdown comes from stdinData.
 		// Build a Readable stream from the collected data for readline processing.
-		mdStream = rl.createInterface({ input: Readable.from([stdinData]), crlfDelay: Infinity })
+		const readline = await import("node:readline")
+		mdStream = readline.createInterface({ input: Readable.from([stdinData]), crlfDelay: Infinity })
 		// If an argument is supplied it designates the output destination.
 		if (argv.length > 0) {
 			outputPath = path.resolve(process.cwd(), argv[0])
@@ -99,7 +99,8 @@ async function main(argv = process.argv.slice(2)) {
 			if (firstIsFile) {
 				// First argument is a markdown file.
 				const mdFile = path.resolve(process.cwd(), argv[0])
-				mdStream = rl.createInterface({
+				const readline = await import("node:readline")
+				mdStream = readline.createInterface({
 					input: (await fs.open(mdFile)).createReadStream(),
 					crlfDelay: Infinity,
 				})
@@ -113,7 +114,8 @@ async function main(argv = process.argv.slice(2)) {
 				// Markdown will be read from STDIN (which we already know is empty),
 				// so we fall back to interactive readline.
 				outputPath = path.resolve(process.cwd(), argv[0])
-				mdStream = rl.createInterface({ input: process.stdin, crlfDelay: Infinity })
+				const readline = await import("node:readline")
+				mdStream = readline.createInterface({ input: process.stdin, crlfDelay: Infinity })
 			}
 		}
 	}
@@ -123,16 +125,17 @@ async function main(argv = process.argv.slice(2)) {
 	}
 	ui.console.info()
 
-	const parsed = await Markdown.parseStream(mdStream)
+	const parsed = await MarkdownProtocol.parseStream(mdStream)
 	const stream = unpackAnswer(parsed, isDry, baseDir)
 	for await (const str of stream) {
 		ui.console.info(str)
 	}
 }
 
-main().catch((err) => {
-	ui.console.error(err.message)
-	if (err.stack) ui.console.debug(err.stack)
-	process.exit(1)
-})
-
+if (import.meta.url === `file://${process.argv[1]}`) {
+	main().catch((err) => {
+		ui.console.error(err.message)
+		if (err.stack) ui.console.debug(err.stack)
+		process.exit(1)
+	})
+}

@@ -420,3 +420,24 @@
 	```
 	Error: properly escape code blocks in `{filename}.md` triple quote for the .md and quadruple quote for the code blocks inside.
 	```
++ llimo-unpack error fix:
+	```bash
+	╭╴yaro::~/Downloads/teplo
+	╰╴20:22 √ok % llimo unpack chat/53697415-89fd-4651-93ec-85847ce94fec/steps/011/answer.md 
+	file:///Users/i/src/purejs/llimo.app/bin/llimo-unpack.js:16
+	import Markdown from "../src/utils/Markdown.js"
+	```
+- unhandled error:
+	```bash
+	read | 0:19 | $0.0094 | 117,873T | 6,145T/sss/s
+	chat | 0:19 | $0.0094 | 117,873T | 6,145T/s | 82,127T ==- 59%node:internal/process/promises:330
+	      new UnhandledPromiseRejection(reason);
+	      ^
+	
+	UnhandledPromiseRejection: This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason "#<Object>".
+	    at throwUnhandledRejectionsMode (node:internal/process/promises:330:7)
+	    at processPromiseRejections (node:internal/process/promises:413:17)
+	    at process.processTicksAndRejections (node:internal/process/task_queues:104:32) {
+	  code: 'ERR_UNHANDLED_REJECTION'
+	}
+	```
