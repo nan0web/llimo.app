@@ -716,7 +716,7 @@ export class ChatCLiApp {
 	 * @param {string} input
 	 * @returns {Promise<{ content: string, injected: FileSize[] }>}
 	 */
-	async packPrompt(input) {
+	async packPrompt(input = this.input) {
 		// Collect previous user message blocks by splitting their content by --- and trimming
 		const previousBlocksSet = new Set(
 			this.chat.messages
@@ -742,7 +742,9 @@ export class ChatCLiApp {
 		const text = []
 		const injected = []
 		// let bar = ""
-		const stream = this.packMarkdown({ input: inputText })
+		const stream = this.packMarkdown({
+			input: inputText, ignore: this.options.ignore ?? undefined
+		})
 		for await (const entry of stream) {
 			if ("string" === typeof entry) {
 				text.push(entry)
@@ -825,7 +827,7 @@ export class ChatCLiApp {
 		await this.packSystem(step)
 
 		// 4. pack prompt – prepend system.md if present
-		let packed = await this.packPrompt(this.input)
+		let packed = await this.packPrompt()
 
 		// 5. chat loop – refactored
 		const model = this.ai.selectedModel
